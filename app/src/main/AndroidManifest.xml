@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
     <uses-permission android:name="android.permission.INTERNET"/>
     <application
+        android:name = ".di.HiltApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -15,6 +16,9 @@
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
             android:value="cimn27aj2e" />
+        <activity
+            android:name=".ui.splash.SplashActivity"
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

@@ -1,5 +1,8 @@
 package com.example.yactong
 
+import com.example.yactong.data.retrofit.ApiBaseUrl
+import com.example.yactong.data.retrofit.DrugApiService
+import com.example.yactong.data.retrofit.RetrofitClient
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
@@ -15,15 +18,5 @@ class ExampleUnitTest {
     @Test
     fun addition_isCorrect() {
         assertEquals(4, 2 + 2)
-    }
-
-
-
-    @Test
-    fun api() = runBlocking {
-        val currentTimeMs = System.currentTimeMillis()
-        println("testRunBlockingTest")
-        delay(5000)
-        println("done testRunBlockingTest ${System.currentTimeMillis() - currentTimeMs} ms")
     }
 }

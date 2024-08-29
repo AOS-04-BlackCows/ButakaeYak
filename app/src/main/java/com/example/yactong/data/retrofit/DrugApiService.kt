@@ -10,19 +10,21 @@ interface DrugApiService {
      //drug: DrbEasyDrugInfoService
     // pill: MdcinGrnIdntfcInfoService01
 
-    @GET("DrbEasyDrugInfoService")
+    @GET("DrbEasyDrugInfoService/getDrbEasyDrugList")
     suspend fun getDrugInfo(
-        @Query("item_name") name: String,
+        @Query("itemName") name: String,
         @Query("pageNo") page: Int = 1,
-        @Query("numOfRows") rows: Int = 50,
+        @Query("numOfRows") rows: Int = 3,
         @Query("type") type: String = "json",
         @Query("serviceKey") key: String = BuildConfig.DRUG_INFO_KEY,
     ): DrugInfoDto
 
-    @GET("MdcinGrnIdntfcInfoService01")
+    @GET("MdcinGrnIdntfcInfoService01/getMdcinGrnIdntfcInfoList01")
     suspend fun getPillInfo(
-        @Query("query") query: String,
-        @Query("page") page: Int,
-        @Query("size") size: Int = 30,
+        @Query("item_name") name: String,
+        @Query("pageNo") page: Int = 1,
+        @Query("numOfRows") rows: Int = 3,
+        @Query("type") type: String = "json",
+        @Query("serviceKey") key: String = BuildConfig.DRUG_INFO_KEY,
     ): PillInfoDto
 }
