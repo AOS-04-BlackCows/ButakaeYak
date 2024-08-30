@@ -5,6 +5,8 @@ import com.example.yactong.data.repository.impl.DrugRepositoryImpl
 import com.example.yactong.data.retrofit.ApiBaseUrl
 import com.example.yactong.data.retrofit.DrugApiService
 import com.example.yactong.data.retrofit.RetrofitClient
+import com.example.yactong.data.save_raw.AiApiService
+import com.example.yactong.data.save_raw.AiRetrofitClient
 import com.example.yactong.data.source.api.DrugDataSource
 import dagger.Module
 import dagger.Provides
@@ -29,5 +31,11 @@ class ProvideModule {
     //@ViewModelScoped
     fun provideIoDispatcher(): CoroutineDispatcher {
         return Dispatchers.IO
+    }
+
+    @Provides
+    //@ViewModelScoped
+    fun provideAiApiService() : AiApiService {
+        return AiRetrofitClient.getInstance().create(AiApiService::class.java)
     }
 }

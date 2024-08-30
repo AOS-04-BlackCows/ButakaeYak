@@ -9,7 +9,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object AiRetrofitClient {
 
-    private const val BASE_URL = "https://api.openai.com/v1/chat/completions"
+    private const val BASE_URL = "https://api.openai.com/v1/chat/completions/"
     private val key = BuildConfig.OPEN_AI_KEY
 
     private var instance: Retrofit? = null
