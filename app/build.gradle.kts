@@ -42,6 +42,10 @@ android {
             "NATIVE_APP_KEY",
             properties.getProperty("native_app_key")
         )
+        buildConfigField("String",
+            "OPEN_AI_KEY",
+            properties.getProperty("open_ai_key")
+        )
     }
 
     buildTypes {
