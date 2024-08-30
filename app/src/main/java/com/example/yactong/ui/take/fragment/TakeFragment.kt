@@ -35,7 +35,7 @@ class TakeFragment : Fragment() {
             btnAdd.setOnClickListener {
                 //navigate를 통해서 TakeFragment에서 TakeAddFragment로 이동
                 //TakeAddFragment는 layout에 ViewPager2가 있음
-                findNavController().navigate(R.id.action_navigation_take_to_navigation_take_add)
+               findNavController().navigate(R.id.action_navigation_take_to_navigation_take_add)
             }
         }
     }

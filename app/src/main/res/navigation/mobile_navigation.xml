@@ -22,13 +22,17 @@
         android:name="com.example.yactong.ui.user.UserFragment"
         android:label="@string/title_user"
         tools:layout="@layout/fragment_user" >
-        <action
+        <!-- 지민이 코드 -->
+        <!--<action
             android:id="@+id/action_navigation_user_to_navigation_take"
             app:destination="@id/navigation_take"
             app:enterAnim="@anim/alpha"
             app:exitAnim="@anim/none"
             app:popEnterAnim="@anim/move_end"
-            app:popExitAnim="@anim/none"/>
+            app:popExitAnim="@anim/none"/>-->
+        <action
+            android:id="@+id/action_navigation_user_to_navigation_take"
+            app:destination="@+id/navigation_take"/>
     </fragment>
 
     <fragment
@@ -36,13 +40,17 @@
         android:name="com.example.yactong.ui.take.fragment.TakeFragment"
         android:label="@string/title_user"
         tools:layout="@layout/fragment_take" >
-        <action
+        <!-- 지민이 코드 -->
+        <!--<action
             android:id="@+id/action_navigation_take_to_navigation_take_add"
             app:destination="@id/navigation_take_add"
             app:enterAnim="@anim/alpha"
             app:exitAnim="@anim/none"
             app:popEnterAnim="@anim/move_end"
-            app:popExitAnim="@anim/none"/>
+            app:popExitAnim="@anim/none"/>-->
+        <action
+            android:id="@+id/action_navigation_take_to_navigation_take_add"
+            app:destination="@+id/navigation_take_add"/>
     </fragment>
 
     <fragment
@@ -50,16 +58,13 @@
         android:name="com.example.yactong.ui.take.fragment.TakeAddFragment"
         android:label="@string/title_user"
         tools:layout="@layout/fragment_take_add" >
+        <!-- 지민이 코드 -->
 <!--        <action-->
 <!--            android:id="@+id/action_navigation_take_add_to_navigation_name"-->
 <!--            app:destination="@id/navigation_name" />-->
 <!--        <action-->
 <!--            android:id="@+id/action_navigation_take_add_to_navigation_take2"-->
 <!--            app:destination="@id/navigation_take" />-->
-        <action
-            android:id="@+id/action_navigation_take_add_to_navigation_name"
-            app:destination="@+id/navigation_name"
-            app:popUpTo="@+id/navigation_take"/>
     </fragment>
 
     <fragment

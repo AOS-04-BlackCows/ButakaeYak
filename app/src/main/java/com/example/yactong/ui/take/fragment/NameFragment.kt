@@ -36,18 +36,16 @@ class NameFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentNameBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-        return root
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.ivDelete.setOnClickListener {
+        binding?.ivDelete?.setOnClickListener {
             binding.etMedicineSearch.text = null
         }
-
-        binding.ivBack.setOnClickListener {
+        binding?.ivBack?.setOnClickListener {
             //NameFragment는 ViewPager2 안에 감싸져 있는 Fragment
             //ViewPager2의 layout은 TakeAddFragment에 있음
             //Fragment layout은 MainActivity 한 곳에만 있음
@@ -60,7 +58,7 @@ class NameFragment : Fragment() {
 //            findNavController().navigate(R.id.)
         }
 
-        binding.etMedicineSearch.addTextChangedListener(object : TextWatcher {
+        binding?.etMedicineSearch?.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
@@ -90,30 +88,31 @@ class NameFragment : Fragment() {
             override fun afterTextChanged(s: Editable?) {}
         })
 
+        //TODO 문제 코드
         //키보드 위에 버튼 올리는 코드
-        binding.root.viewTreeObserver.addOnGlobalLayoutListener(object :
+     /*   binding?.root?.viewTreeObserver?.addOnGlobalLayoutListener(object :
             ViewTreeObserver.OnGlobalLayoutListener {
             private var isKeyboardShown = false
 
             override fun onGlobalLayout() {
-                val r = Rect()
-                binding.root.getWindowVisibleDisplayFrame(r)
-                val heightDiff = binding.root.bottom - r.bottom + 80
-                isKeyboardShown = heightDiff > 100
-                val constraintSet = ConstraintSet()
-                constraintSet.clone(binding.root)
-                constraintSet.setMargin(
-                    R.id.btn_next,
-                    ConstraintSet.BOTTOM,
-                    if (isKeyboardShown) heightDiff else 20
-                )
-                constraintSet.applyTo(binding.root)
-            }
-        })
+                    val r = Rect()
+                    binding?.root?.getWindowVisibleDisplayFrame(r)
+                    val heightDiff = binding.root.bottom - r.bottom + 80
+                    isKeyboardShown = heightDiff > 100
+                    val constraintSet = ConstraintSet()
+                    constraintSet.clone(binding.root)
+                    constraintSet.setMargin(
+                        R.id.btn_next,
+                        ConstraintSet.BOTTOM,
+                        if (isKeyboardShown) heightDiff else 20
+                    )
+                    constraintSet.applyTo(binding.root)
+                }
+        })*/
 
         //editText 클릭 시 키보드 올리는 코드
         val inputMethodManager = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        binding.apply{
+        binding?.apply{
                 inputMethodManager.showSoftInput(etMedicineSearch, 0)
         }
     }

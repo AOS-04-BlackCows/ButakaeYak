@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.example.yactong.R
@@ -61,6 +62,8 @@ class UserFragment : Fragment() {
 //            }
         }
     }
+
+
 
     override fun onDestroyView() {
         super.onDestroyView()
