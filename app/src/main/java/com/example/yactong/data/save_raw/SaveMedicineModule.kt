@@ -3,6 +3,7 @@ package com.example.yactong.data.save_raw
 import android.util.Log
 import com.example.yactong.data.models.Drug
 import com.example.yactong.data.repository.DrugRepository
+import com.example.yactong.data.retrofit.AiResultDto
 import okhttp3.ResponseBody
 import javax.inject.Inject
 
@@ -34,7 +35,7 @@ class SaveMedicineModule @Inject constructor(
         }
     }
 
-    private suspend fun summarize(list: List<Drug>): ResponseBody {
+    private suspend fun summarize(list: List<Drug>): AiResultDto {
         val aiMsg = makeAiMessage(list)
         return aiApiService.getSummarize(AiRequestDto(listOf(aiMsg)))
     }

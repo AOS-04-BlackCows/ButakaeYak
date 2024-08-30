@@ -3,6 +3,7 @@ package com.example.yactong.data.save_raw
 import com.example.yactong.BuildConfig
 import com.example.yactong.data.dto.DrugInfoDto
 import com.example.yactong.data.models.Drug
+import com.example.yactong.data.retrofit.AiResultDto
 import com.example.yactong.data.toMap
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -24,7 +25,7 @@ interface AiApiService {
     @POST("completions")
     suspend fun getSummarize(
         @Body requestDto: AiRequestDto
-    ): ResponseBody
+    ): AiResultDto
 }
 
 data class AiRequestDto(
