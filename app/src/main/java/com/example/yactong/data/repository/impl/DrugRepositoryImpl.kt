@@ -25,6 +25,10 @@ class DrugRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun searchDrugs(name: String, page: Int, itemNum: Int): List<Drug> {
+        return drugDataSource.searchDrugs(name, page, itemNum)
+    }
+
     override fun searchPills(name: String, callback: (List<Pill>) -> Unit) {
         CoroutineScope(ioDispatcher).launch {
             kotlin.runCatching {

@@ -26,6 +26,25 @@ class DrugDataSource @Inject constructor(
         return list
     }
 
+    suspend fun searchDrugs(name: String, page: Int, itemNum: Int): List<Drug> {
+        val list = mutableListOf<Drug>()
+        val result = retrofit.getDrugInfo(
+            name = name,
+            page = page,
+            rows = itemNum
+        )
+
+        if(result.header.resultCode == "00") {
+            result.body.items.forEach {
+                list.add(it.toDrug())
+            }
+        } else {
+            Log.d(tag, "SearchDrugs(code: ${result.header.resultCode}): ${result.header.resultMsg}")
+        }
+
+        return list
+    }
+
     suspend fun searchPills(name: String): List<Pill> {
         val list = mutableListOf<Pill>()
         val result = retrofit.getPillInfo(name)
