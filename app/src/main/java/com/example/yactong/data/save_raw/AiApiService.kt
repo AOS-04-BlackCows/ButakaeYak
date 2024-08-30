@@ -5,17 +5,33 @@ import com.example.yactong.data.dto.DrugInfoDto
 import com.example.yactong.data.models.Drug
 import com.example.yactong.data.toMap
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonDeserializationContext
+import com.google.gson.JsonDeserializer
+import com.google.gson.JsonElement
+import com.google.gson.JsonPrimitive
+import com.google.gson.JsonSerializationContext
+import com.google.gson.JsonSerializer
 import okhttp3.ResponseBody
+import retrofit2.http.Body
 import retrofit2.http.POST
 import retrofit2.http.Query
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.lang.reflect.Type
 
 interface AiApiService {
-    @POST()
+    @POST("completions")
     suspend fun getSummarize(
-        @Query("messages") msg: AiMessage,
-        @Query("model") model: String = "pt-3.5-turbo"
+        @Body requestDto: AiRequestDto
     ): ResponseBody
 }
+
+data class AiRequestDto(
+    val messages: List<AiMessage>,
+    val model: String = "gpt-3.5-turbo"
+)
+
 
 data class AiMessage(
     val role: String,
@@ -49,9 +65,12 @@ fun makeAiMessage(list: List<Drug>): AiMessage {
             "    \"bizrno\": \"1108100102\"\n" +
             "}\n" +
             "\n" +
-            "위 데이터를 참고하여 각 항목을 키워드로 요약해 주세요. 가능한 한 간결하게 작성해 주세요."
+            "위 데이터를 참고하여 각 항목을 키워드로 요약하고 content 필드 내에 json의 medicine의 리스트 형태로 만들어주세요. 가능한 한 간결하게 작성해 주세요."
 
-    val gson = Gson()
+    val gson = GsonBuilder()
+        .registerTypeAdapter(LocalDate::class.java, LocalDateAdapter())
+        .create()
+
     val strBuilder = StringBuilder().append(prefix)
     list.forEach {
         strBuilder
@@ -61,4 +80,17 @@ fun makeAiMessage(list: List<Drug>): AiMessage {
     }
 
     return AiMessage(role, strBuilder.toString())
+}
+
+class LocalDateAdapter : JsonSerializer<LocalDate>, JsonDeserializer<LocalDate> {
+
+    private val formatter = DateTimeFormatter.ISO_LOCAL_DATE
+
+    override fun serialize(src: LocalDate, typeOfSrc: Type, context: JsonSerializationContext): JsonElement {
+        return JsonPrimitive(src.format(formatter))
+    }
+
+    override fun deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): LocalDate {
+        return LocalDate.parse(json.asString, formatter)
+    }
 }

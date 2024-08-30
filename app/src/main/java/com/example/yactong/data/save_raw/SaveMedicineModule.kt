@@ -36,7 +36,7 @@ class SaveMedicineModule @Inject constructor(
 
     private suspend fun summarize(list: List<Drug>): ResponseBody {
         val aiMsg = makeAiMessage(list)
-        return aiApiService.getSummarize(aiMsg)
+        return aiApiService.getSummarize(AiRequestDto(listOf(aiMsg)))
     }
 
     private suspend fun getDrugs(name: String, page: Int, itemNum: Int): List<Drug> {
