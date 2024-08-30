@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 class DrugRepositoryImpl @Inject constructor(
     private val drugDataSource: DrugDataSource,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+    private val ioDispatcher: CoroutineDispatcher
 ): DrugRepository {
     override fun searchDrugs(name: String, callback: (List<Drug>) -> Unit) {
         CoroutineScope(ioDispatcher).launch {
