@@ -18,6 +18,6 @@ data class Choice(
 @Parcelize
 data class Message(
     @SerializedName("role") val role: String,
-    @SerializedName("content") val medicine: String
+    @SerializedName("content") val medicineJson: String
 ): Parcelable
 
