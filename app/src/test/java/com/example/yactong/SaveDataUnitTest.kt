@@ -59,14 +59,7 @@ class SaveDataUnitTest {
     @Test
     fun getSummarize() = runBlocking {
         val instance = AiRetrofitClient.getInstance().create(AiApiService::class.java)
-        val result = suspendCoroutine { continuation ->
-
-
-            drugRepository.searchDrugs("타이레놀") { drugs ->
-                // callback 내용 작성
-                continuation.resume(drugs)
-            }
-        }
+        val result = drugRepository.searchDrugs("", 1, 10)
 
         val list = listOf(makeAiMessage(result))
         val response = instance.getSummarize(AiRequestDto(list))

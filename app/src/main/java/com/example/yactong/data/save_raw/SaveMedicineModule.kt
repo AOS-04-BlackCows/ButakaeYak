@@ -51,12 +51,7 @@ class SaveMedicineModule @Inject constructor(
     }
 
     private suspend fun saveInFireStore(drug: Drug, medicine: Medicine) {
-        val data = medicine.toMap().toMutableMap()
-
-        //TODO: 고쳐라
-        data["name"] = drug.name!!
-        data["classification"] = medicine.name
-
+        val data = medicine.toMap()
         try {
             db.collection("medicines").document(medicine.id)
                 .set(data, SetOptions.merge())
