@@ -7,6 +7,7 @@ import com.example.yactong.data.retrofit.DrugApiService
 import com.example.yactong.data.retrofit.RetrofitClient
 import com.example.yactong.data.save_raw.AiApiService
 import com.example.yactong.data.save_raw.AiRetrofitClient
+import com.example.yactong.data.save_raw.SaveMedicineModule
 import com.example.yactong.data.source.api.DrugDataSource
 import dagger.Module
 import dagger.Provides

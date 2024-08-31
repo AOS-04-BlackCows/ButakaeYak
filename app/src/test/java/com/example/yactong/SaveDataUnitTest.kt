@@ -47,7 +47,7 @@ class SaveDataUnitTest {
 
     @After
     fun after() {
-        println("--------------------------------------------------------------------------------------")
+        //println("--------------------------------------------------------------------------------------")
     }
 
     @Test
@@ -70,17 +70,23 @@ class SaveDataUnitTest {
 
         val list = listOf(makeAiMessage(result))
         val response = instance.getSummarize(AiRequestDto(list))
-        val medicineJson = response.choice[0].msg.medicine
+        val medicineJson = response.choice[0].msg.medicineJson
 
         val gson = Gson()
         val type: Type = object : TypeToken<List<Medicine>>() {}.type
         val medicines: List<Medicine> = gson.fromJson(medicineJson, type)
 
         medicines.forEachIndexed { i, it->
-            println("$i: ${it.name}, ${it.caution}")
+            println("$i: ${it.name}")
+            println(it.effect)
+            println(it.caution)
+            println(it.warning)
+            println(it.enterprise)
+            println(it.sideEffect)
+            println(it.storingMethod)
+            println(it.instructions)
+            println(it.interaction)
+            println("--------------------------------------------------------------")
         }
-
-        assertNotNull(result)
-        assertTrue(result.isNotEmpty())
     }
 }

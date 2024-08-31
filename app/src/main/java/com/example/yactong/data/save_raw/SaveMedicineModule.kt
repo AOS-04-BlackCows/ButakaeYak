@@ -7,12 +7,15 @@ import com.example.yactong.data.retrofit.AiResultDto
 import com.example.yactong.data.retrofit.Medicine
 import com.example.yactong.data.toMap
 import com.google.firebase.Firebase
+import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.firestore
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.tasks.await
 import okhttp3.ResponseBody
 import java.lang.reflect.Type
 import javax.inject.Inject
+import kotlin.concurrent.timer
 
 class SaveMedicineModule @Inject constructor(
     private val drugRepository: DrugRepository,
@@ -24,19 +27,22 @@ class SaveMedicineModule @Inject constructor(
     private val TAG = "SaveMedicineModule"
     private val db = Firebase.firestore
 
+    private val numPerPage = 20
+    private val pages = 4777/numPerPage + if(4777%numPerPage != 0) 1 else 0
+
     suspend fun doSave() {
-        for(i in 1..48) {
+        for(i in 1..pages) {
             var isSuccess = true
             kotlin.runCatching {
-                val list = getDrugs("", i, 100)
+                val list = getDrugs("", i, numPerPage)
                 val medicineList = summarize(list)
-                medicineList.forEach {
-                    saveInFireStore(it)
+                medicineList.forEachIndexed { i, it ->
+                    saveInFireStore(list[i], it)
                 }
             }.onSuccess {
                 isSuccess = true
             }.onFailure {
-                Log.e(TAG, "Failed at $i")
+                Log.e(TAG, "Failed at $i: ${it.message}")
                 isSuccess = false
             }
 
@@ -44,12 +50,22 @@ class SaveMedicineModule @Inject constructor(
         }
     }
 
-    private suspend fun saveInFireStore(medicine: Medicine) {
-        val data = medicine.toMap()
-        db.collection("medicines").document(medicine.id)
-            .set(data)
-            .addOnSuccessListener { Log.d(TAG, "Succeed Storing data: ${medicine.id}, ${medicine.name}") }
-            .addOnFailureListener { Log.i(TAG, "Failed Storing data: ${medicine.id}, ${medicine.name}") }
+    private suspend fun saveInFireStore(drug: Drug, medicine: Medicine) {
+        val data = medicine.toMap().toMutableMap()
+
+        //TODO: 고쳐라
+        data["name"] = drug.name!!
+        data["classification"] = medicine.name
+
+        try {
+            db.collection("medicines").document(medicine.id)
+                .set(data, SetOptions.merge())
+                .await()
+
+            Log.d(TAG, "Succeed Storing data: ${medicine.id}, ${medicine.name}")
+        } catch (e: Exception) {
+            Log.i(TAG, "Failed Storing data: ${medicine.id}, ${medicine.name}: ${e.message}")
+        }
     }
 
     private suspend fun summarize(list: List<Drug>): List<Medicine> {

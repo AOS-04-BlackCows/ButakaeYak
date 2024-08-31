@@ -8,15 +8,23 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.example.yactong.data.save_raw.SaveMedicineModule
 import com.example.yactong.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
 import com.example.yactong.firebase.auth.FirebaseAuthManager
 import com.google.firebase.FirebaseApp
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+
+    @Inject lateinit var saveMedicineModule: SaveMedicineModule
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,7 +38,9 @@ class MainActivity : AppCompatActivity() {
         
         navView.setupWithNavController(navController)
 
-
+        CoroutineScope(Dispatchers.IO).launch {
+            saveMedicineModule.doSave()
+        }
     }
 
 }
