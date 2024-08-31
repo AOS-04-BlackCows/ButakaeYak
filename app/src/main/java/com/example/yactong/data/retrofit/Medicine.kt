@@ -15,6 +15,5 @@ data class Medicine (
     val interaction: String,
     val sideEffect: String,
     val storingMethod: String,
-    val openDate: String,
-    val updateDate: String
+    val imageUrl: String
 ): Parcelable

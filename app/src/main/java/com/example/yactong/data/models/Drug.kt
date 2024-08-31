@@ -1,7 +1,10 @@
 package com.example.yactong.data.models
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 import java.time.LocalDate
 
+@Parcelize
 data class Drug(
     val id: String?,
     val name: String?,
@@ -16,4 +19,4 @@ data class Drug(
     val openDate: LocalDate,
     val updateDate: LocalDate,
     val imageUrl: String?
-)
+): Parcelable

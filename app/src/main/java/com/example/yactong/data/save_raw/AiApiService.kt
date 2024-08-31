@@ -46,42 +46,42 @@ fun makeAiMessage(list: List<Drug>): AiMessage {
             "내가 보낸 json 포맷의 각 필드를 요약하여 아래와 같은 방식으로 알려주면 돼.\n" +
             "[\n" +
             "    {\n" +
-            "        \"entpName\": \"동화약품(주)\",\n" +
-            "        \"itemName\": \"활명수\",\n" +
-            "        \"itemSeq\": \"195700020\",\n" +
-            "        \"efcyQesitm\": \"식욕감퇴(식욕부진), 위부팽만감, 소화불량, 과식, 체함, 구역, 구토\",\n" +
-            "        \"useMethodQesitm\": \"연령별 용량, 1일 3회, 식후, 4시간 간격\",\n" +
-            "        \"atpnWarnQesitm\": \"고령자 주의, 특정 질환자 주의\",\n" +
-            "        \"atpnQesitm\": \"만 3개월 미만 금지, 나트륨 제한, 과민증 환자 주의, 용법 준수\",\n" +
-            "        \"intrcQesitm\": \"다른 약물과 상호작용 주의\",\n" +
-            "        \"seQesitm\": \"드물게 발진, 알레르기 반응\",\n" +
-            "        \"depositMethodQesitm\": \"실온 보관, 습기 및 빛 피하기, 어린이 금지\",\n" +
+            "        \"enterprise\": \"동화약품(주)\",\n" +
+            "        \"name\": \"활명수\",\n" +
+            "        \"id\": \"195700020\",\n" +
+            "        \"effect\": \"식욕감퇴(식욕부진), 위부팽만감, 소화불량, 과식, 체함, 구역, 구토\",\n" +
+            "        \"instructions\": \"연령별 용량, 1일 3회, 식후, 4시간 간격\",\n" +
+            "        \"warning\": \"고령자 주의, 특정 질환자 주의\",\n" +
+            "        \"caution\": \"만 3개월 미만 금지, 나트륨 제한, 과민증 환자 주의, 용법 준수\",\n" +
+            "        \"interaction\": \"다른 약물과 상호작용 주의\",\n" +
+            "        \"sideEffect\": \"드물게 발진, 알레르기 반응\",\n" +
+            "        \"storingMethod\": \"실온 보관, 습기 및 빛 피하기, 어린이 금지\",\n" +
             "        \"itemImage\": \"이미지 없음\"\n" +
             "    },\n" +
             "    {\n" +
-            "        \"entpName\": \"한미약품(주)\",\n" +
-            "        \"itemName\": \"진통제\",\n" +
-            "        \"itemSeq\": \"123456789\",\n" +
-            "        \"efcyQesitm\": \"두통, 근육통, 관절통, 발열\",\n" +
-            "        \"useMethodQesitm\": \"성인은 1회 1정, 1일 3회, 식후 복용\",\n" +
-            "        \"atpnWarnQesitm\": \"간 질환자 주의, 장기 복용 주의\",\n" +
-            "        \"atpnQesitm\": \"임산부, 수유부는 복용 전 의사 상담\",\n" +
-            "        \"intrcQesitm\": \"다른 진통제와 병용 시 주의\",\n" +
-            "        \"seQesitm\": \"위장 장애, 어지러움, 발진\",\n" +
-            "        \"depositMethodQesitm\": \"습기와 빛을 피해 실온 보관\",\n" +
+            "        \"enterprise\": \"한미약품(주)\",\n" +
+            "        \"name\": \"진통제\",\n" +
+            "        \"id\": \"123456789\",\n" +
+            "        \"effect\": \"두통, 근육통, 관절통, 발열\",\n" +
+            "        \"instructions\": \"성인은 1회 1정, 1일 3회, 식후 복용\",\n" +
+            "        \"warning\": \"간 질환자 주의, 장기 복용 주의\",\n" +
+            "        \"caution\": \"임산부, 수유부는 복용 전 의사 상담\",\n" +
+            "        \"interaction\": \"다른 진통제와 병용 시 주의\",\n" +
+            "        \"sideEffect\": \"위장 장애, 어지러움, 발진\",\n" +
+            "        \"storingMethod\": \"습기와 빛을 피해 실온 보관\",\n" +
             "        \"itemImage\": \"이미지 없음\"\n" +
             "    },\n" +
             "    {\n" +
-            "        \"entpName\": \"삼성제약(주)\",\n" +
-            "        \"itemName\": \"해열제\",\n" +
-            "        \"itemSeq\": \"987654321\",\n" +
-            "        \"efcyQesitm\": \"발열, 두통, 근육통 완화\",\n" +
-            "        \"useMethodQesitm\": \"성인은 1회 1정, 1일 4회, 식후 복용\",\n" +
-            "        \"atpnWarnQesitm\": \"간 질환자, 신장 질환자 주의\",\n" +
-            "        \"atpnQesitm\": \"알레르기 반응 시 즉시 중단\",\n" +
-            "        \"intrcQesitm\": \"다른 해열제와 병용 시 주의\",\n" +
-            "        \"seQesitm\": \"위장 불편, 발진\",\n" +
-            "        \"depositMethodQesitm\": \"서늘한 곳에 보관\",\n" +
+            "        \"enterprise\": \"삼성제약(주)\",\n" +
+            "        \"name\": \"해열제\",\n" +
+            "        \"id\": \"987654321\",\n" +
+            "        \"effect\": \"발열, 두통, 근육통 완화\",\n" +
+            "        \"instructions\": \"성인은 1회 1정, 1일 4회, 식후 복용\",\n" +
+            "        \"warning\": \"간 질환자, 신장 질환자 주의\",\n" +
+            "        \"caution\": \"알레르기 반응 시 복용 금지\",\n" +
+            "        \"interaction\": \"다른 해열제와 병용 시 주의\",\n" +
+            "        \"sideEffect\": \"위장 불편, 발진\",\n" +
+            "        \"storingMethod\": \"서늘한 곳에 보관\",\n" +
             "        \"itemImage\": \"이미지 없음\"\n" +
             "    }\n" +
             "]" +
@@ -99,9 +99,9 @@ fun makeAiMessage(list: List<Drug>): AiMessage {
     val strBuilder = StringBuilder().append(prefix)
     list.forEach {
         strBuilder
-            .append("\n")
+            .append("")
             .append(gson.toJson(it))
-            .append("\n")
+            .append("")
     }
 
     return AiMessage(role, strBuilder.toString())

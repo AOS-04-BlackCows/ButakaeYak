@@ -1,6 +1,7 @@
 package com.example.yactong.data.retrofit
 
 import android.os.Parcelable
+import com.example.yactong.data.models.Drug
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
@@ -17,6 +18,6 @@ data class Choice(
 @Parcelize
 data class Message(
     @SerializedName("role") val role: String,
-    @SerializedName("content") val medicine: List<Medicine>
+    @SerializedName("content") val medicine: String
 ): Parcelable
 
