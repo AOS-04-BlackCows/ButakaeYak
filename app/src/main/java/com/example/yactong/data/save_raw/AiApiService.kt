@@ -31,7 +31,7 @@ interface AiApiService {
 data class AiRequestDto(
     val messages: List<AiMessage>,
     val temperature: Float = 0.0f,
-    val model: String = "gpt-3.5-turbo"
+    val model: String = "gpt-3.5-turbo"     //gpt-4o-mini   //gpt-3.5-turbo
 )
 
 
@@ -42,8 +42,9 @@ data class AiMessage(
 
 fun makeAiMessage(list: List<Drug>): AiMessage {
     val role = "user"
-    val prefix = "너는 ai가 아닌 Json 요약 프로그램이야. \n"+
-            "내가 보낸 json 포맷의 각 필드를 요약하여 아래와 같은 방식으로 알려주면 돼.\n" +
+    val prefix = "너는 JSON 요약 프로그램입니다. 아래의 JSON 배열을 간결하고 요약된 형식으로 변환해 주세요. \n" +
+            "\n" +
+            "### 대답 예시:\n" +
             "[\n" +
             "    {\n" +
             "        \"enterprise\": \"동화약품(주)\",\n" +
@@ -58,39 +59,16 @@ fun makeAiMessage(list: List<Drug>): AiMessage {
             "        \"storingMethod\": \"실온 보관, 습기 및 빛 피하기, 어린이 금지\",\n" +
             "        \"itemImage\": \"이미지 없음\"\n" +
             "    },\n" +
-            "    {\n" +
-            "        \"enterprise\": \"한미약품(주)\",\n" +
-            "        \"name\": \"진통제\",\n" +
-            "        \"id\": \"123456789\",\n" +
-            "        \"effect\": \"두통, 근육통, 관절통, 발열\",\n" +
-            "        \"instructions\": \"성인은 1회 1정, 1일 3회, 식후 복용\",\n" +
-            "        \"warning\": \"간 질환자 주의, 장기 복용 주의\",\n" +
-            "        \"caution\": \"임산부, 수유부는 복용 전 의사 상담\",\n" +
-            "        \"interaction\": \"다른 진통제와 병용 시 주의\",\n" +
-            "        \"sideEffect\": \"위장 장애, 어지러움, 발진\",\n" +
-            "        \"storingMethod\": \"습기와 빛을 피해 실온 보관\",\n" +
-            "        \"itemImage\": \"이미지 없음\"\n" +
-            "    },\n" +
-            "    {\n" +
-            "        \"enterprise\": \"삼성제약(주)\",\n" +
-            "        \"name\": \"해열제\",\n" +
-            "        \"id\": \"987654321\",\n" +
-            "        \"effect\": \"발열, 두통, 근육통 완화\",\n" +
-            "        \"instructions\": \"성인은 1회 1정, 1일 4회, 식후 복용\",\n" +
-            "        \"warning\": \"간 질환자, 신장 질환자 주의\",\n" +
-            "        \"caution\": \"알레르기 반응 시 복용 금지\",\n" +
-            "        \"interaction\": \"다른 해열제와 병용 시 주의\",\n" +
-            "        \"sideEffect\": \"위장 불편, 발진\",\n" +
-            "        \"storingMethod\": \"서늘한 곳에 보관\",\n" +
-            "        \"itemImage\": \"이미지 없음\"\n" +
-            "    }\n" +
-            "]" +
-            "\n" +
-            "\n" +
-            "위 예시를 참고하여 아래 조건을 만족시켜줘.\n" +
-            "조건1. 인삿말 및 다른 수식언을 절대 대답에 포함시키지 않기\n" +
-            "조건2. itemName 필드는 요약하지 않고 필드이름만 name으로 변경\n" +
-            "조건3. 그 밖의 필드는 이름을 위 예시와 같이 변경하여 꼭 포함시키기"
+            "    { ... },\n" +
+            "    { ... }\n" +
+            "]\n" +
+            "지시 사항:\n" +
+            "인삿말 및 수식어 제외: 대답에 인삿말이나 수식어를 포함하지 마세요.\n" +
+            "필드 이름 변경: itemName 필드는 name으로 변경하세요. 나머지 필드는 예시와 같은 이름으로 변경해야 합니다.\n" +
+            "핵심 정보 요약: 원래의 의미를 유지하면서, 핵심 정보를 짧고 명확하게 요약하세요. 각 항목은 한 줄로 작성합니다.\n" +
+            "형식 유지: 결과는 JSON 배열 형식을 유지하고, 필드 이름을 정확히 변경하세요.\n" +
+            "정확한 JSON 포맷: JSON 문자열의 구문이 정확해야 합니다. 모든 문자열은 따옴표로 둘러싸여 있어야 하고, 모든 객체와 배열은 올바르게 닫혀야 합니다.\n" +
+            "아래 JSON 배열을 요약해 주세요"
 
 
 

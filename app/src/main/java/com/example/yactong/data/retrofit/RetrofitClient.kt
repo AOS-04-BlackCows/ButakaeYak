@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -38,7 +39,9 @@ object RetrofitClient {
     private fun getOkhttpClient(apiBaseUrl: ApiBaseUrl): OkHttpClient {
         return when(apiBaseUrl) {
             ApiBaseUrl.DrugInfoUrl -> {
-                OkHttpClient().newBuilder().build()
+                OkHttpClient().newBuilder()
+                    .addInterceptor(HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY })
+                    .build()
             }
         }
     }

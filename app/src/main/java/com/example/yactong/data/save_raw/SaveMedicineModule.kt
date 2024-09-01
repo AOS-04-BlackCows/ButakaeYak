@@ -1,5 +1,7 @@
 package com.example.yactong.data.save_raw
 
+import android.content.SharedPreferences
+import android.content.SharedPreferences.Editor
 import android.util.Log
 import com.example.yactong.data.models.Drug
 import com.example.yactong.data.repository.DrugRepository
@@ -11,9 +13,11 @@ import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.firestore
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.tasks.await
 import okhttp3.ResponseBody
 import java.lang.reflect.Type
+import java.util.prefs.Preferences
 import javax.inject.Inject
 import kotlin.concurrent.timer
 
@@ -27,27 +31,44 @@ class SaveMedicineModule @Inject constructor(
     private val TAG = "SaveMedicineModule"
     private val db = Firebase.firestore
 
-    private val numPerPage = 20
+    private val numPerPage = 5
     private val pages = 4777/numPerPage + if(4777%numPerPage != 0) 1 else 0
 
-    suspend fun doSave() {
-        for(i in 1..pages) {
+    suspend fun doSave(preferences: SharedPreferences, editor: Editor) {
+        var index = 1
+        val failedIndex = mutableListOf<Int>()
+
+        val saveDto = SaveDto.get(preferences) ?:
+                    SaveDto(numPerPage, (1..pages).toList())
+
+        while (index <= saveDto.notYetSaved.size) {
             var isSuccess = true
-            kotlin.runCatching {
-                val list = getDrugs("", i, numPerPage)
+            try {
+                Log.d(TAG, "$index/${saveDto.notYetSaved.size})---------------------------------------------------------")
+                val list = getDrugs("", index, numPerPage)
                 val medicineList = summarize(list)
                 medicineList.forEachIndexed { i, it ->
                     saveInFireStore(list[i], it)
                 }
-            }.onSuccess {
                 isSuccess = true
-            }.onFailure {
-                Log.e(TAG, "Failed at $i: ${it.message}")
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed at $index: ${e.message}")
+                e.printStackTrace()
                 isSuccess = false
             }
 
-            if(!isSuccess) break
+            delay(30000L)
+
+            if(!isSuccess) failedIndex.add(index)
+            index++
         }
+
+        SaveDto.save(
+            preferences,
+            SaveDto(numPerPage, failedIndex)
+        )
+
+        Log.d("SaveMedicineModule_Result", failedIndex.joinToString())
     }
 
     private suspend fun saveInFireStore(drug: Drug, medicine: Medicine) {
@@ -65,7 +86,7 @@ class SaveMedicineModule @Inject constructor(
 
     private suspend fun summarize(list: List<Drug>): List<Medicine> {
         val aiMsg = makeAiMessage(list)
-        val medicineJson = aiApiService.getSummarize(AiRequestDto(listOf(aiMsg))).choice[0].msg.medicineJson
+        val medicineJson = aiApiService.getSummarize(AiRequestDto(listOf(aiMsg))).choice[0].msg.medicineJson.apply { replace("```json", "") }
 
         val gson = Gson()
         val type: Type = object : TypeToken<List<Medicine>>() {}.type
