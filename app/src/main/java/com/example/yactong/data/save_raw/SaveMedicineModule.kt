@@ -35,18 +35,27 @@ class SaveMedicineModule @Inject constructor(
     private val pages = 4777/numPerPage + if(4777%numPerPage != 0) 1 else 0
 
     suspend fun doSave(preferences: SharedPreferences, editor: Editor) {
-        var index = 1
         val failedIndex = mutableListOf<Int>()
-
         val saveDto = SaveDto.get(preferences) ?:
                     SaveDto(numPerPage, (1..pages).toList())
 
-        while (index <= saveDto.notYetSaved.size) {
+        var index = 1
+        while (index <= saveDto.notYetSaved.lastIndex) {
             var isSuccess = true
+            val num = saveDto.notYetSaved[index]
             try {
                 Log.d(TAG, "$index/${saveDto.notYetSaved.size})---------------------------------------------------------")
-                val list = getDrugs("", index, numPerPage)
+                val list = getDrugs("", num, numPerPage)
+
+                if (checkIsSaved(list[0])) {
+                    Log.d(TAG, "$index) already Saved...")
+                    index++
+                    continue
+                }
+
                 val medicineList = summarize(list)
+
+
                 medicineList.forEachIndexed { i, it ->
                     saveInFireStore(list[i], it)
                 }
@@ -59,7 +68,7 @@ class SaveMedicineModule @Inject constructor(
 
             delay(30000L)
 
-            if(!isSuccess) failedIndex.add(index)
+            if(!isSuccess) failedIndex.add(num)
             index++
         }
 
@@ -68,13 +77,31 @@ class SaveMedicineModule @Inject constructor(
             SaveDto(numPerPage, failedIndex)
         )
 
-        Log.d("SaveMedicineModule_Result", failedIndex.joinToString())
+        Log.d("SaveMedicineModule_Result", "left:${failedIndex.size}: ${failedIndex.joinToString()}")
+    }
+
+    private suspend fun checkIsSaved(drug: Drug): Boolean {
+        try {
+
+            val isSaved = db.collection("medicines")
+                .whereEqualTo("id", drug.id!!)
+                .get()
+                .await().toObjects(Medicine::class.java)
+
+            Log.d(TAG, "has Medicine(id: ${drug.id}?) ${isSaved.isNotEmpty()}")
+
+            return isSaved.isNotEmpty()
+        } catch (e: Exception) {
+            Log.d(TAG, "CheckIsSaved Failed: ${e.message}")
+            e.printStackTrace()
+            return false
+        }
     }
 
     private suspend fun saveInFireStore(drug: Drug, medicine: Medicine) {
         val data = medicine.toMap()
         try {
-            db.collection("medicines").document(medicine.id)
+            db.collection("medicines").document(medicine.id!!)
                 .set(data, SetOptions.merge())
                 .await()
 
