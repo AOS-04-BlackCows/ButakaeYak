@@ -1,7 +1,7 @@
-package com.example.yactong
+package com.blackcows.butakaeyak
 
-import com.example.yactong.data.models.Drug
-import com.example.yactong.data.repository.DrugRepository
+import com.blackcows.butakaeyak.data.models.Drug
+import com.blackcows.butakaeyak.data.repository.DrugRepository
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.HiltTestApplication

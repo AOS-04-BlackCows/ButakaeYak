@@ -1,12 +1,12 @@
-package com.example.yactong
+package com.blackcows.butakaeyak
 
-import com.example.yactong.data.repository.DrugRepository
-import com.example.yactong.data.retrofit.AiResultDto
-import com.example.yactong.data.retrofit.Medicine
-import com.example.yactong.data.save_raw.AiApiService
-import com.example.yactong.data.save_raw.AiRequestDto
-import com.example.yactong.data.save_raw.AiRetrofitClient
-import com.example.yactong.data.save_raw.makeAiMessage
+import com.blackcows.butakaeyak.data.repository.DrugRepository
+import com.blackcows.butakaeyak.data.retrofit.AiResultDto
+import com.blackcows.butakaeyak.data.retrofit.Medicine
+import com.blackcows.butakaeyak.data.save_raw.AiApiService
+import com.blackcows.butakaeyak.data.save_raw.AiRequestDto
+import com.blackcows.butakaeyak.data.save_raw.AiRetrofitClient
+import com.blackcows.butakaeyak.data.save_raw.makeAiMessage
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken

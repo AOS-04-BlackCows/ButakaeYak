@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/list"
-    android:name="com.example.yactong.ui.home.ResultsFragment"
+    android:name="com.blackcows.butakaeyak.ui.home.ResultsFragment"
     android:layout_width="match_parent"
     android:layout_height="0dp"
     android:layout_marginLeft="16dp"

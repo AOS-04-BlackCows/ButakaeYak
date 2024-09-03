@@ -16,7 +16,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.yactong"
+    namespace = "com.blackcows.butakaeyak"
     compileSdk = 34
 
     val properties = Properties()
@@ -26,13 +26,13 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.yactong"
+        applicationId = "com.blackcows.butakaeyak"
         minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "com.example.yactong.HiltTestRunner"
+        testInstrumentationRunner = "com.blackcows.butakaeyak.HiltTestRunner"
 
         buildConfigField("String",
             "DRUG_INFO_KEY",
