@@ -66,7 +66,7 @@ class SaveMedicineModule @Inject constructor(
                 isSuccess = false
             }
 
-            delay(30000L)
+            delay(10000L)
 
             if(!isSuccess) failedIndex.add(num)
             index++
