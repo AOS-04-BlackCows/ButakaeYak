@@ -17,25 +17,24 @@ import androidx.fragment.app.activityViewModels
 import com.blackcows.butakaeyak.BuildConfig
 import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.data.models.KakaoPlace
+import com.blackcows.butakaeyak.databinding.BottomsheetMapDetailBinding
 import com.blackcows.butakaeyak.databinding.FragmentMapBinding
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.api.AnnotationsProto.http
 import com.kakao.sdk.common.KakaoSdk
-import com.kakao.sdk.common.util.Utility
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.camera.CameraAnimation
 import com.kakao.vectormap.camera.CameraUpdateFactory
-import com.kakao.vectormap.label.Label
-import com.kakao.vectormap.label.LabelLayer
 import com.kakao.vectormap.label.LabelOptions
 import com.kakao.vectormap.label.LabelStyle
 import com.kakao.vectormap.label.LabelStyles
-import kotlinx.coroutines.delay
+import java.util.zip.Inflater
 
 private const val TAG = "k3f_MapFragment"
 class MapFragment : Fragment() {
@@ -49,6 +48,8 @@ class MapFragment : Fragment() {
     private val REQUEST_PERMISSION_LOCATION = 10
     lateinit var mLastLocation: Location // 위치 값을 가지고 있는 객체
     private lateinit var mLocationRequest: LocationRequest // 위치 정보
+    private lateinit var bottomSheetView: BottomsheetMapDetailBinding
+    private lateinit var bottomSheetDialog: BottomSheetDialog
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -63,14 +64,17 @@ class MapFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         KakaoSdk.init(requireContext(), BuildConfig.NATIVE_APP_KEY)
-
         // 키해쉬 발급 ( 디버그 )
         // val keyHash = Utility.getKeyHash(requireContext())
         // Log.d(TAG, keyHash)
-
+        bottomSheetView = BottomsheetMapDetailBinding.inflate(layoutInflater)
+        bottomSheetDialog = BottomSheetDialog(requireContext())
+        bottomSheetDialog.setContentView(bottomSheetView.root)
+        binding.testBtn1.setOnClickListener {
+            bottomSheetDialog.show()
+        }
         // 위치를 찍는다.
         locationInit()
-
         mapViewModel.apiPharmacyInfoList()
     }
     private fun locationInit() {
@@ -145,32 +149,45 @@ class MapFragment : Fragment() {
                 kakaoMap.labelManager!!.getLayer()
                 kakaoMap.labelManager!!.getLodLayer()
                 for (item in items) {
-                    // 스타일 지정. LabelStyle.from()안에 원하는 이미지 넣기
+                    val itemResult = with(item){
+                        "$placeName||$distance||$placeUrl||$categoryName||$addressName||$roadAddressName||$id||$phone||$categoryGroupCode||$categoryGroupName||$x||$y"
+                    }
                     val style = kakaoMap.labelManager?.addLabelStyles(LabelStyles.from(LabelStyle.from(R.drawable.marker_pill)))
                     // 라벨 옵션 지정. 위경도와 스타일 넣기
-                    val options = LabelOptions.from(LatLng.from(item.y.toDouble(), item.x.toDouble())).setStyles(style).setTag(item).setClickable(true)
+                    val options = LabelOptions.from(LatLng.from(item.y.toDouble(), item.x.toDouble())).setStyles(style).setTag(itemResult).setClickable(true)
                     // 레이어 가져오기
                     val layer = kakaoMap.labelManager?.layer
                     // 레이어에 라벨 추가
                     layer?.addLabel(options)
                     kakaoMap.setOnLabelClickListener { kakaoMap, labelLayer, label ->
                         Log.d(TAG, label?.tag.toString())
+                        val selectTagArr = label?.tag.toString().split("||")
+                        bottomSheetView.distance.text = "${selectTagArr[1]}m"
+                        bottomSheetView.placeName.text = selectTagArr[0]
+                        bottomSheetView.phone.text = selectTagArr[7]
+                        bottomSheetView.placeUrl.text = selectTagArr[2]
+                        bottomSheetView.addressName.text = selectTagArr[4]
+                        bottomSheetView.roadAddressName.text = selectTagArr[5]
+                        bottomSheetDialog.show()
                         true
                     }
-//                    KakaoPlace(
-//                    placeName=한우리약국,
-//                    distance=291,
-//                    placeUrl="http://place.map.kakao.com/9578427",
-//                    categoryName="의료,건강 > 약국",
-//                    addressName="경기 성남시 분당구 야탑동 215",
-//                    roadAddressName="경기 성남시 분당구 장미로 139",
-//                    id=9578427,
-//                    phone="031-708-3399",
-//                    categoryGroupCode="PM9",
-//                    categoryGroupName="약국",
-//                    x=127.13616482305073,
-//                    y=37.413583634331886
-//                    )
+                    "KakaoPlace(placeName=한우리약국, distance=290, placeUrl=http://place.map.kakao.com/9578427, categoryName=의료,건강 > 약국, addressName=경기 성남시 분당구 야탑동 215, roadAddressName=경기 성남시 분당구 장미로 139, id=9578427, phone=031-708-3399, categoryGroupCode=PM9, categoryGroupName=약국, x=127.13616482305073, y=37.413583634331886)"
+                    "한우리약국" +
+                            "290" +
+                            "http://place.map.kakao.com/9578427"
+//                    selectTagArr =
+//                    [0] placeName=한우리약국,
+//                    [1] distance=291,
+//                    [2] placeUrl="http://place.map.kakao.com/9578427",
+//                    [3] categoryName="의료,건강 > 약국",
+//                    [4] addressName="경기 성남시 분당구 야탑동 215",
+//                    [5] roadAddressName="경기 성남시 분당구 장미로 139",
+//                    [6] id=9578427,
+//                    [7] phone="031-708-3399",
+//                    [8] categoryGroupCode="PM9",
+//                    [9] categoryGroupName="약국",
+//                    [10] x=127.13616482305073,
+//                    [11] y=37.413583634331886
 
                 }
             }

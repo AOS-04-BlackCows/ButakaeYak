@@ -1,56 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="headline_b">
-        <item name="fontFamily">@font/scdream</item>
+        <item name="fontFamily">@font/pretendard</item>
         <item name="android:textColor">@color/black</item>
-        <item name="android:textSize">36sp</item>
+        <item name="android:textSize">28sp</item>
         <item name="android:textFontWeight">700</item>
     </style>
 
     <style name="subtitle_b">
-        <item name="fontFamily">@font/scdream</item>
+        <item name="fontFamily">@font/pretendard</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:textSize">24sp</item>
         <item name="android:textFontWeight">700</item>
     </style>
 
     <style name="body_b">
-        <item name="fontFamily">@font/scdream</item>
+        <item name="fontFamily">@font/pretendard</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:textSize">16sp</item>
         <item name="android:textFontWeight">700</item>
     </style>
 
     <style name="caption_b">
-        <item name="fontFamily">@font/scdream</item>
+        <item name="fontFamily">@font/pretendard</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:textSize">12sp</item>
         <item name="android:textFontWeight">700</item>
     </style>
 
     <style name="headline">
-        <item name="fontFamily">@font/scdream</item>
+        <item name="fontFamily">@font/pretendard</item>
         <item name="android:textColor">@color/black</item>
-        <item name="android:textSize">36sp</item>
+        <item name="android:textSize">28sp</item>
         <item name="android:textFontWeight">400</item>
     </style>
 
     <style name="subtitle">
-        <item name="fontFamily">@font/scdream</item>
+        <item name="fontFamily">@font/pretendard</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:textSize">24sp</item>
         <item name="android:textFontWeight">400</item>
     </style>
 
     <style name="body">
-        <item name="fontFamily">@font/scdream</item>
+        <item name="fontFamily">@font/pretendard</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:textSize">16sp</item>
         <item name="android:textFontWeight">400</item>
     </style>
 
     <style name="caption">
-        <item name="fontFamily">@font/scdream</item>
+        <item name="fontFamily">@font/pretendard</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:textSize">12sp</item>
         <item name="android:textFontWeight">400</item>
