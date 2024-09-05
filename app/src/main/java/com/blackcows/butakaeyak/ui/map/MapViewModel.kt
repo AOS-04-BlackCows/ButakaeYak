@@ -5,15 +5,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.blackcows.butakaeyak.data.models.KakaoPlacePharmacy
-import com.blackcows.butakaeyak.data.repository.KakaoMapRepository
-import com.blackcows.butakaeyak.data.retrofit.ApiBaseUrl
+import com.blackcows.butakaeyak.data.models.KakaoPlace
+import com.blackcows.butakaeyak.domain.repo.KakaoMapRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 private const val TAG = "k3f_MapViewModel"
 
@@ -21,8 +17,8 @@ private const val TAG = "k3f_MapViewModel"
 class MapViewModel @Inject constructor(
     private val kakaoRepository: KakaoMapRepository
 ) : ViewModel() {
-    private val _items = MutableLiveData<List<KakaoPlacePharmacy>>()
-    val items: LiveData<List<KakaoPlacePharmacy>>
+    private val _items = MutableLiveData<List<KakaoPlace>>()
+    val items: LiveData<List<KakaoPlace>>
         get() = _items
 
     fun communicateNetWork(x: Double, y: Double) {
