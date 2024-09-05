@@ -11,17 +11,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import com.blackcows.butakaeyak.data.models.Medicine
-import com.blackcows.butakaeyak.databinding.FragmentPillResultBinding
+import com.blackcows.butakaeyak.databinding.FragmentMedicineResultBinding
 import com.blackcows.butakaeyak.ui.home.adapter.HomeRecyclerAdapter
 import com.blackcows.butakaeyak.ui.home.data.DataSource
 import com.blackcows.butakaeyak.ui.take.TakeViewModel
 
-class PillResultFragment : Fragment() {
+class MedicineResultFragment : Fragment() {
     //binding 설정
-    private var _binding: FragmentPillResultBinding? = null
+    private var _binding: FragmentMedicineResultBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var pillAdapter : HomeRecyclerAdapter
+    private lateinit var medicineAdapter : HomeRecyclerAdapter
 
     //viewModel 설정
     private val homeViewModel: HomeViewModel by activityViewModels()
@@ -43,7 +43,7 @@ class PillResultFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentPillResultBinding.inflate(inflater, container, false)
+        _binding = FragmentMedicineResultBinding.inflate(inflater, container, false)
         val root = binding.root
 
         // Set the adapter
@@ -61,47 +61,37 @@ class PillResultFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         //더미 데이터
-        val dataSource = DataSource.getDataSoures().getPillList()
+//        val dataSource = DataSource.getDataSoures().getMedicineList()
         binding.apply {
-            pillAdapter = HomeRecyclerAdapter(object : HomeRecyclerAdapter.ClickListener{
+            medicineAdapter = HomeRecyclerAdapter(object : HomeRecyclerAdapter.ClickListener{
                 override fun onItemClick(item: Medicine) {
                     //("디테일 화면 띄움")
                     Log.d("아이템 누름","${item.id}, ${item.name} ")
                 }
-
-                override fun onFavoriteClick(item: Medicine, needAdd: Boolean) {
-                    //("즐겨찾기 약 추가/삭제")
-                    Log.d("아이템 좋아요 누름","${item.id}, ${item.name}, ${needAdd}")
-
-                    DataSource.saveData(requireContext(),"FavoriteData", setOf(
-                        item.id.toString(), item.name.toString(),item.enterprise.toString(),
-                        item.effect.toString(), item.instructions.toString(),item.warning.toString(),
-                        item.caution.toString(), item.interaction.toString(),
-                        item.sideEffect.toString(), item.storingMethod.toString(),item.imageUrl.toString(),
-                    ),needAdd)
-
-                }
-
                 override fun onMyPillClick(item: Medicine, needAdd: Boolean) {
                     //("복용중인 약 추가/삭제")
+                    val json = "{\"id:\":\""+item.id.toString()+"\","+
+                                "\"name:\":\""+item.name.toString()+"\","+
+                                "\"enterprise:\":\""+item.enterprise.toString()+"\","+
+                                "\"effect:\":\""+item.effect.toString()+"\","+
+                                "\"instructions:\":\""+item.instructions.toString()+"\","+
+                                "\"warning:\":\""+item.warning.toString()+"\","+
+                                "\"caution:\":\""+item.caution.toString()+"\","+
+                                "\"interaction:\":\""+item.interaction.toString()+"\","+
+                                "\"sideEffect:\":\""+item.sideEffect.toString()+"\","+
+                                "\"storingMethod:\":\""+item.storingMethod.toString()+"\","+
+                                "\"imageUrl:\":\""+item.imageUrl.toString()+"\","+
+                                "\"needAdd:\":\""+needAdd+"\"}"
                     Log.d("아이템 복용약 누름","${item.id}, ${item.name}, ${needAdd}")
-                    DataSource.saveData(requireContext(),"MyPillData", setOf(
-                        item.id.toString(), item.name.toString(),item.enterprise.toString(),
-                        item.effect.toString(), item.instructions.toString(),item.warning.toString(),
-                        item.caution.toString(), item.interaction.toString(),
-                        item.sideEffect.toString(), item.storingMethod.toString(),item.imageUrl.toString(),
-                    ),needAdd)
+                    DataSource.saveData(requireContext(),"MyPillData",item.id.toString(),json)
                 }
-
             })
-            resultlist.adapter = pillAdapter
+            resultlist.adapter = medicineAdapter
             resultlist.itemAnimator = null
-            pillAdapter.submitList(dataSource)
-
-            //TODO viewModel로 name을 넘김
-            pillAdapter.setItemClickListener { pilltext->
-                viewModel.updateItem(pilltext)
+            homeViewModel.medicineResult.observe(viewLifecycleOwner){
+                medicineAdapter.submitList(it.toList())
             }
+//            pillAdapter.submitList(dataSource)
         }
     }
 
@@ -111,7 +101,7 @@ class PillResultFragment : Fragment() {
 
         @JvmStatic
         fun newInstance(columnCount: Int) =
-            PillResultFragment().apply {
+            MedicineResultFragment().apply {
                 arguments = Bundle().apply {
                     putInt(ARG_COLUMN_COUNT, columnCount)
                 }

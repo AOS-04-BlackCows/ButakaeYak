@@ -63,7 +63,7 @@ class HomeFragment : Fragment() {
 
         binding.searchBtnSearch.setOnClickListener {
             val query = binding.searchEtSearchtext.text.toString()
-            homeViewModel.searchPills(query)
+            homeViewModel.searchMedicinesWithName(query)
         }
     }
 

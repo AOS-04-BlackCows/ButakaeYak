@@ -91,22 +91,17 @@ class HomeRecyclerAdapter(private val clickListener: ClickListener) :
         private val ivPill: ImageView = pillView.ivPill
         private val tvPillname: TextView = pillView.tvPillname
         private val tvPilltype: TextView = pillView.tvPilltype
-        private val btnFavoritepill: ToggleButton = pillView.btnFavoritepill
         private val btnMyPill: ToggleButton = pillView.btnMypill
         private val loPillinfo: ConstraintLayout = pillView.loPillinfo
 
         fun bind(pillitem: Medicine) {
             with(pillitem) {
-                Glide.with(itemView).load(imageUrl).into(ivPill)
+                Glide.with(itemView).load(imageUrl?:R.drawable.medicine).into(ivPill)
                 tvPillname.text = name
                 tvPilltype.text = effect
                 loPillinfo.setOnClickListener {
                     clickListener.onItemClick(pillitem)
                     Log.d("아이템 좋아요 누름", getItem(1).toString())
-                }
-                btnFavoritepill.setOnCheckedChangeListener { buttonView, isChecked ->
-                    clickListener.onFavoriteClick(pillitem,isChecked)
-                    Log.d("아이템 좋아요 누름","${name}")
                 }
                 btnMyPill.setOnCheckedChangeListener { buttonView, isChecked ->
                     clickListener.onMyPillClick(pillitem,isChecked)
@@ -136,7 +131,6 @@ class HomeRecyclerAdapter(private val clickListener: ClickListener) :
     }
     interface ClickListener{
         fun onItemClick(item: Medicine)
-        fun onFavoriteClick(item: Medicine,needAdd :Boolean)
         fun onMyPillClick(item: Medicine,needAdd :Boolean)
     }
 }

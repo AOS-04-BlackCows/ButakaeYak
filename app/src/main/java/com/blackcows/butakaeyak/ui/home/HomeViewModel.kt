@@ -4,13 +4,16 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.blackcows.butakaeyak.data.models.Pill
+import androidx.lifecycle.viewModelScope
+import com.blackcows.butakaeyak.data.models.Medicine
 import com.blackcows.butakaeyak.domain.GetMedicinesNameUseCase
 import com.blackcows.butakaeyak.domain.home.GetPillUseCase
+import com.blackcows.butakaeyak.ui.home.data.DataSource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-
+private const val TAG = "SearchResult"
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getPillUseCase: GetPillUseCase,
@@ -22,28 +25,13 @@ class HomeViewModel @Inject constructor(
     }
     val text: LiveData<String> = _text          //LiveData는 뭐 때문에 넣은거야??
 
-    private val _pillResult = MutableLiveData(mutableListOf<Pill>())
-    private val pillResult get() = _pillResult
+    private val _medicineResult = MutableLiveData(listOf<Medicine>())
+    val medicineResult get() = _medicineResult
 
-    fun searchPills(name: String) {
-        getPillUseCase.invoke(name) { list ->
-            Log.d("HomeViewModel", "SearchPills: Find ${list.size}'s result.")
-            if(list.isNotEmpty()) {
-                // 검색 결과 있음.
-                pillResult.value = list.toMutableList()
-            } else {
-                // 검색 결과 없음.
-            }
+    fun searchMedicinesWithName(name: String) {
+        viewModelScope.launch {
+
+            _medicineResult.value = getMedicinesNameUseCase.invoke(name)
         }
-    }
-
-    fun getUserName(id: String) {
-//        getUserNameUseCase.invoke(id) { userName ->
-//            if(userName.isNotEmpty()) {
-//
-//            } else {
-//
-//            }
-//        }
     }
 }
