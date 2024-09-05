@@ -69,7 +69,7 @@ class DataSourceUnitTest {
 
     @Test
     fun getMedicineCallback() = runBlocking {
-        val result = medicineDataSource.searchMedicinesByName("마더스")
+        val result = medicineDataSource.searchMedicinesByNames("마더스 타이레놀")
 
         assertNotNull(result)
         //assertTrue(result.isNotEmpty())

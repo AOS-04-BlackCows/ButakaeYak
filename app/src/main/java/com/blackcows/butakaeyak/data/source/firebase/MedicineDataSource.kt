@@ -24,26 +24,43 @@ class MedicineDataSource @Inject constructor(
 
     suspend fun searchMedicinesByName(name: String): List<Medicine> {
         val result = mutableListOf<Medicine>()
-
-//        val settingsJson = JSONObject()
-//        settingsJson.put("attributesForFaceting", JSONArray(listOf("name")))
-//
-//        //TODO: 이게 맞나? 확인해야함.
-//        medicineIndex.setSettings(settingsJson)
-
-
         val facet = "name"
-        val nameFilter = "$facet:$name"
 
         val query = Query(name).apply {
             advancedSyntax = true
             setRestrictSearchableAttributes("name")
         }
 
-        println("Query: $query")
-        println("Filters: $nameFilter")
+        val jsonArray = medicineIndex.searchSync(query)
+
+        jsonArray?.getJSONArray("hits")?.let { medicines ->
+            println("hits size: ${medicines.length()}")
+            Log.d(TAG, "hits size: ${medicines.length()}")
+            val gson = Gson()
+
+            val seq = (0 until medicines.length()).asSequence().map { medicines.getJSONObject(it) }
+            for(json in seq) {
+                val data = gson.fromJson(json.toString(), Medicine::class.java)
+                result.add(getImageUrl(data))
+            }
+        }
+
+        return result
+    }
+
+    suspend fun searchMedicinesByNames(names: String): List<Medicine> {
+        val result = mutableListOf<Medicine>()
+        val facet = "name"
+
+        val queryStr = names.replace(" ", " OR ")
+
+        val query = Query(queryStr).apply {
+            advancedSyntax = true
+            setRestrictSearchableAttributes("name")
+        }
 
         val jsonArray = medicineIndex.searchSync(query)
+        println(jsonArray.toString())
 
         jsonArray?.getJSONArray("hits")?.let { medicines ->
             println("hits size: ${medicines.length()}")

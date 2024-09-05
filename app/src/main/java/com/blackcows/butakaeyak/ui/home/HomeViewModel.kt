@@ -37,16 +37,6 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun searchMedicinesWithName(name: String) {
-        getMedicinesNameUseCase.invoke(name) {
-            if(it.isNotEmpty()) {
-                //결과가 있을때
-            } else {
-                //결과가 없을때
-            }
-        }
-    }
-
     fun getUserName(id: String) {
 //        getUserNameUseCase.invoke(id) { userName ->
 //            if(userName.isNotEmpty()) {
