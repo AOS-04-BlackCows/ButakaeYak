@@ -7,6 +7,8 @@ import com.blackcows.butakaeyak.data.models.Medicine
 import com.blackcows.butakaeyak.data.retrofit.DrugApiService
 import com.google.gson.Gson
 import javax.inject.Inject
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 
 class MedicineDataSource @Inject constructor(
@@ -28,7 +30,7 @@ class MedicineDataSource @Inject constructor(
 
         val query = Query(name).apply {
             advancedSyntax = true
-            setRestrictSearchableAttributes("name")
+            setRestrictSearchableAttributes(facet)
         }
 
         val jsonArray = medicineIndex.searchSync(query)
@@ -52,14 +54,21 @@ class MedicineDataSource @Inject constructor(
         val result = mutableListOf<Medicine>()
         val facet = "name"
 
-        val queryStr = names.replace(" ", " OR ")
-
-        val query = Query(queryStr).apply {
-            advancedSyntax = true
-            setRestrictSearchableAttributes("name")
+        val queryList = names.split(" ").map {
+            Query(it).apply {
+                advancedSyntax = true
+                setRestrictSearchableAttributes(facet)
+            }
         }
 
-        val jsonArray = medicineIndex.searchSync(query)
+        val jsonArray = suspendCoroutine { continuation ->
+            medicineIndex.multipleQueriesAsync(
+                queryList,
+                Client.MultipleQueriesStrategy.NONE) { jsonObj, e ->
+                continuation.resume(jsonObj)
+            }
+        }
+
         println(jsonArray.toString())
 
         jsonArray?.getJSONArray("hits")?.let { medicines ->
