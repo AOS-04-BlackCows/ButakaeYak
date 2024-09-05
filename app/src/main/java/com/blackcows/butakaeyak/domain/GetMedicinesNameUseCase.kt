@@ -7,7 +7,7 @@ import javax.inject.Inject
 class GetMedicinesNameUseCase @Inject constructor(
     private val medicineRepository: MedicineRepository
 ){
-    operator fun invoke(name: String, callback: (List<Medicine>) -> Unit) {
-        medicineRepository.searchMedicinesByName(name, callback)
-    }
+    suspend operator fun invoke(name: String): List<Medicine>
+        = medicineRepository.searchMedicinesByName(name)
+
 }
