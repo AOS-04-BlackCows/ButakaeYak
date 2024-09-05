@@ -1,6 +1,6 @@
 package com.blackcows.butakaeyak.data.models
 
-data class KakaoPlacePharmacy(
+data class KakaoPlace(
     val placeName: String,
     val distance: String,
     val placeUrl: String,
