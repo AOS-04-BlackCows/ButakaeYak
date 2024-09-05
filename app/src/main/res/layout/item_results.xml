@@ -8,14 +8,14 @@
     android:paddingVertical="8dp"
     android:orientation="horizontal">
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/lo_pillinfo"
+        android:id="@+id/lo_medicine_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="start|center_vertical"
         android:layout_weight="10">
 
         <ImageView
-            android:id="@+id/iv_pill"
+            android:id="@+id/iv_medicine"
             android:layout_width="110dp"
             android:layout_height="76dp"
             android:padding="8dp"
@@ -25,7 +25,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tv_pillname"
+            android:id="@+id/tv_medicine_name"
             android:layout_width="0dp"
             android:layout_height="36dp"
             android:paddingEnd="24dp"
@@ -36,25 +36,27 @@
             android:maxLines="1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/iv_pill"
-            app:layout_constraintTop_toTopOf="@+id/iv_pill" />
+            app:layout_constraintStart_toEndOf="@+id/iv_medicine"
+            app:layout_constraintTop_toTopOf="@+id/iv_medicine" />
 
         <TextView
-            android:id="@+id/tv_pilltype"
+            android:id="@+id/tv_medicine_type"
+            style="@style/caption"
             android:layout_width="0dp"
             android:layout_height="30dp"
-            android:paddingEnd="32dp"
             android:ellipsize="end"
-            android:singleLine="true"
+            android:layout_marginTop="4dp"
             android:hint="제품타입"
-            style="@style/caption"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_pill"
+            android:paddingEnd="32dp"
+            android:singleLine="true"
+
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/iv_pill" />
+            app:layout_constraintStart_toEndOf="@+id/iv_medicine"
+            app:layout_constraintTop_toBottomOf="@+id/tv_medicine_name" />
 
         <ToggleButton
-            android:id="@+id/btn_mypill"
+            android:id="@+id/btn_my_medicine"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_marginTop="4dp"
@@ -64,7 +66,7 @@
             android:textOn=""
             android:textOff=""
             android:scaleType="fitCenter"
-            android:background="@drawable/selector_mypill"
+            android:background="@drawable/selector_mymedicine"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>

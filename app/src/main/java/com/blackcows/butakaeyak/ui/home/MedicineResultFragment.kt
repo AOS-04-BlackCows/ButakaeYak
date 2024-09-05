@@ -14,8 +14,7 @@ import com.blackcows.butakaeyak.data.models.Medicine
 import com.blackcows.butakaeyak.databinding.FragmentMedicineResultBinding
 import com.blackcows.butakaeyak.ui.home.adapter.HomeRecyclerAdapter
 import com.blackcows.butakaeyak.ui.home.data.DataSource
-import com.blackcows.butakaeyak.ui.take.TakeViewModel
-
+private const val TAG = "약 결과"
 class MedicineResultFragment : Fragment() {
     //binding 설정
     private var _binding: FragmentMedicineResultBinding? = null
@@ -25,9 +24,6 @@ class MedicineResultFragment : Fragment() {
 
     //viewModel 설정
     private val homeViewModel: HomeViewModel by activityViewModels()
-
-    //TODO NameFragment로 데이터 넘겨줄 viewModel
-    private val viewModel: TakeViewModel by activityViewModels()
 
     private var columnCount = 1 //컬럼 갯수 = 1 리니어
 
@@ -66,25 +62,33 @@ class MedicineResultFragment : Fragment() {
             medicineAdapter = HomeRecyclerAdapter(object : HomeRecyclerAdapter.ClickListener{
                 override fun onItemClick(item: Medicine) {
                     //("디테일 화면 띄움")
-                    Log.d("아이템 누름","${item.id}, ${item.name} ")
+                    Log.d(TAG,"${item.id}, ${item.name} ")
                 }
-                override fun onMyPillClick(item: Medicine, needAdd: Boolean) {
-                    //("복용중인 약 추가/삭제")
-                    val json = "{\"id:\":\""+item.id.toString()+"\","+
-                                "\"name:\":\""+item.name.toString()+"\","+
-                                "\"enterprise:\":\""+item.enterprise.toString()+"\","+
-                                "\"effect:\":\""+item.effect.toString()+"\","+
-                                "\"instructions:\":\""+item.instructions.toString()+"\","+
-                                "\"warning:\":\""+item.warning.toString()+"\","+
-                                "\"caution:\":\""+item.caution.toString()+"\","+
-                                "\"interaction:\":\""+item.interaction.toString()+"\","+
-                                "\"sideEffect:\":\""+item.sideEffect.toString()+"\","+
-                                "\"storingMethod:\":\""+item.storingMethod.toString()+"\","+
-                                "\"imageUrl:\":\""+item.imageUrl.toString()+"\","+
-                                "\"needAdd:\":\""+needAdd+"\"}"
-                    Log.d("아이템 복용약 누름","${item.id}, ${item.name}, ${needAdd}")
-                    DataSource.saveData(requireContext(),"MyPillData",item.id.toString(),json)
+                override fun isMedicineChecked(item: Medicine) : Boolean{
+                    Log.d(TAG,item.id.toString() + ": "+DataSource.isItemChecked(requireContext(),"MyPillData",item.id.toString()))
+                    return DataSource.isItemChecked(requireContext(),"MyPillData",item.id.toString())
                 }
+                override fun setMedicineChecked(item: Medicine, isChecked: Boolean) {
+                    Log.d(TAG,item.id.toString() + ": "+isChecked)
+                    DataSource.satItemChecked(requireContext(),"MyPillData",item.id.toString(),isChecked)
+                }
+//                override fun onMyPillClick(item: Medicine, needAdd: Boolean) {
+//                    //("복용중인 약 추가/삭제")
+//                    val json = "{\"id:\":\""+item.id.toString()+"\","+
+//                                "\"name:\":\""+item.name.toString()+"\","+
+//                                "\"enterprise:\":\""+item.enterprise.toString()+"\","+
+//                                "\"effect:\":\""+item.effect.toString()+"\","+
+//                                "\"instructions:\":\""+item.instructions.toString()+"\","+
+//                                "\"warning:\":\""+item.warning.toString()+"\","+
+//                                "\"caution:\":\""+item.caution.toString()+"\","+
+//                                "\"interaction:\":\""+item.interaction.toString()+"\","+
+//                                "\"sideEffect:\":\""+item.sideEffect.toString()+"\","+
+//                                "\"storingMethod:\":\""+item.storingMethod.toString()+"\","+
+//                                "\"imageUrl:\":\""+item.imageUrl.toString()+"\","+
+//                                "\"needAdd:\":\""+needAdd+"\"}"
+//                    Log.d("아이템 복용약 누름","${item.id}, ${item.name}, ${needAdd}")
+//                    DataSource.saveData(requireContext(),"MyPillData",item.id.toString(),json)
+//                }
             })
             resultlist.adapter = medicineAdapter
             resultlist.itemAnimator = null

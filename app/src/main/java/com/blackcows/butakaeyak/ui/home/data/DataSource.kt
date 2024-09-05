@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity.MODE_PRIVATE
 import com.blackcows.butakaeyak.data.models.Medicine
 import com.google.gson.Gson
 
-private const val TAG = "Data"
+private const val TAG = "약 데이터"
 class DataSource {
     companion object {
         private var INSTANCE: DataSource? = null
@@ -21,21 +21,24 @@ class DataSource {
         }
 
         //SharedPreferences
-        fun saveData(
-            context: android.content.Context,
-            fileName: String,
-            key: String,
-            data: String
-        ) {
+        fun saveData(context: android.content.Context,fileName: String,key: String,data: String) {
             context.getSharedPreferences(fileName, MODE_PRIVATE)
                 .edit()
                 .putString(key, data)
                 .apply() // 저장완료
-            Log.d(TAG,context.getSharedPreferences(fileName, MODE_PRIVATE).all.toString())
+        }
+        fun satItemChecked(context: android.content.Context,fileName: String,key: String,isChecked: Boolean) {
+            context.getSharedPreferences(fileName, MODE_PRIVATE).edit().putBoolean(key, isChecked).apply() // 저장완료
+            Log.d(TAG, key +" str "+ context.getSharedPreferences(fileName, MODE_PRIVATE).getBoolean(key,false).toString())
         }
 
-        fun loadData(context: android.content.Context, fileName: String) : Medicine {
-            val pref = context.getSharedPreferences(fileName, MODE_PRIVATE).toString()
+        fun isItemChecked(context: android.content.Context, fileName: String,key: String) : Boolean {
+            Log.d(TAG, key +" - "+ context.getSharedPreferences(fileName, MODE_PRIVATE).getBoolean(key,false))
+            return context.getSharedPreferences(fileName, MODE_PRIVATE).getBoolean(key,false)
+        }
+        fun loadAllData(context: android.content.Context, fileName: String) : Medicine {
+            val pref = context.getSharedPreferences(fileName, MODE_PRIVATE).all.toString()
+            Log.d(TAG,context.getSharedPreferences(fileName, MODE_PRIVATE).all.toString())
             return parseJson(pref)
         }
         fun parseJson(jsonString: String): Medicine {

@@ -30,7 +30,6 @@ class HomeViewModel @Inject constructor(
 
     fun searchMedicinesWithName(name: String) {
         viewModelScope.launch {
-
             _medicineResult.value = getMedicinesNameUseCase.invoke(name)
         }
     }

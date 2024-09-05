@@ -4,32 +4,26 @@ import android.util.Log
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.ToggleButton
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
+import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.data.models.Medicine
 import com.blackcows.butakaeyak.databinding.FragmentFeedListBinding
 import com.blackcows.butakaeyak.databinding.ItemResultsBinding
+import com.blackcows.butakaeyak.ui.home.data.DataSource
 import com.blackcows.butakaeyak.ui.home.data.ListItem
-import com.blackcows.butakaeyak.ui.navigation.FragmentTag
-import com.blackcows.butakaeyak.ui.navigation.MainNavigation
-import com.blackcows.butakaeyak.ui.take.fragment.TakeAddFragment
 import com.bumptech.glide.Glide
-
-// 이전 코드 -                        values: MutableList<PlaceholderItem>
-// 안되는 코드 class HomeRecyclerAdapter(private val onClick: (ListItem) -> Unit)
+import kotlin.coroutines.coroutineContext
+private const val TAG = "홈 어뎁터"
 class HomeRecyclerAdapter(private val clickListener: ClickListener) :
     ListAdapter<Medicine, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
-
-        //TODO itemClick 처리 이벤트
-    private var itemClickListener: ((String) -> Unit)? = null
-
-    fun setItemClickListener(listener: (String) -> Unit) {
-        itemClickListener = listener
-    }
 
     companion object {
         private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Medicine>() {
@@ -50,13 +44,13 @@ class HomeRecyclerAdapter(private val clickListener: ClickListener) :
             }
         }
 
-        private const val TYPE_PIll = 0
+        private const val TYPE_MEDICINE = 0
         private const val TYPE_FEED = 1
     }
 
     override fun getItemViewType(position: Int): Int {
         return when (getItem(position)) {
-            is Medicine -> TYPE_PIll
+            is Medicine -> TYPE_MEDICINE
 //            is ListItem.FeedItem -> TYPE_FEED
             else -> throw IllegalArgumentException("Invalid view type")
         }
@@ -65,10 +59,10 @@ class HomeRecyclerAdapter(private val clickListener: ClickListener) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
-            TYPE_PIll -> {
-                val pillbinding =
+            TYPE_MEDICINE -> {
+                val medicineBinding =
                     ItemResultsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-                PillResultHolder(pillbinding)
+                MedicineResultHolder(medicineBinding)
             }
 //            TYPE_FEED -> {}
             else -> throw IllegalArgumentException("Invalid view type")
@@ -78,7 +72,7 @@ class HomeRecyclerAdapter(private val clickListener: ClickListener) :
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         runCatching {
             when (val item = getItem(position)) {
-                is Medicine -> (holder as PillResultHolder).bind(item)
+                is Medicine -> (holder as MedicineResultHolder).bind(item)
 //                is ListItem.FeedItem -> (holder as FeedHolder).bind(item)
             }
         }.onFailure { exception ->
@@ -86,32 +80,28 @@ class HomeRecyclerAdapter(private val clickListener: ClickListener) :
         }
     }
 
-    inner class PillResultHolder(pillView: ItemResultsBinding) :
-        RecyclerView.ViewHolder(pillView.root) {
-        private val ivPill: ImageView = pillView.ivPill
-        private val tvPillname: TextView = pillView.tvPillname
-        private val tvPilltype: TextView = pillView.tvPilltype
-        private val btnMyPill: ToggleButton = pillView.btnMypill
-        private val loPillinfo: ConstraintLayout = pillView.loPillinfo
+    inner class MedicineResultHolder(medicineView: ItemResultsBinding) :
+        RecyclerView.ViewHolder(medicineView.root) {
+        private val ivMedicine: ImageView = medicineView.ivMedicine
+        private val tvMedicineName: TextView = medicineView.tvMedicineName
+        private val tvMedicineType: TextView = medicineView.tvMedicineType
+        private val btnMyMedicine: ToggleButton = medicineView.btnMyMedicine
+        private val loMedicineInfo: ConstraintLayout = medicineView.loMedicineInfo
 
-        fun bind(pillitem: Medicine) {
-            with(pillitem) {
-                Glide.with(itemView).load(imageUrl?:R.drawable.medicine).into(ivPill)
-                tvPillname.text = name
-                tvPilltype.text = effect
-                loPillinfo.setOnClickListener {
-                    clickListener.onItemClick(pillitem)
-                    Log.d("아이템 좋아요 누름", getItem(1).toString())
+        fun bind(medicineItem: Medicine) {
+            btnMyMedicine.isChecked = clickListener.isMedicineChecked(medicineItem)
+            with(medicineItem) {
+                Glide.with(itemView).load(imageUrl?:R.drawable.medicine).into(ivMedicine)
+                tvMedicineName.text = name
+                tvMedicineType.text = effect
+                loMedicineInfo.setOnClickListener {
+                    clickListener.onItemClick(medicineItem)
+                    Log.d(TAG, "${name}")
                 }
-                btnMyPill.setOnCheckedChangeListener { buttonView, isChecked ->
-                    clickListener.onMyPillClick(pillitem,isChecked)
-                    Log.d("아이템 복용약 누름","${name}")
-
-                    //TODO btnMyPill 클릭 시 약 이름과 TakeAdd로 화면 이동
-                    itemClickListener?.invoke(tvPillname.text.toString())
-                    MainNavigation.addFragment(
-                        TakeAddFragment.newInstance(pillitem), FragmentTag.TakeAddFragment
-                    )
+                btnMyMedicine.setOnClickListener {
+                    //clickListener.onMyMedicineClick(medicineItem,isChecked)
+                    clickListener.setMedicineChecked(medicineItem, btnMyMedicine.isChecked)
+                    Log.d(TAG,"${name}")
                 }
             }
         }
@@ -123,14 +113,16 @@ class HomeRecyclerAdapter(private val clickListener: ClickListener) :
 //        val feedname: TextView = binding.feedTvName
 //        val feedwriter: TextView = binding.feedTvWriter
 
-        fun bind(pillitem: ListItem.FeedItem) {
-            when (pillitem) {
+        fun bind(medicineitem: ListItem.FeedItem) {
+            when (medicineitem) {
             }
 
         }
     }
     interface ClickListener{
         fun onItemClick(item: Medicine)
-        fun onMyPillClick(item: Medicine,needAdd :Boolean)
+        fun isMedicineChecked(item: Medicine) : Boolean
+        fun setMedicineChecked(item: Medicine, isChecked:Boolean)
+//        fun onMyMedicineClick(item: Medicine,needAdd :Boolean)
     }
 }

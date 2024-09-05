@@ -1,10 +1,15 @@
 package com.blackcows.butakaeyak.ui.home
 
+import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.viewpager2.widget.ViewPager2
@@ -12,7 +17,7 @@ import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.data.models.SearchCategory
 import com.blackcows.butakaeyak.data.models.SearchCategoryDataSource
 import com.blackcows.butakaeyak.databinding.BottomsheetSearchfilterBinding
-import com.blackcows.butakaeyak.databinding.FragmentHomeBinding
+import com.blackcows.butakaeyak.databinding.FragmentSearchBinding
 import com.blackcows.butakaeyak.databinding.ItemSearchfilterBinding
 import com.blackcows.butakaeyak.ui.home.adapter.HomeViewPager
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -22,7 +27,8 @@ import com.google.android.material.tabs.TabLayoutMediator
 
 class HomeFragment : Fragment() {
 
-    private var _binding: FragmentHomeBinding? = null
+
+    private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var viewPager: ViewPager2
@@ -39,7 +45,7 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        _binding = FragmentSearchBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         val viewpager = binding.searchVp
@@ -63,7 +69,15 @@ class HomeFragment : Fragment() {
 
         binding.searchBtnSearch.setOnClickListener {
             val query = binding.searchEtSearchtext.text.toString()
+            binding.searchLoProgressContainer.visibility = View.VISIBLE
             homeViewModel.searchMedicinesWithName(query)
+            /*todo : 검색 완료시 프로그래스바 사라지게
+               검색 클릭시 에니메이션
+               검색 클릭시 키보드 내려가게
+               검색전 횡한화면 채우기*/
+            Handler(Looper.getMainLooper()).postDelayed({
+                binding.searchLoProgressContainer.visibility = View.GONE
+            },5000)
         }
     }
 
