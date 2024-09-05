@@ -25,6 +25,7 @@ import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.kakao.sdk.common.KakaoSdk
+import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.camera.CameraAnimation
 import com.kakao.vectormap.camera.CameraUpdateFactory
@@ -46,6 +47,7 @@ class MapFragment : Fragment() {
     private lateinit var mLocationRequest: LocationRequest // 위치 정보
     private lateinit var bottomSheetView: BottomsheetMapDetailBinding
     private lateinit var bottomSheetDialog: BottomSheetDialog
+    private lateinit var kakaoMapCall: KakaoMap
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -71,21 +73,10 @@ class MapFragment : Fragment() {
         }
         // 위치를 찍는다.
         locationInit()
-        mapViewModel.apiPharmacyInfoList()
     }
     private fun locationInit() {
         mLocationRequest = LocationRequest.create().apply {
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-        }
-
-
-        // 버튼 이벤트를 통해 현재 위치 찾기
-        binding.testBtn1.setOnClickListener {
-            Log.d(TAG, "test_btn_1_clicked")
-        }
-        binding.testBtn2.setOnClickListener {
-            Log.d(TAG, "test_btn_2_clicked")
-
         }
         // 최초 X, Y 경도 위도 구현
         if (checkPermissionForLocation(this)) {
@@ -123,15 +114,23 @@ class MapFragment : Fragment() {
         myPlaceX = mLastLocation.longitude // 갱신 된 경도 127.11547410533494
         myPlaceY = mLastLocation.latitude // 갱신 된 위도 37.40754692649233
         Log.d(TAG, "위도 myPlaceX : $myPlaceX |&| 경도 myPlaceY : $myPlaceY")
+        // 현재 위치를 중심으로한 약국 좌표를 저장한다.
+        mapViewModel.communicateNetWork(myPlaceX, myPlaceY)
         kakaoMapInit()
     }
 
+    // 내 위치로 이동
+    private fun kakaoMapMoveCamera(kakaoMap: KakaoMap) {
+        var cameraUpdate = CameraUpdateFactory.newCenterPosition(LatLng.from(myPlaceY, myPlaceX))
+        kakaoMap.moveCamera(cameraUpdate, CameraAnimation.from(500, true, true))
+    }
     // 카카오맵
     private fun kakaoMapInit() {
         // 카카오맵 실행
         KakaoMapUtil(requireContext()).kakaoMapInit(binding.mapView, myPlaceX, myPlaceY, mapViewModel) { kakaoMap ->
+            kakaoMapCall = kakaoMap
             // 버튼 이벤트 설정
-            binding.btnLocation.setOnClickListener {
+                binding.btnLocation.setOnClickListener {
                 if (checkPermissionForLocation(this)) {
                     // 버튼 이벤트를 통해 현재 위치 찾기
                     startLocationUpdates()
@@ -172,24 +171,21 @@ class MapFragment : Fragment() {
                             "290" +
                             "http://place.map.kakao.com/9578427"
 //                    selectTagArr =
-//                    [0] placeName=한우리약국,
-//                    [1] distance=291,
-//                    [2] placeUrl="http://place.map.kakao.com/9578427",
-//                    [3] categoryName="의료,건강 > 약국",
-//                    [4] addressName="경기 성남시 분당구 야탑동 215",
-//                    [5] roadAddressName="경기 성남시 분당구 장미로 139",
-//                    [6] id=9578427,
-//                    [7] phone="031-708-3399",
-//                    [8] categoryGroupCode="PM9",
-//                    [9] categoryGroupName="약국",
-//                    [10] x=127.13616482305073,
-//                    [11] y=37.413583634331886
+//                    [0] placeName = 예시 : 한우리약국,
+//                    [1] distance = 예시 : 291,
+//                    [2] placeUrl = 예시 : "http://place.map.kakao.com/9578427",
+//                    [3] categoryName = 예시 : "의료,건강 > 약국",
+//                    [4] addressName = 예시 : "경기 성남시 분당구 야탑동 215",
+//                    [5] roadAddressName = 예시 : "경기 성남시 분당구 장미로 139",
+//                    [6] id = 예시 : 9578427,
+//                    [7] phone = 예시 : "031-708-3399",
+//                    [8] categoryGroupCode = 예시 : "PM9",
+//                    [9] categoryGroupName = 예시 : "약국",
+//                    [10] x = 예시 : 127.13616482305073,
+//                    [11] y = 예시 : 37.413583634331886
 
                 }
             }
-            // 현재 위치를 중심으로한 약국 좌표를 저장한다.
-            mapViewModel.communicateNetWork(myPlaceX, myPlaceY)
-//            kakaoMap.setOnLabelClickListener()
         }
     }
 
