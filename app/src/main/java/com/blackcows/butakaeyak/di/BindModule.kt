@@ -23,7 +23,7 @@ abstract class BindModule {
     @Binds
     //@ViewModelScoped
     abstract fun provideLocalRepository(impl: LocalRepositoryImpl): LocalRepository
-}
+
     @Binds
     //@ViewModelScoped
     abstract fun provideKakaoRepository(impl: KakaoMapRepositoryImpl): KakaoMapRepository
