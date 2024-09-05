@@ -1,4 +1,4 @@
-package com.blackcows.butakaeyak.data.repository
+package com.blackcows.butakaeyak.domain.repo
 
 import com.blackcows.butakaeyak.data.models.Drug
 import com.blackcows.butakaeyak.data.models.Pill

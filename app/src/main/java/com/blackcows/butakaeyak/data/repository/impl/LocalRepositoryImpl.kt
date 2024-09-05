@@ -1,6 +1,6 @@
 package com.blackcows.butakaeyak.data.repository.impl
 
-import com.blackcows.butakaeyak.data.repository.LocalRepository
+import com.blackcows.butakaeyak.domain.repo.LocalRepository
 import com.blackcows.butakaeyak.data.source.LocalDataSource
 import com.blackcows.butakaeyak.ui.take.data.MyMedicine
 import javax.inject.Inject

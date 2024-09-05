@@ -1,9 +1,9 @@
 package com.blackcows.butakaeyak.di
 
-import com.blackcows.butakaeyak.data.repository.DrugRepository
-import com.blackcows.butakaeyak.data.repository.LocalRepository
-import com.blackcows.butakaeyak.data.repository.MedicineRepository
+import com.blackcows.butakaeyak.domain.repo.DrugRepository
 import com.blackcows.butakaeyak.domain.repo.KakaoMapRepository
+import com.blackcows.butakaeyak.domain.repo.LocalRepository
+import com.blackcows.butakaeyak.domain.repo.MedicineRepository
 import com.blackcows.butakaeyak.data.repository.impl.DrugRepositoryImpl
 import com.blackcows.butakaeyak.data.repository.impl.LocalRepositoryImpl
 import com.blackcows.butakaeyak.data.repository.impl.KakaoMapRepositoryImpl

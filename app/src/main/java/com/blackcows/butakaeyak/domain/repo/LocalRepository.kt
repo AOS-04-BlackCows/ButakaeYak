@@ -1,8 +1,6 @@
-package com.blackcows.butakaeyak.data.repository
+package com.blackcows.butakaeyak.domain.repo
 
-import com.blackcows.butakaeyak.data.source.LocalDataSource
 import com.blackcows.butakaeyak.ui.take.data.MyMedicine
-import javax.inject.Inject
 
 interface LocalRepository {
     fun getMyMedicines(): List<MyMedicine>

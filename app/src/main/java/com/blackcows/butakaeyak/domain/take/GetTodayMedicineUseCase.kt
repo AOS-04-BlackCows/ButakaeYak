@@ -1,7 +1,7 @@
 package com.blackcows.butakaeyak.domain.take
 
 import com.blackcows.butakaeyak.data.models.Medicine
-import com.blackcows.butakaeyak.data.repository.LocalRepository
+import com.blackcows.butakaeyak.domain.repo.LocalRepository
 import com.blackcows.butakaeyak.ui.take.data.MedicineAtTime
 import io.ktor.util.date.WeekDay
 import javax.inject.Inject

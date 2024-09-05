@@ -1,7 +1,7 @@
 package com.blackcows.butakaeyak.domain
 
 import com.blackcows.butakaeyak.data.models.Medicine
-import com.blackcows.butakaeyak.data.repository.MedicineRepository
+import com.blackcows.butakaeyak.domain.repo.MedicineRepository
 import javax.inject.Inject
 
 class GetMedicinesNameUseCase @Inject constructor(

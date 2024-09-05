@@ -1,8 +1,7 @@
 package com.blackcows.butakaeyak.domain.home
 
-import com.blackcows.butakaeyak.data.models.Drug
 import com.blackcows.butakaeyak.data.models.Pill
-import com.blackcows.butakaeyak.data.repository.DrugRepository
+import com.blackcows.butakaeyak.domain.repo.DrugRepository
 import javax.inject.Inject
 
 class GetPillUseCase @Inject constructor(

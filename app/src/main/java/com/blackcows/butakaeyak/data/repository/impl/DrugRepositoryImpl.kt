@@ -2,13 +2,12 @@ package com.blackcows.butakaeyak.data.repository.impl
 
 import com.blackcows.butakaeyak.data.models.Drug
 import com.blackcows.butakaeyak.data.models.Pill
-import com.blackcows.butakaeyak.data.repository.DrugRepository
+import com.blackcows.butakaeyak.domain.repo.DrugRepository
 import com.blackcows.butakaeyak.data.source.api.DrugDataSource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 class DrugRepositoryImpl @Inject constructor(

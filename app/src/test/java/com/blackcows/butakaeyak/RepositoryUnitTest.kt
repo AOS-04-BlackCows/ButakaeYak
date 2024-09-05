@@ -1,11 +1,9 @@
 package com.blackcows.butakaeyak
 
-import com.blackcows.butakaeyak.data.models.Drug
-import com.blackcows.butakaeyak.data.repository.DrugRepository
+import com.blackcows.butakaeyak.domain.repo.DrugRepository
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.HiltTestApplication
-import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNotNull
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.runBlocking
