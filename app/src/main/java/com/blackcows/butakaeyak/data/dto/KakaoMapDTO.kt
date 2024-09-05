@@ -2,7 +2,7 @@ package com.blackcows.butakaeyak.data.dto
 
 
 import android.os.Parcelable
-import com.blackcows.butakaeyak.data.models.KakaoPlace
+import com.blackcows.butakaeyak.data.models.KakaoPlacePharmacy
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
@@ -64,7 +64,7 @@ data class KakaoDocuments (
     @SerializedName("y")
     val y: String?
 ) : Parcelable {
-    fun toKakaoPlace() = KakaoPlace(
+    fun toKakaoPlace() = KakaoPlacePharmacy(
         placeName = placeName?: "",
         distance = distance?: "",
         placeUrl = placeUrl?: "",

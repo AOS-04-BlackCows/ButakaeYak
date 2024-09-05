@@ -1,10 +1,8 @@
 package com.blackcows.butakaeyak.data.repository
 
-import com.blackcows.butakaeyak.data.models.Drug
-import com.blackcows.butakaeyak.data.models.KakaoPlace
-import com.blackcows.butakaeyak.data.models.Pill
+import com.blackcows.butakaeyak.data.models.KakaoPlacePharmacy
 
 interface KakaoMapRepository {
-    suspend fun searchCategory(x: String,y: String): List<KakaoPlace>
-    fun searchPlace(x: String,y: String, callback: (List<KakaoPlace>) -> (Unit))
+    suspend fun searchCategory(x: String,y: String): List<KakaoPlacePharmacy>
+    fun searchPlace(x: String,y: String, callback: (List<KakaoPlacePharmacy>) -> (Unit))
 }

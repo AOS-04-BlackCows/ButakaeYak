@@ -5,12 +5,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.blackcows.butakaeyak.data.models.KakaoPlace
+import com.blackcows.butakaeyak.data.models.KakaoPlacePharmacy
 import com.blackcows.butakaeyak.data.repository.KakaoMapRepository
-import com.blackcows.butakaeyak.data.repository.PharmacyInfoRepository
 import com.blackcows.butakaeyak.data.retrofit.ApiBaseUrl
-import com.blackcows.butakaeyak.data.retrofit.PharmacyInfoApiService
-import com.blackcows.butakaeyak.data.retrofit.RetrofitClientXml
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -24,8 +21,8 @@ class MapViewModel @Inject constructor(
 ) : ViewModel() {
     private var pharmacyInfoRepository: PharmacyInfoRepository? = null
 
-    private val _items = MutableLiveData<List<KakaoPlace>>()
-    val items: LiveData<List<KakaoPlace>>
+    private val _items = MutableLiveData<List<KakaoPlacePharmacy>>()
+    val items: LiveData<List<KakaoPlacePharmacy>>
         get() = _items
 
 //    fun apiPharmacyInfoList() = runBlocking {
