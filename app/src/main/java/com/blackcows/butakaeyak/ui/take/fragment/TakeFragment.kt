@@ -124,6 +124,7 @@ class TakeFragment : Fragment() {
                 }
 
                 is TakeUiState.GetMyMedicinesSuccess -> {
+                    Log.d(TAG, "MyMedicine: ${it.medicines.size}")
                     myMedicinesAdapter.submitList(it.medicines)
                 }
 
