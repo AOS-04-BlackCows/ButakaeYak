@@ -109,8 +109,9 @@ class HomeRecyclerAdapter(private val clickListener: ClickListener) :
                     clickListener.setMedicineChecked(medicineItem, btnMyMedicine.isChecked)
                     Log.d(TAG,"${name}")
 
-                    //TODO btnMyPill 클릭 시 약 이름과 TakeAdd로 화면 이동
+                    //TODO btnMyMedicine 클릭 시 약 이름과 TakeAdd로 화면 이동
                     itemClickListener?.invoke(tvMedicineName.text.toString())
+
                     MainNavigation.addFragment(
                         TakeAddFragment.newInstance(medicineItem), FragmentTag.TakeAddFragment
                     )

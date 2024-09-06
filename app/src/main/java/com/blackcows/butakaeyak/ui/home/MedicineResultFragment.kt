@@ -14,6 +14,8 @@ import com.blackcows.butakaeyak.data.models.Medicine
 import com.blackcows.butakaeyak.databinding.FragmentMedicineResultBinding
 import com.blackcows.butakaeyak.ui.home.adapter.HomeRecyclerAdapter
 import com.blackcows.butakaeyak.ui.home.data.DataSource
+import com.blackcows.butakaeyak.ui.take.TakeViewModel
+
 private const val TAG = "약 결과"
 class MedicineResultFragment : Fragment() {
     //binding 설정
@@ -24,6 +26,9 @@ class MedicineResultFragment : Fragment() {
 
     //viewModel 설정
     private val homeViewModel: HomeViewModel by activityViewModels()
+
+    //TODO NameFragment로 데이터 넘겨줄 viewModel
+    private val viewModel: TakeViewModel by activityViewModels()
 
     private var columnCount = 1 //컬럼 갯수 = 1 리니어
 
@@ -96,6 +101,11 @@ class MedicineResultFragment : Fragment() {
                 medicineAdapter.submitList(it.toList())
             }
 //            pillAdapter.submitList(dataSource)
+
+            //TODO viewModel로 name을 넘김
+            medicineAdapter.setItemClickListener { medicineText->
+                viewModel.updateItem(medicineText)
+            }
         }
     }
 
