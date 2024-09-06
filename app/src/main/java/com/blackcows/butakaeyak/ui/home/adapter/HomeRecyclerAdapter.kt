@@ -116,12 +116,6 @@ class HomeRecyclerAdapter(private val clickListener: ClickListener) :
                         TakeAddFragment.newInstance(medicineItem), FragmentTag.TakeAddFragment
                     )
                 }
-
-                //TODO btnMyPill 클릭 시 약 이름과 TakeAdd로 화면 이동
-                itemClickListener?.invoke(tvPillname.text.toString())
-                MainNavigation.addFragment(
-                    TakeAddFragment.newInstance(pillitem), FragmentTag.TakeAddFragment
-                )
             }
         }
     }
