@@ -61,6 +61,8 @@ class MedicineDataSource @Inject constructor(
             }
         }
 
+        println(queryList.joinToString())
+
         val jsonArray = suspendCoroutine { continuation ->
             medicineIndex.multipleQueriesAsync(
                 queryList,
