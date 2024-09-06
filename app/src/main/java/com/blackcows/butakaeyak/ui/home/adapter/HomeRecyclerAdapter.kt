@@ -19,7 +19,6 @@ import com.blackcows.butakaeyak.ui.navigation.FragmentTag
 import com.blackcows.butakaeyak.ui.navigation.MainNavigation
 import com.blackcows.butakaeyak.ui.take.fragment.TakeAddFragment
 import com.bumptech.glide.Glide
-import kotlin.coroutines.coroutineContext
 private const val TAG = "홈 어뎁터"
 class HomeRecyclerAdapter(private val clickListener: ClickListener) :
     ListAdapter<Medicine, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
