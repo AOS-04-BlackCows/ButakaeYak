@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="240dp"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="20dp"
     android:layout_marginTop="24dp"
@@ -12,7 +13,7 @@
             android:id="@+id/iv_cycle_one_alarm"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:layout_marginBottom="4dp"
+            android:layout_marginBottom="8dp"
             android:src="@drawable/baseline_access_time_24dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -24,109 +25,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginBottom="4dp"
+            android:layout_marginBottom="8dp"
             android:text=""
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/iv_cycle_one_alarm"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/tv_mon"
-            style="@style/body"
-            android:layout_width="30dp"
-            android:layout_height="40dp"
-            android:layout_marginBottom="4dp"
-            android:background="@android:color/transparent"
-            android:gravity="center"
-            android:text="월"
-            android:textColor="@color/dark_gray"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/tv_tue" />
-
-        <TextView
-            android:id="@+id/tv_tue"
-            style="@style/body"
-            android:layout_width="30dp"
-            android:layout_height="40dp"
-            android:layout_marginBottom="4dp"
-            android:background="@android:color/transparent"
-            android:gravity="center"
-            android:text="화"
-            android:textColor="@color/dark_gray"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/tv_wed" />
-
-        <TextView
-            android:id="@+id/tv_wed"
-            style="@style/body"
-            android:layout_width="30dp"
-            android:layout_height="40dp"
-            android:layout_marginBottom="4dp"
-            android:background="@android:color/transparent"
-            android:gravity="center"
-            android:text="수"
-            android:textColor="@color/dark_gray"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/tv_thu" />
-
-        <TextView
-            android:id="@+id/tv_thu"
-            style="@style/body"
-            android:layout_width="30dp"
-            android:layout_height="40dp"
-            android:layout_marginBottom="4dp"
-            android:background="@android:color/transparent"
-            android:gravity="center"
-            android:text="목"
-            android:textColor="@color/dark_gray"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/tv_fri" />
-
-        <TextView
-            android:id="@+id/tv_fri"
-            style="@style/body"
-            android:layout_width="30dp"
-            android:layout_height="40dp"
-            android:layout_marginBottom="4dp"
-            android:background="@android:color/transparent"
-            android:gravity="center"
-            android:text="금"
-            android:textColor="@color/dark_gray"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/tv_sat" />
-
-        <TextView
-            android:id="@+id/tv_sat"
-            style="@style/body"
-            android:layout_width="30dp"
-            android:layout_height="40dp"
-            android:layout_marginBottom="4dp"
-            android:background="@android:color/transparent"
-            android:gravity="center"
-            android:text="토"
-            android:textColor="@color/dark_gray"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/tv_sun" />
-
-        <TextView
-            android:id="@+id/tv_sun"
-            style="@style/body"
-            android:layout_width="30dp"
-            android:layout_height="40dp"
-            android:layout_marginEnd="32dp"
-            android:layout_marginBottom="4dp"
-            android:background="@android:color/transparent"
-            android:gravity="center"
-            android:text="일"
-            android:textColor="@color/dark_gray"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
         <ImageView
             android:id="@+id/iv_delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
+            android:layout_marginBottom="8dp"
             android:src="@drawable/baseline_cancel_24dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
