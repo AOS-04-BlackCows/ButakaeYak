@@ -41,7 +41,7 @@ class TodayMedicineRvAdapter:
                 medicineRv.run {
                     layoutManager = LinearLayoutManager(binding.root.context)
                     this.adapter = adapter
-                    addItemDecoration(TakeRvDecorator.getLinearDeco())
+                    addItemDecoration(TakeRvDecorator.getLinearDecoSimpleItem())
                 }
 
                 adapter.submitList(item.list.take(2))

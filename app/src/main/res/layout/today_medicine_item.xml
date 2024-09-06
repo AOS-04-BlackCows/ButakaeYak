@@ -6,7 +6,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/round_white"
     android:padding="5dp"
-    android:elevation="5dp"
+    android:elevation="3dp"
+    android:layout_marginHorizontal="5dp"
     >
 
     <TextView
@@ -33,7 +34,7 @@
         app:layout_constraintStart_toStartOf="@id/alarm_time_tv"
         app:layout_constraintEnd_toEndOf="parent"
 
-        android:layout_marginHorizontal="20dp"
+        android:layout_marginEnd="20dp"
 
         tools:listitem="@layout/medicine_simple_item"
          />

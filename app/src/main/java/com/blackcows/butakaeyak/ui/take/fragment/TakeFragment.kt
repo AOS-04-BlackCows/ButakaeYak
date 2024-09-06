@@ -46,7 +46,7 @@ class TakeFragment : Fragment() {
 
     private val TAG = "TakeFragment"
 
-    private val todayDate = Calendar.getInstance().time
+    private val todayDate = Calendar.getInstance()
     private val todayWeekDay by lazy {
         val calendar = Calendar.getInstance().apply {
             setTime(Date())
@@ -85,7 +85,7 @@ class TakeFragment : Fragment() {
         initUiState()
 
         with(binding) {
-            todayDateTv.text = "${todayDate.toKorean()} ${todayWeekDay.toKorean()}"
+            todayDateTv.text = "${todayDate.get(Calendar.YEAR)}년 ${todayDate.time.toKorean()}"
 
             todayMedicineRv.run {
                 layoutManager = LinearLayoutManager(requireContext())

@@ -48,6 +48,12 @@
         <item name="android:textSize">12sp</item>
     </style>
 
+    <style name="caption_gray">
+        <item name="fontFamily">@font/pretendard</item>
+        <item name="android:textColor">@color/dark_gray</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
 <!-- 칩 관련 스타일   -->
 
     <style name="CustomChipStyle_On" parent="Widget.MaterialComponents.Chip.Filter">
