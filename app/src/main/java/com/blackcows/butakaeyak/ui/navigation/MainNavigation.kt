@@ -32,10 +32,10 @@ object MainNavigation {
         val curStack = fragmentStack[currentTab]!!
         if(curStack.size == 0) return
 
-        curStack.pop()
+        val secondFromLastFragmentTag = curStack[curStack.lastIndex - 1]
 
         val curFragment = fragmentManager.findFragmentByTag(
-            curStack.last().name
+            secondFromLastFragmentTag.name
         )!!
 
         fragmentManager.beginTransaction()
@@ -43,6 +43,8 @@ object MainNavigation {
             .commit()
 
         Log.d("Navigation", "size: ${curStack.size}")
+
+        curStack.pop()
     }
 
     fun toOtherTab(tabTag: TabTag) {
