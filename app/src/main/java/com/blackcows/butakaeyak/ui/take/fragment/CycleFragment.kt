@@ -62,6 +62,7 @@ class CycleFragment : Fragment() {
 
             }
         })
+
         _binding = FragmentCycleBinding.inflate(inflater, container, false)
 
         val root: View = binding.root
