@@ -59,7 +59,6 @@ class CycleAdapter(private val context: Context, private val alarmList: MutableL
         return calendar.timeInMillis
     }
 
-
     fun removeAt(position: Int) {
         if (position < alarmList.size) {
             alarmList.removeAt(position)
