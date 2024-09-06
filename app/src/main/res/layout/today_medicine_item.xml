@@ -4,8 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/round_rect_500"
+    android:background="@drawable/round_white"
     android:padding="5dp"
+    android:elevation="5dp"
     >
 
     <TextView
@@ -14,14 +15,14 @@
         android:layout_height="wrap_content"
 
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="@id/medicine_rv"
         app:layout_constraintStart_toStartOf="parent"
 
         android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
 
         android:text="18:50"
         android:textStyle="bold"
-        android:textColor="@color/white"
+        android:textColor="@color/black"
         android:textSize="18sp" 
         />
 
@@ -30,9 +31,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
 
-        app:layout_constraintTop_toTopOf="parent"
-
-        app:layout_constraintStart_toEndOf="@id/alarm_time_tv"
+        app:layout_constraintTop_toBottomOf="@id/alarm_time_tv"
+        app:layout_constraintStart_toStartOf="@id/alarm_time_tv"
         app:layout_constraintEnd_toEndOf="parent"
 
         android:layout_marginHorizontal="20dp"
@@ -51,10 +51,10 @@
 
         android:layout_marginTop="5dp"
 
-        android:text="더보기"
+        android:text="더보기▼"
         android:textColor="@color/white"
         android:textSize="16sp"
-        android:visibility="gone"
+        android:visibility="visible"
          />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
