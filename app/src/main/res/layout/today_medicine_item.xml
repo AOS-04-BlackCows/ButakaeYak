@@ -54,5 +54,20 @@
         style="@style/body"
         android:visibility="gone"
          />
+    <TextView
+        android:id="@+id/foldButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintTop_toBottomOf="@id/medicine_rv"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+
+        android:layout_marginTop="5dp"
+
+        android:text="접기▲"
+        style="@style/body"
+        android:visibility="gone"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

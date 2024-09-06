@@ -92,7 +92,7 @@
                 />
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/no_today_view_box"
+                android:id="@+id/no_today_guide_box"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
 

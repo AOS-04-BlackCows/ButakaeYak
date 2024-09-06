@@ -82,27 +82,8 @@ class TakeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initView()
         initUiState()
-
-        with(binding) {
-            todayDateTv.text = "${todayDate.get(Calendar.YEAR)}년 ${todayDate.time.toKorean()}"
-
-            todayMedicineRv.run {
-                layoutManager = LinearLayoutManager(requireContext())
-                adapter = todayMedicinesAdapter
-                addItemDecoration(TakeRvDecorator.getLinearDeco())
-            }
-            myMedicineRv.run {
-                layoutManager = LinearLayoutManager(requireContext())
-                adapter = myMedicinesAdapter
-                addItemDecoration(
-                    DividerItemDecoration(
-                        requireContext(),
-                        LinearLayoutManager.VERTICAL
-                    )
-                )
-            }
-        }
     }
 
     override fun onResume() {
@@ -120,7 +101,12 @@ class TakeFragment : Fragment() {
         myTakeViewModel.uiState.collectLatest {
             when (it) {
                 is TakeUiState.GetTodayMedicinesSuccess -> {
-                    todayMedicinesAdapter.submitList(it.medicineAtTimes)
+                    if(it.medicineAtTimes.isEmpty()) {
+                        binding.noTodayGuideBox.visibility = View.VISIBLE
+                    } else {
+                        binding.noTodayGuideBox.visibility = View.GONE
+                        todayMedicinesAdapter.submitList(it.medicineAtTimes)
+                    }
                 }
 
                 is TakeUiState.GetMyMedicinesSuccess -> {
@@ -134,6 +120,31 @@ class TakeFragment : Fragment() {
 
                 else -> null
             }
+        }
+    }
+
+    private fun initView() = with(binding) {
+        todayDateTv.text = "${todayDate.get(Calendar.YEAR)}년 ${todayDate.time.toKorean()}"
+
+
+        noTodayGuideGoBtn.setOnClickListener {
+            //TODO: 어디로 가요?
+        }
+
+        todayMedicineRv.run {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = todayMedicinesAdapter
+            addItemDecoration(TakeRvDecorator.getLinearDeco())
+        }
+        myMedicineRv.run {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = myMedicinesAdapter
+            addItemDecoration(
+                DividerItemDecoration(
+                    requireContext(),
+                    LinearLayoutManager.VERTICAL
+                )
+            )
         }
     }
 }

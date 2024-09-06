@@ -22,36 +22,18 @@ class MyTakeViewModel @Inject constructor(
     val uiState = _uiState.asStateFlow()
 
     fun loadTodayMedicines(dayWeekDay: WeekDay) {
-//        getTodayMedicineUseCase.invoke(dayWeekDay) { medicineAtTimes ->
-//            if(medicineAtTimes.isNotEmpty()) {
-//                _uiState.value = TakeUiState.GetTodayMedicinesSuccess(medicineAtTimes)
-//            } else {
-//                _uiState.value = TakeUiState.Failure
-//            }
-//        }
-        _uiState.value = TakeUiState.GetTodayMedicinesSuccess(
-            listOf(
-                MedicineAtTime(dayWeekDay, "8:00", listOf(Medicine(id = "1", name = "기본약"), Medicine(id = "2",name = "비타민"), Medicine(id = "3",name = "영양제"), Medicine(id = "4", name = "4약"), Medicine(id = "5", name = "5약"))),
-                MedicineAtTime(dayWeekDay, "12:00", listOf(Medicine(id = "1",name = "기본약"))),
-                MedicineAtTime(dayWeekDay, "18:00", listOf(Medicine(id = "1",name = "기본약")))
-            )
-        )
+        getTodayMedicineUseCase.invoke(dayWeekDay) { medicineAtTimes ->
+            _uiState.value = TakeUiState.GetTodayMedicinesSuccess(medicineAtTimes)
+        }
     }
 
     fun loadMyMedicines() {
-//        getMyMedicinesUseCase.invoke { myMedicines ->
-//            if(myMedicines.isNotEmpty()) {
-//                _uiState.value = TakeUiState.GetMyMedicinesSuccess(myMedicines)
-//            } else {
-//                _uiState.value = TakeUiState.Failure
-//            }
-//        }
-        _uiState.value = TakeUiState.GetMyMedicinesSuccess(
-            listOf(
-                MyMedicine(Medicine(id = "1",name = "기본약"), mapOf(WeekDay.WEDNESDAY to listOf("8:00", "12:00", "18:00"))),
-                MyMedicine(Medicine(id = "2",name = "비타민"), mapOf(WeekDay.WEDNESDAY to listOf("8:00"))),
-                MyMedicine(Medicine(id = "3",name = "영양제"), mapOf(WeekDay.WEDNESDAY to listOf("8:00")))
-            )
-        )
+        getMyMedicinesUseCase.invoke { myMedicines ->
+            if(myMedicines.isNotEmpty()) {
+                _uiState.value = TakeUiState.GetMyMedicinesSuccess(myMedicines)
+            } else {
+                _uiState.value = TakeUiState.Failure
+            }
+        }
     }
 }
