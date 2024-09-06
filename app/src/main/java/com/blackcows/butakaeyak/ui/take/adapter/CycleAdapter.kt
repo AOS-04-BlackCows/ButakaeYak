@@ -3,13 +3,17 @@ package com.blackcows.butakaeyak.ui.take.adapter
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.databinding.ItemRecyclerviewCycleBinding
 import com.blackcows.butakaeyak.ui.take.TimePickerDialog
 import com.blackcows.butakaeyak.ui.take.data.AlarmItem
-import java.util.Calendar
 
-class CycleAdapter(private val context: Context, private val alarmList: MutableList<AlarmItem>,private val onItemCountChangeListener: (Int) -> Unit) : RecyclerView.Adapter<CycleAdapter.CycleViewHolder>() {
+class CycleAdapter(private val context: Context, val alarmList: MutableList<AlarmItem>) : RecyclerView.Adapter<CycleAdapter.CycleViewHolder>() {
+
+    private var onDaySelectedListener: (() -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CycleViewHolder {
         val binding = ItemRecyclerviewCycleBinding.inflate(
@@ -21,7 +25,11 @@ class CycleAdapter(private val context: Context, private val alarmList: MutableL
     }
 
     override fun onBindViewHolder(holder: CycleViewHolder, position: Int) {
-        holder.bind(alarmList[position])
+        val alarmItem = alarmList[position]
+
+        holder.timeText.text = alarmItem.timeText
+        holder.image
+        holder.dayClickListeners()
         holder.binding.ivDelete.setOnClickListener {
             removeAt(position)
         }
@@ -36,37 +44,45 @@ class CycleAdapter(private val context: Context, private val alarmList: MutableL
 
     inner class CycleViewHolder(val binding : ItemRecyclerviewCycleBinding) : RecyclerView.ViewHolder(binding.root) {
 
+        val image = binding.ivCycleOneAlarm
         val timeText = binding.tvCycleOneAlarmTime
+        val monday = binding.tvMon
+        val tuesday = binding.tvTue
+        val wednesday = binding.tvWed
+        val thursday = binding.tvThu
+        val friday = binding.tvFri
+        val saturday = binding.tvSat
+        val sunday = binding.tvSun
 
-        fun bind(alarmItem: AlarmItem) {
-            timeText.text = "알림 시간 : " + alarmItem.timeText ?: "시간을 설정하세요"
+        fun dayClickListeners() {
+            monday.setOnClickListener { selectDay(monday) }
+            tuesday.setOnClickListener { selectDay(tuesday) }
+            wednesday.setOnClickListener { selectDay(wednesday) }
+            thursday.setOnClickListener { selectDay(thursday) }
+            friday.setOnClickListener { selectDay(friday) }
+            saturday.setOnClickListener { selectDay(saturday) }
+            sunday.setOnClickListener { selectDay(sunday) }
         }
-    }
 
-    fun getAlarmList(): List<AlarmItem> = alarmList
-
-    fun addItem(alarmItem: AlarmItem) {
-        alarmList.add(alarmItem)
-        notifyDataSetChanged()
-        onItemCountChangeListener(alarmList.size)
-    }
-
-    fun getTimeInMillis(hourOfDay: Int, minute: Int): Long {
-        val calendar = Calendar.getInstance()
-        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
-        calendar.set(Calendar.MINUTE, minute)
-        calendar.set(Calendar.SECOND, 0)
-        calendar.set(Calendar.MILLISECOND, 0)
-        return calendar.timeInMillis
+        private fun selectDay(textView: TextView) {
+            val isSelected = textView.currentTextColor == ContextCompat.getColor(itemView.context, R.color.green)
+            textView.setTextColor(
+                ContextCompat.getColor(
+                    itemView.context,
+                    if (isSelected) R.color.dark_gray else R.color.green
+                )
+            )
+            onDaySelectedListener?.invoke()
+        }
     }
 
     fun removeAt(position: Int) {
-        if (position < alarmList.size) {
-            alarmList.removeAt(position)
-            notifyItemRemoved(position)
-            notifyDataSetChanged()
-            notifyItemRangeChanged(position, alarmList.size)
-            onItemCountChangeListener(alarmList.size)
-        }
+        alarmList.removeAt(position)
+        notifyItemRemoved(position)
+        notifyItemRangeChanged(position, alarmList.size)
+    }
+
+    fun setOnDaySelectedListener(listener: () -> Unit) {
+        this.onDaySelectedListener = listener
     }
 }

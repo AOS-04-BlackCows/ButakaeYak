@@ -4,26 +4,32 @@ import android.util.Log
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.ImageButton
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.ToggleButton
+import com.blackcows.butakaeyak.R
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.data.models.Medicine
 import com.blackcows.butakaeyak.databinding.FragmentFeedListBinding
 import com.blackcows.butakaeyak.databinding.ItemResultsBinding
-import com.blackcows.butakaeyak.ui.home.data.DataSource
 import com.blackcows.butakaeyak.ui.home.data.ListItem
+import com.blackcows.butakaeyak.ui.navigation.FragmentTag
+import com.blackcows.butakaeyak.ui.navigation.MainNavigation
+import com.blackcows.butakaeyak.ui.take.fragment.TakeAddFragment
 import com.bumptech.glide.Glide
 import kotlin.coroutines.coroutineContext
 private const val TAG = "홈 어뎁터"
 class HomeRecyclerAdapter(private val clickListener: ClickListener) :
     ListAdapter<Medicine, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
+
+        //TODO itemClick 처리 이벤트
+    private var itemClickListener: ((String) -> Unit)? = null
+
+    fun setItemClickListener(listener: (String) -> Unit) {
+        itemClickListener = listener
+    }
 
     companion object {
         private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Medicine>() {
@@ -102,6 +108,12 @@ class HomeRecyclerAdapter(private val clickListener: ClickListener) :
                     //clickListener.onMyMedicineClick(medicineItem,isChecked)
                     clickListener.setMedicineChecked(medicineItem, btnMyMedicine.isChecked)
                     Log.d(TAG,"${name}")
+
+                    //TODO btnMyPill 클릭 시 약 이름과 TakeAdd로 화면 이동
+                    itemClickListener?.invoke(tvMedicineName.text.toString())
+                    MainNavigation.addFragment(
+                        TakeAddFragment.newInstance(medicineItem), FragmentTag.TakeAddFragment
+                    )
                 }
             }
         }
