@@ -10,13 +10,18 @@ import com.blackcows.butakaeyak.R
 class AlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val notification = NotificationCompat.Builder(context, "alarm_channel_id")
-            .setSmallIcon(R.drawable.bell)
-            .setContentTitle("Alarm")
-            .setContentText("Your scheduled alarm is ringing!")
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .build()
 
-        notificationManager.notify(1,notification)
+        val notificationId = intent.getIntExtra("NOTIFICATION_ID", 0)
+        val notificationTitle = intent.getStringExtra("NOTIFICATION_TITLE")
+        val notificationContent = intent.getStringExtra("NOTIFICATION_CONTENT")
+
+        val notificationBuilder = NotificationCompat.Builder(context, "alarm_channel")
+            .setSmallIcon(R.drawable.bell)
+            .setContentTitle(notificationTitle)
+            .setContentText(notificationContent)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setAutoCancel(true)
+
+        notificationManager.notify(notificationId, notificationBuilder.build())
     }
 }

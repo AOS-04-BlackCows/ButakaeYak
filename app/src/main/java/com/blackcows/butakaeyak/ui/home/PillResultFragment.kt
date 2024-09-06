@@ -9,13 +9,12 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity.MODE_PRIVATE
 import androidx.fragment.app.activityViewModels
 import com.blackcows.butakaeyak.data.models.Medicine
 import com.blackcows.butakaeyak.databinding.FragmentPillResultBinding
 import com.blackcows.butakaeyak.ui.home.adapter.HomeRecyclerAdapter
 import com.blackcows.butakaeyak.ui.home.data.DataSource
-import com.blackcows.butakaeyak.ui.home.data.ListItem
+import com.blackcows.butakaeyak.ui.take.TakeViewModel
 
 class PillResultFragment : Fragment() {
     //binding 설정
@@ -26,6 +25,9 @@ class PillResultFragment : Fragment() {
 
     //viewModel 설정
     private val homeViewModel: HomeViewModel by activityViewModels()
+
+    //TODO NameFragment로 데이터 넘겨줄 viewModel
+    private val viewModel: TakeViewModel by activityViewModels()
 
     private var columnCount = 1 //컬럼 갯수 = 1 리니어
 
@@ -95,6 +97,11 @@ class PillResultFragment : Fragment() {
             resultlist.adapter = pillAdapter
             resultlist.itemAnimator = null
             pillAdapter.submitList(dataSource)
+
+            //TODO viewModel로 name을 넘김
+            pillAdapter.setItemClickListener { pilltext->
+                viewModel.updateItem(pilltext)
+            }
         }
     }
 

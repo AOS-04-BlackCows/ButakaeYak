@@ -28,13 +28,6 @@
         android:name="com.blackcows.butakaeyak.ui.user.UserFragment"
         android:label="@string/title_user"
         tools:layout="@layout/fragment_user" >
-        <action
-            android:id="@+id/action_navigation_user_to_navigation_take"
-            app:destination="@id/navigation_take"
-            app:enterAnim="@anim/alpha"
-            app:exitAnim="@anim/none"
-            app:popEnterAnim="@anim/move_end"
-            app:popExitAnim="@anim/none"/>
     </fragment>
 
     <fragment
@@ -42,53 +35,5 @@
         android:name="com.blackcows.butakaeyak.ui.take.fragment.TakeFragment"
         android:label="@string/title_user"
         tools:layout="@layout/fragment_take" >
-        <action
-            android:id="@+id/action_navigation_take_to_navigation_take_add"
-            app:destination="@id/navigation_take_add"
-            app:enterAnim="@anim/alpha"
-            app:exitAnim="@anim/none"
-            app:popEnterAnim="@anim/move_end"
-            app:popExitAnim="@anim/none"/>
-        <action
-            android:id="@+id/action_navigation_take_to_navigation_name"
-            app:destination="@id/navigation_name" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/navigation_take_add"
-        android:name="com.blackcows.butakaeyak.ui.take.fragment.TakeAddFragment"
-        android:label="@string/title_user"
-        tools:layout="@layout/fragment_take_add" >
-        <action
-            android:id="@+id/action_navigation_take_add_to_navigation_name"
-            app:destination="@+id/navigation_name"
-            app:popUpTo="@+id/navigation_take"/>
-        <action
-            android:id="@+id/action_navigation_take_add_to_navigation_take"
-            app:destination="@id/navigation_take" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/navigation_name"
-        android:name="com.blackcows.butakaeyak.ui.take.fragment.NameFragment"
-        android:label="name"
-        tools:layout="@layout/fragment_name">
-        <action
-            android:id="@+id/action_navigation_name_to_navigation_form"
-            app:destination="@id/navigation_form" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/navigation_form"
-        android:name="com.blackcows.butakaeyak.ui.take.fragment.FormFragment"
-        android:label="form"
-        tools:layou="@layout/fragment_form">
-    </fragment>
-
-    <fragment
-        android:id="@+id/navigation_cycle"
-        android:name="com.blackcows.butakaeyak.ui.take.fragment.CycleFragment"
-        android:label="cycle"
-        tools:layout="@layout/fragment_cycle">
     </fragment>
 </navigation>

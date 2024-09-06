@@ -4,28 +4,32 @@ import android.util.Log
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.ImageButton
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.ToggleButton
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.data.models.Medicine
 import com.blackcows.butakaeyak.databinding.FragmentFeedListBinding
 import com.blackcows.butakaeyak.databinding.ItemResultsBinding
-import com.blackcows.butakaeyak.ui.home.data.DataSource
 import com.blackcows.butakaeyak.ui.home.data.ListItem
+import com.blackcows.butakaeyak.ui.navigation.FragmentTag
+import com.blackcows.butakaeyak.ui.navigation.MainNavigation
+import com.blackcows.butakaeyak.ui.take.fragment.TakeAddFragment
 import com.bumptech.glide.Glide
-import kotlin.coroutines.coroutineContext
 
 // 이전 코드 -                        values: MutableList<PlaceholderItem>
 // 안되는 코드 class HomeRecyclerAdapter(private val onClick: (ListItem) -> Unit)
 class HomeRecyclerAdapter(private val clickListener: ClickListener) :
     ListAdapter<Medicine, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
+
+        //TODO itemClick 처리 이벤트
+    private var itemClickListener: ((String) -> Unit)? = null
+
+    fun setItemClickListener(listener: (String) -> Unit) {
+        itemClickListener = listener
+    }
 
     companion object {
         private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Medicine>() {
@@ -107,6 +111,12 @@ class HomeRecyclerAdapter(private val clickListener: ClickListener) :
                 btnMyPill.setOnCheckedChangeListener { buttonView, isChecked ->
                     clickListener.onMyPillClick(pillitem,isChecked)
                     Log.d("아이템 복용약 누름","${name}")
+
+                    //TODO btnMyPill 클릭 시 약 이름과 TakeAdd로 화면 이동
+                    itemClickListener?.invoke(tvPillname.text.toString())
+                    MainNavigation.addFragment(
+                        TakeAddFragment.newInstance(pillitem), FragmentTag.TakeAddFragment
+                    )
                 }
             }
         }

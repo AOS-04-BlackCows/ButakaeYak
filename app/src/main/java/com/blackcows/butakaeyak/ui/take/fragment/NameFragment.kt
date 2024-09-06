@@ -11,10 +11,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.fragment.findNavController
+import androidx.lifecycle.Observer
+import com.blackcows.butakaeyak.MainActivity
 import com.blackcows.butakaeyak.R
+import com.blackcows.butakaeyak.data.models.Medicine
 import com.blackcows.butakaeyak.databinding.FragmentNameBinding
+import com.blackcows.butakaeyak.ui.navigation.FragmentTag
+import com.blackcows.butakaeyak.ui.navigation.MainNavigation
 import com.blackcows.butakaeyak.ui.take.TakeViewModel
 
 class NameFragment : Fragment() {
@@ -31,20 +36,36 @@ class NameFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
+        val mainActivity = activity as MainActivity
+        mainActivity.hideBottomNavigation(true)
+
         _binding = FragmentNameBinding.inflate(inflater, container, false)
         val root: View = binding.root
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+            }
+        })
         return root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.apply {
+            viewModel.getData().observe(viewLifecycleOwner, Observer {
+                etMedicineName.setText(it)
+            })
+        }
+
+        //companion object
+        val medicine: Medicine? = arguments?.getParcelable(MEDICINE_DATA)
+
         binding.ivDelete.setOnClickListener {
             binding.etMedicineName.text = null
         }
 
         binding.ivBack.setOnClickListener {
-            findNavController().popBackStack()
         }
 
         binding.etMedicineName.addTextChangedListener(object : TextWatcher {
@@ -54,13 +75,16 @@ class NameFragment : Fragment() {
                 binding.apply{
                     if(etMedicineName.length() > 0){
                         btnNext.apply{
-
                             isEnabled = true
                             setBackgroundResource(R.color.green)
                             setTextColor(Color.WHITE)
                             setOnClickListener {
                                 Log.d("버튼","버튼 눌림")
-                                viewModel.moveToNextPage()
+                                medicine?.let { it1 -> FormFragment.newInstance(it1) }?.let { it2 ->
+                                    MainNavigation.addFragment(
+                                        it2, FragmentTag.NameFragment
+                                    )
+                                }
                                 viewModel.updateItem(etMedicineName.text.toString())
                             }
                         }
@@ -85,9 +109,20 @@ class NameFragment : Fragment() {
         }
     }
 
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        private const val MEDICINE_DATA = "medicine_data"
+
+        @JvmStatic
+        fun newInstance(medicine: Medicine) =
+            NameFragment().apply {
+                arguments = Bundle().apply {
+                    putParcelable(MEDICINE_DATA, medicine)
+                }
+            }
     }
 }

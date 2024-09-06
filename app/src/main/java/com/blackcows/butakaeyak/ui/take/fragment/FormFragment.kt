@@ -9,10 +9,12 @@ import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.blackcows.butakaeyak.R
+import com.blackcows.butakaeyak.data.models.Medicine
 import com.blackcows.butakaeyak.databinding.FragmentFormBinding
+import com.blackcows.butakaeyak.ui.navigation.FragmentTag
+import com.blackcows.butakaeyak.ui.navigation.MainNavigation
 import com.blackcows.butakaeyak.ui.take.TakeViewModel
 import com.blackcows.butakaeyak.ui.take.adapter.FormAdapter
 import com.blackcows.butakaeyak.ui.take.data.FormItem
@@ -32,20 +34,14 @@ class FormFragment : Fragment(), FormAdapter.checkBoxChangeListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val callback = object : OnBackPressedCallback(true) {
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                val current = viewModel.currentPage.value ?: 0
-                if (current > 0) {
-                    viewModel.moveToPreviousPage()
-                } else {
-                    // NavController를 통해 뒤로 가기
-                    findNavController().popBackStack()
-                }
             }
-        }
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
+        })
         _binding = FragmentFormBinding.inflate(inflater, container, false)
         val root: View = binding.root
+
         return root
     }
 
@@ -70,7 +66,6 @@ class FormFragment : Fragment(), FormAdapter.checkBoxChangeListener {
 
         binding.apply {
             ivBack.setOnClickListener {
-                viewModel.moveToPreviousPage()
             }
             adapter = FormAdapter(dataForm, requireContext(), this@FormFragment)
             recyclerviewForm.adapter = adapter
@@ -86,6 +81,9 @@ class FormFragment : Fragment(), FormAdapter.checkBoxChangeListener {
 
     override fun onItemChecked(position: Int, isChecked: Boolean) {
 
+        //companion object
+        val medicine: Medicine? = arguments?.getParcelable(FormFragment.MEDICINE_DATA)
+
         binding.apply {
             if (isChecked) {
                 btnNext.apply {
@@ -95,7 +93,11 @@ class FormFragment : Fragment(), FormAdapter.checkBoxChangeListener {
                     setBackgroundResource(R.color.green)
                     setTextColor(Color.WHITE)
                     setOnClickListener {
-                        viewModel.moveToNextPage()
+                        medicine?.let { it1 -> CycleFragment.newInstance(it1) }?.let { it2 ->
+                            MainNavigation.addFragment(
+                                it2, FragmentTag.FormFragment
+                            )
+                        }
                         viewModel.updateFormItem(selectName)
                         viewModel.updateFormImageItem(selectImage)
                     }
@@ -115,5 +117,17 @@ class FormFragment : Fragment(), FormAdapter.checkBoxChangeListener {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        private const val MEDICINE_DATA = "medicine_data"
+
+        @JvmStatic
+        fun newInstance(medicine: Medicine) =
+            FormFragment().apply {
+                arguments = Bundle().apply {
+                    putParcelable(MEDICINE_DATA, medicine)
+                }
+            }
     }
 }

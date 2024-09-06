@@ -10,7 +10,7 @@ data class FormItem(var aImage : Int, var aName : String):Parcelable
 @Parcelize
 data class CycleItem(val aImage : Bitmap, val aName : String):Parcelable
 
-data class AlarmItem(   // 아이콘 리소스 ID
+data class AlarmItem(
     val timeText: String,      // 시간 텍스트
     val isMonEnabled: Boolean, // 월요일 활성화 여부
     val isTueEnabled: Boolean, // 화요일 활성화 여부

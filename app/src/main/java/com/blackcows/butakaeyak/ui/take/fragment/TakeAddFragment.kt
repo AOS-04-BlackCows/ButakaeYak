@@ -5,14 +5,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.blackcows.butakaeyak.MainActivity
-import com.blackcows.butakaeyak.R
+import com.blackcows.butakaeyak.data.models.Medicine
 import com.blackcows.butakaeyak.databinding.FragmentTakeAddBinding
+import com.blackcows.butakaeyak.ui.navigation.FragmentTag
+import com.blackcows.butakaeyak.ui.navigation.MainNavigation
 import com.blackcows.butakaeyak.ui.take.TakeViewModel
-import com.blackcows.butakaeyak.ui.take.TakeViewPagerAdapter
 
 class TakeAddFragment : Fragment() {
 
@@ -35,29 +36,39 @@ class TakeAddFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val mainActivity = activity as MainActivity
-        mainActivity.hideBottomNavigation(true)
+        mainActivity.hideBottomNavigation(false)
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+            }
+        })
 
-        _binding = FragmentTakeAddBinding.inflate(inflater, container, false)
+        _binding = FragmentTakeAddBinding.inflate(layoutInflater,container,false)
         val root: View = binding.root
         return root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewPager = binding.vp2Add
-        binding.apply {
-            if (viewPager?.adapter == null) {
-                vp2Add.adapter = TakeViewPagerAdapter(this@TakeAddFragment)
-                vp2Add.isUserInputEnabled = false
-            }
-            viewModel.currentPage.observe(viewLifecycleOwner){page ->
-                viewPager?.currentItem = page
-            }
+
+        //companion object
+        val medicine: Medicine? = arguments?.getParcelable(TakeAddFragment.MEDICINE_DATA)
+        medicine?.let { it1 -> NameFragment.newInstance(it1) }?.let { it2 ->
+            MainNavigation.addFragment(
+                it2, FragmentTag.TakeAddFragment
+            )
         }
     }
 
-    fun navigateToTakeFragment() {
-        findNavController().navigate(R.id.action_navigation_take_add_to_navigation_take)
+    companion object {
+        private const val MEDICINE_DATA = "medicine_data"
+
+        @JvmStatic
+        fun newInstance(medicine: Medicine) =
+            TakeAddFragment().apply {
+                arguments = Bundle().apply {
+                    putParcelable(MEDICINE_DATA, medicine)
+                }
+            }
     }
 
     override fun onDestroyView() {

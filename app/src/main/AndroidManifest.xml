@@ -21,6 +21,9 @@
         android:theme="@style/Theme.YacTong"
         tools:targetApi="31">
 
+        <receiver
+            android:name=".ui.take.AlarmReceiver"
+            android:exported="false" />
 
         <meta-data
             android:name="com.kakao.sdk.AppKey"

@@ -86,19 +86,4 @@ class TakeViewModel : ViewModel() {
         formImageFragmentText.value = image
     }
 
-    fun moveToNextPage(){
-        _currentPage.value = (_currentPage.value ?: 0) + 1
-    }
-
-    fun moveToPreviousPage() {
-        val current = _currentPage.value ?: 0
-        if (current > 0) {
-            _currentPage.value = current - 1
-        }
-    }
-
-    fun resetPage() {
-        _currentPage.value = 0
-    }
-
 }

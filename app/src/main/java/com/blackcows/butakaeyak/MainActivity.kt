@@ -1,22 +1,16 @@
 package com.blackcows.butakaeyak
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
+import android.os.Build
 import android.os.Bundle
-import android.os.StrictMode
-import android.os.StrictMode.ThreadPolicy
-import android.os.StrictMode.VmPolicy
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.setupWithNavController
-import androidx.viewpager2.widget.ViewPager2
 import com.blackcows.butakaeyak.databinding.ActivityMainBinding
 import com.blackcows.butakaeyak.ui.navigation.MainNavigation
-import com.blackcows.butakaeyak.ui.navigation.MainViewpager
 import dagger.hilt.android.AndroidEntryPoint
-import com.google.firebase.FirebaseApp
-import com.kakao.sdk.user.UserApiClient
-import com.blackcows.butakaeyak.firebase.auth.FirebaseAuthManager
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -41,11 +35,29 @@ class MainActivity : AppCompatActivity() {
             Log.d(TAG, "Navigating to UserFragment")
             //navController.navigate(R.id.navigation_user)
         }
+
+        //TODO 알림 설정
+        createNotificationChannel()
     }
 
     //navigation bar 안 보이게 할 때 쓰는 메소드
     fun hideBottomNavigation(state: Boolean) {
         if (state) binding.bottomMenuBar.visibility = View.GONE else binding.bottomMenuBar.visibility =
             View.VISIBLE
+    }
+
+    //TODO 알림 설정
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = "Alarm Channel"
+            val descriptionText = "Channel for Alarm Manager"
+            val importance = NotificationManager.IMPORTANCE_HIGH
+            val channel = NotificationChannel("alarm_channel", name, importance).apply {
+                description = descriptionText
+            }
+            val notificationManager: NotificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
     }
 }
