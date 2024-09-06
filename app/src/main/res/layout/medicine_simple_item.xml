@@ -29,7 +29,10 @@
         android:layout_marginStart="10dp"
 
         android:text="타이레놀"
-        style="@style/body_b"
+        style="@style/body"
+
+        android:maxLines="1"
+        android:ellipsize="end"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

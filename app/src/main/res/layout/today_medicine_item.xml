@@ -21,9 +21,7 @@
         android:layout_marginTop="10dp"
 
         android:text="18:50"
-        android:textStyle="bold"
-        android:textColor="@color/black"
-        android:textSize="18sp" 
+        style="@style/body"
         />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -52,9 +50,8 @@
         android:layout_marginTop="5dp"
 
         android:text="더보기▼"
-        android:textColor="@color/white"
-        android:textSize="16sp"
-        android:visibility="visible"
+        style="@style/body"
+        android:visibility="gone"
          />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
