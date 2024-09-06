@@ -71,54 +71,7 @@ class MapFragment : Fragment() {
         binding.testBtn1.setOnClickListener {
             bottomSheetDialog.show()
         }
-        // 위치 찍는 코드 시작점
-        // locationInit()
     }
-    /* 위치찍는 코드
-    private fun locationInit() {
-        mLocationRequest = LocationRequest.create().apply {
-            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-        }
-        // 최초 X, Y 경도 위도 구현
-        if (checkPermissionForLocation(this)) {
-            startLocationUpdates()
-        }
-    }
-
-    private fun startLocationUpdates() {
-        //FusedLocationProviderClient의 인스턴스를 생성.
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext())
-        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED
-            && ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION ) != PackageManager.PERMISSION_GRANTED ) {
-            return
-        }
-        // 기기의 위치에 관한 정기 업데이트를 요청하는 메서드 실행
-        // 지정한 루퍼 스레드(Looper.myLooper())에서 콜백(mLocationCallback)으로 위치 업데이트를 요청
-        mFusedLocationProviderClient!!.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper())
-    }
-
-    // 시스템으로 부터 위치 정보를 콜백으로 받음
-    private val mLocationCallback = object : LocationCallback() {
-        override fun onLocationResult(locationResult: LocationResult) {
-            // 시스템에서 받은 location 정보를 onLocationChanged()에 전달
-            locationResult.lastLocation
-            onLocationChanged(locationResult.lastLocation)
-        }
-    }
-
-    // 시스템으로 부터 받은 위치정보를 갱신해주는 메소드
-    fun onLocationChanged(location: Location) {
-        mLastLocation = location
-        // longitude = 경도 = x
-        // latitude = 위도 = y
-        myPlaceX = mLastLocation.longitude // 갱신 된 경도 127.11547410533494
-        myPlaceY = mLastLocation.latitude // 갱신 된 위도 37.40754692649233
-        Log.d(TAG, "위도 myPlaceX : $myPlaceX |&| 경도 myPlaceY : $myPlaceY")
-        // 현재 위치를 중심으로한 약국 좌표를 저장한다.
-        mapViewModel.communicateNetWork(myPlaceX, myPlaceY)
-        kakaoMapInit()
-    }
-    */
     // 내 위치로 이동
     private fun kakaoMapMoveCamera(kakaoMap: KakaoMap) {
         var cameraUpdate = CameraUpdateFactory.newCenterPosition(LatLng.from(myPlaceY, myPlaceX))
@@ -131,6 +84,7 @@ class MapFragment : Fragment() {
         // Android 6.0 Marshmallow 이상에서는 위치 권한에 추가 런타임 권한이 필요
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (fragment.context?.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                gpsInit()
                 true
             } else {
                 // 권한이 없으므로 권한 요청 알림 보내기
@@ -147,8 +101,6 @@ class MapFragment : Fragment() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == REQUEST_PERMISSION_LOCATION) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // 위치 찍는 코드
-                // startLocationUpdates()
                 gpsInit()
             } else {
                 Log.d(TAG, "onRequestPermissionsResult() _ 권한 허용 거부")
@@ -176,10 +128,7 @@ class MapFragment : Fragment() {
         }
         Log.d(TAG, result)  // Enabled Providers : passive, gps, network..
         // 위치정보얻기
-        // getAccuracy(): 정확도
-        // getLatitude(): 위도
-        // getLongitude(): 경도
-        // getTime(): 획득 시간
+        // getAccuracy(): 정확도 || getLatitude(): 위도 || getLongitude(): 경도 || getTime(): 획득 시간
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             val location: Location? = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
             location?.let{
@@ -192,20 +141,6 @@ class MapFragment : Fragment() {
         }
         kakaoMapInit(myPlaceX, myPlaceY)
         mapViewModel.communicateNetWork(myPlaceX, myPlaceY)
-
-        // 이게 location이 변경된 후 적용되는줄 알았는데 아니였음
-//        val listener: LocationListener = object : LocationListener {
-//            override fun onLocationChanged(location: Location) {
-//                kakaoMapInit(myPlaceX, myPlaceY)
-//                mapViewModel.communicateNetWork(myPlaceX, myPlaceY)
-//            }
-//        }
-//        manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10_000L, 10f, listener)
-//        manager.removeUpdates(listener)
-        // 계속 위치를 가져와야 한다면 LocationListener를 이용
-        // onLocationChanged(): 새로운 위치를 가져오면 호출됩니다.
-        // onProviderEnabled(): 위치 제공자가 이용할 수 있는 상황이면 호출됩니다.
-        // onProviderDisabled(): 위치 제공자가 이용할 수 없는 상황이면 호출됩니다.
     }
     // 카카오맵
     private fun kakaoMapInit(x: Double, y: Double) {
@@ -251,21 +186,19 @@ class MapFragment : Fragment() {
                         bottomSheetDialog.show()
                         true
                     }
-
-                    /*
-                        selectTagArr
+                    /*  selectTagArr Data
                         [0] placeName = 예시 : 한우리약국,
-                        ||| [1] distance = 예시 : 291,
-                        ||| [2] placeUrl = 예시 : "http://place.map.kakao.com/9578427",
-                        ||| [3] categoryName = 예시 : "의료,건강 > 약국",
-                        ||| [4] addressName = 예시 : "경기 성남시 분당구 야탑동 215",
-                        ||| [5] roadAddressName = 예시 : "경기 성남시 분당구 장미로 139",
-                        ||| [6] id = 예시 : 9578427,
-                        ||| [7] phone = 예시 : "031-708-3399",
-                        ||| [8] categoryGroupCode = 예시 : "PM9",
-                        ||| [9] categoryGroupName = 예시 : "약국",
-                        ||| [10] x = 예시 : 127.13616482305073,
-                        ||| [11] y = 예시 : 37.413583634331886
+                        || [1] distance = 예시 : 291,
+                        || [2] placeUrl = 예시 : "http://place.map.kakao.com/9578427",
+                        || [3] categoryName = 예시 : "의료,건강 > 약국",
+                        || [4] addressName = 예시 : "경기 성남시 분당구 야탑동 215",
+                        || [5] roadAddressName = 예시 : "경기 성남시 분당구 장미로 139",
+                        || [6] id = 예시 : 9578427,
+                        || [7] phone = 예시 : "031-708-3399",
+                        || [8] categoryGroupCode = 예시 : "PM9",
+                        || [9] categoryGroupName = 예시 : "약국",
+                        || [10] x = 예시 : 127.13616482305073,
+                        || [11] y = 예시 : 37.413583634331886
                     */
                 }
             }
