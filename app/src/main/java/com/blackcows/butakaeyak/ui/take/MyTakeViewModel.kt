@@ -29,11 +29,7 @@ class MyTakeViewModel @Inject constructor(
 
     fun loadMyMedicines() {
         getMyMedicinesUseCase.invoke { myMedicines ->
-            if(myMedicines.isNotEmpty()) {
-                _uiState.value = TakeUiState.GetMyMedicinesSuccess(myMedicines)
-            } else {
-                _uiState.value = TakeUiState.Failure
-            }
+            _uiState.value = TakeUiState.GetMyMedicinesSuccess(myMedicines)
         }
     }
 }

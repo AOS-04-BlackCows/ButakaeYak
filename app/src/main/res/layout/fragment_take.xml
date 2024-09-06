@@ -198,6 +198,23 @@
                 android:background="@color/any_200"
                 />
 
+            <TextView
+                android:id="@+id/no_my_medicine_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:visibility="gone"
+
+                app:layout_constraintTop_toBottomOf="@id/division2"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+
+                android:text="@string/no_my_medicine_str"
+                style="@style/caption_gray"
+
+                android:layout_marginVertical="28dp"
+                />
+
             <RelativeLayout
                 android:id="@+id/my_medicine_box"
                 android:layout_width="wrap_content"

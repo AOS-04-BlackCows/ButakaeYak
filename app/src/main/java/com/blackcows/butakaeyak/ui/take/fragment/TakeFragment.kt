@@ -20,6 +20,8 @@ import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.databinding.FragmentTakeBinding
 import com.blackcows.butakaeyak.domain.take.GetTodayMedicineUseCase
 import com.blackcows.butakaeyak.ui.example.UserUiState
+import com.blackcows.butakaeyak.ui.navigation.MainNavigation
+import com.blackcows.butakaeyak.ui.navigation.TabTag
 import com.blackcows.butakaeyak.ui.take.MyTakeViewModel
 import com.blackcows.butakaeyak.ui.take.TakeUiState
 import com.blackcows.butakaeyak.ui.take.adapter.MyMedicinesRvAdapter
@@ -110,8 +112,13 @@ class TakeFragment : Fragment() {
                 }
 
                 is TakeUiState.GetMyMedicinesSuccess -> {
-                    Log.d(TAG, "MyMedicine: ${it.medicines.size}")
-                    myMedicinesAdapter.submitList(it.medicines)
+                    Log.d(TAG, "isMyMedicineEmpty: ${it.medicines.isEmpty()}")
+                    if(it.medicines.isEmpty()) {
+                        binding.noMyMedicineTv.visibility = View.VISIBLE
+                    } else {
+                        binding.noMyMedicineTv.visibility = View.GONE
+                        myMedicinesAdapter.submitList(it.medicines)
+                    }
                 }
 
                 is TakeUiState.Failure -> {
@@ -129,6 +136,10 @@ class TakeFragment : Fragment() {
 
         noTodayGuideGoBtn.setOnClickListener {
             //TODO: 어디로 가요?
+            //  1. 우선 검색화면으로?
+            //      추가1) 튜토리얼
+            //      추가2)
+            MainNavigation.toOtherTab(TabTag.Search)
         }
 
         todayMedicineRv.run {

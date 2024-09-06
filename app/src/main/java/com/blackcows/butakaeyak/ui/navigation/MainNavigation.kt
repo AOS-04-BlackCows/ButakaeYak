@@ -17,6 +17,8 @@ object MainNavigation {
     private var currentTab = TabTag.Take
     private val fragmentStack = HashMap<TabTag, Stack<FragmentTag>>()
 
+    private lateinit var binding: ActivityMainBinding
+
 
     fun addFragment(fragment: Fragment, tag: FragmentTag) {
         fragmentManager.beginTransaction()
@@ -43,6 +45,11 @@ object MainNavigation {
         Log.d("Navigation", "size: ${curStack.size}")
     }
 
+    fun toOtherTab(tabTag: TabTag) {
+        currentTab = tabTag
+        binding.viewPager.currentItem = tabTag.index
+    }
+
     //-------------------------------------------------------------------------------------------------------------
 
 
@@ -60,7 +67,8 @@ object MainNavigation {
     }
 
 
-    private fun initViewPager(activity: MainActivity, binding: ActivityMainBinding) {
+    private fun initViewPager(activity: MainActivity, b: ActivityMainBinding) {
+        binding = b
         val viewPager = binding.viewPager
         val viewPagerAdapter = MainViewpager(activity)
         viewPager.adapter = viewPagerAdapter
