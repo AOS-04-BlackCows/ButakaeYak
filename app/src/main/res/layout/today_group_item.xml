@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/round_white_radius12"
+    android:elevation="5dp"
+    android:padding="18dp"
+    android:layout_margin="5dp">
+
+    <ToggleButton
+        android:id="@+id/taken_cb"
+        android:layout_width="37dp"
+        android:layout_height="37dp"
+
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+
+        android:checked="false"
+
+        android:background="@drawable/taken_checkbox_selector"
+
+        android:drawablePadding="0dp"
+
+        android:textOff=" "
+        android:textOn=" "
+        />
+
+    <TextView
+        android:id="@+id/group_name_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@id/taken_cb"
+
+        android:layout_marginStart="20dp"
+
+
+        android:text="약 그룹 이름"
+        style="@style/subtitle"
+        />
+
+    <TextView
+        android:id="@+id/medicine_num_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintStart_toEndOf="@id/group_name_tv"
+        app:layout_constraintTop_toTopOf="@id/group_name_tv"
+        app:layout_constraintBottom_toBottomOf="@id/group_name_tv"
+
+        android:layout_marginStart="20dp"
+
+        android:text="약 5개"
+        style="@style/medium_gray"
+        />
+
+    <ImageView
+        android:id="@+id/modify_btn"
+        android:layout_width="16dp"
+        android:layout_height="28dp"
+
+        app:layout_constraintTop_toTopOf="@id/group_name_tv"
+        app:layout_constraintBottom_toBottomOf="@id/group_name_tv"
+        app:layout_constraintEnd_toEndOf="parent"
+
+        android:layout_marginEnd="16dp"
+
+        android:src="@drawable/right_arrow"
+        />
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

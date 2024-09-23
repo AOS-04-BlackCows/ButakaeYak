@@ -9,19 +9,27 @@ import com.blackcows.butakaeyak.data.source.firebase.MedicineDataSource
 import com.blackcows.butakaeyak.data.source.firebase.MemoDataSource
 import com.blackcows.butakaeyak.data.source.firebase.RemoteMedicineGroupDataSource
 import com.blackcows.butakaeyak.data.source.link.MedicineGroupDataSource
+import com.blackcows.butakaeyak.data.source.local.LocalMedicineGroupDataSource
+import com.blackcows.butakaeyak.data.source.local.LocalUtilsDataSource
 import com.blackcows.butakaeyak.domain.repo.MemoRepository
 import java.time.LocalDate
 import javax.inject.Inject
 
 class MemoRepositoryImpl @Inject constructor(
     private val memoDataSource: MemoDataSource,
-    private val medicineGroupDataSource: MedicineGroupDataSource,
-    private val medicineInfoDataSource: MedicineInfoDataSource
+    private val localMedicineGroupDataSource: LocalMedicineGroupDataSource,
+    private val remoteMedicineGroupDataSource: RemoteMedicineGroupDataSource,
+    private val medicineInfoDataSource: MedicineInfoDataSource,
+    private val localUtilsDataSource: LocalUtilsDataSource
 ): MemoRepository {
 
     companion object {
         private const val TAG = "MemoRepositoryImpl"
     }
+
+    private val medicineGroupDataSource
+    = if(localUtilsDataSource.isSignIn()) remoteMedicineGroupDataSource
+    else localMedicineGroupDataSource
 
     override suspend fun getMemosByUserId(userId: String): List<Memo> {
         return kotlin.runCatching {

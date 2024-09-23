@@ -5,7 +5,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/round_white_radius12"
     android:padding="23dp"
-    android:elevation="5dp">
+    android:elevation="5dp"
+    android:layout_margin="5dp">
 
     <TextView
         android:id="@+id/title_tv"

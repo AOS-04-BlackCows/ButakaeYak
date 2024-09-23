@@ -13,7 +13,7 @@ import com.blackcows.butakaeyak.databinding.NoteItemBinding
 
 class NoteItemRvAdapter(
 
-): ListAdapter<RecyclerItem, RecyclerView.ViewHolder>(
+): ListAdapter<RecyclerItem, RecyclerView.ViewHolder> (
     object: DiffUtil.ItemCallback<RecyclerItem>() {
         override fun areItemsTheSame(oldItem: RecyclerItem, newItem: RecyclerItem): Boolean {
             return  (oldItem == newItem)

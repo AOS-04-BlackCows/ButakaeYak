@@ -10,11 +10,18 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.lifecycle.lifecycleScope
 import com.blackcows.butakaeyak.databinding.ActivityMainBinding
 import com.blackcows.butakaeyak.ui.navigation.MainNavigation
+import com.blackcows.butakaeyak.ui.state.LoginUiState
+import com.blackcows.butakaeyak.ui.viewmodels.UserViewModel
+import com.kakao.sdk.common.KakaoSdk
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -22,6 +29,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val REQUEST_PERMISSION_LOCATION = 10
     private val TAG = "MainActivity"
+
+    private val userViewModel: UserViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +44,43 @@ class MainActivity : AppCompatActivity() {
         createNotificationChannel()
         // GPS 권한 체크 후 없을 시 요청
         checkPermissionForLocation()
+
+        KakaoSdk.init(this, BuildConfig.NATIVE_APP_KEY)
+
+        lifecycleScope.launch {
+            userViewModel.loginUiState.collectLatest {
+                when(it) {
+                    is LoginUiState.Success -> {
+                        MainNavigation.disableLoadingBar()
+                    }
+
+                    is LoginUiState.Loading -> {
+                        MainNavigation.showLoadingBar()
+                    }
+
+                    is LoginUiState.NotFoundAutoLoginData -> {
+                        MainNavigation.disableLoadingBar()
+                    }
+
+                    is LoginUiState.Failure -> {
+                        MainNavigation.disableLoadingBar()
+                        Toast.makeText(this@MainActivity, "로그인에 실패하였습니다. 다시 로그인해주세요.", Toast.LENGTH_SHORT).show()
+                    }
+
+                    else -> {
+                        MainNavigation.disableLoadingBar()
+                    }
+                }
+            }
+        }
+
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        userViewModel.autoLogin()
     }
 
     //TODO 알림 설정

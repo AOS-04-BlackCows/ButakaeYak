@@ -9,14 +9,21 @@
         android:id="@+id/navigation_home"
         android:name="com.blackcows.butakaeyak.ui.search.SearchFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_search" >
+        tools:layout="@layout/fragment_home" >
     </fragment>
 
     <fragment
-        android:id="@+id/navigation_map"
-        android:name="com.blackcows.butakaeyak.ui.map.MapFragment"
-        android:label="@string/title_map"
-        tools:layout="@layout/fragment_map" >
+        android:id="@+id/navigation_schedule"
+        android:name="com.blackcows.butakaeyak.ui.schedule.ScheduleFragment"
+        android:label="@string/title_schedule"
+        tools:layout="@layout/fragment_schedule" >
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_note"
+        android:name="com.blackcows.butakaeyak.ui.note.NoteFragment"
+        android:label="@string/title_note"
+        tools:layout="@layout/fragment_note" >
     </fragment>
 
     <fragment
@@ -24,12 +31,5 @@
         android:name="com.blackcows.butakaeyak.ui.user.UserFragment"
         android:label="@string/title_user"
         tools:layout="@layout/fragment_user" >
-    </fragment>
-
-    <fragment
-        android:id="@+id/navigation_take"
-        android:name="com.blackcows.butakaeyak.ui.take.fragment.TakeFragment"
-        android:label="@string/title_user"
-        tools:layout="@layout/fragment_take" >
     </fragment>
 </navigation>

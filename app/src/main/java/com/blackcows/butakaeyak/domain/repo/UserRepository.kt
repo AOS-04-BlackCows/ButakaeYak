@@ -5,6 +5,7 @@ import com.blackcows.butakaeyak.data.models.User
 import com.blackcows.butakaeyak.data.models.UserRequest
 import com.blackcows.butakaeyak.domain.result.LoginResult
 import com.blackcows.butakaeyak.domain.result.SignUpResult
+import com.blackcows.butakaeyak.ui.schedule.recycler.ScheduleProfile
 
 interface UserRepository {
     suspend fun loginWithId(id: String, pwd: String): LoginResult
@@ -21,4 +22,6 @@ interface UserRepository {
     suspend fun deleteProfile(user: User): User
 
     suspend fun registerDeviceToken(user: User): User
+
+    suspend fun getProfileAndName(userId: String): ScheduleProfile
 }

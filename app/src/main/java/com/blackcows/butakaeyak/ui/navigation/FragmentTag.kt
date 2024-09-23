@@ -15,5 +15,6 @@ enum class FragmentTag {
     SignInFragment,
     TermsFragment,
     MapFragment,
-    OpenAPIFragment
+    OpenAPIFragment,
+    UserFragment
 }

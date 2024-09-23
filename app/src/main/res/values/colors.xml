@@ -15,7 +15,10 @@
     <color name="dark_gray">#5C5C5C</color>
     <color name="gray">#B7B7B7</color>
     <color name="light_gray">#E9E9E9</color>
+
+    <color name="transparent_gray">#33E9E9E9</color>
     
     <color name="beige">#FFDBFBE8</color>
+    <color name="bright_gray_green">#FFE2EEE1</color>
 
 </resources>

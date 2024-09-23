@@ -1,9 +1,9 @@
 <resources>
     <string name="app_name">부탁해약</string>
-    <string name="title_home">Home</string>
-    <string name="title_search">Search</string>
-    <string name="title_map">map</string>
-    <string name="title_user">user</string>
+    <string name="title_home">홈</string>
+    <string name="title_note">노트</string>
+    <string name="title_schedule">스케줄</string>
+    <string name="title_user">마이페이지</string>
     <string name="title">부탁해약</string>
 
     <string name="phone_number">전화번호</string>
@@ -147,6 +147,9 @@
         \n개발자는 애플리케이션 내 정보를 수정할 의무를 지지 않으나 필요에 따라 개선할 수 있습니다.
         \n애플리케이션은 "검색 지원 서비스"로서 서비스 및 정보와 관련하여 직접, 간접, 부수적, 징벌적, 파생적인 손해에 관해서 책임을 지지 않습니다.
         \n개발자는 "구체적인 약의 정보 및 복용"에 대해 애플리케이션 이용 시 이용자에게 "약사에게 확인할 것"을 고지하고 있으며, 이를 이용자가 확인하지 않아 발생한 사고에 대해서는 개발자는 책임을 지지 않습니다.</string>
+    <string name="modifying_text">수정하기</string>
+    <string name="remove_text">삭제하기</string>
+    <string name="do_login_please_text">로그인이 필요한 서비스입니다. 로그인해주세요.</string>
 
 
     <!-- Open API -->

@@ -58,6 +58,12 @@
         <item name="android:textSize">20sp</item>
     </style>
 
+    <style name="medium_gray">
+        <item name="fontFamily">@font/pretendard</item>
+        <item name="android:textColor">@color/gray</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
     <style name="body_big">
         <item name="fontFamily">@font/pretendard</item>
         <item name="android:textColor">@color/black</item>
@@ -123,5 +129,12 @@
     <style name="NumberPicker">
         <item name="colorControlNormal">@color/green</item>
         <item name="android:textColorPrimary">@color/dark_gray</item>
+    </style>
+
+    <!-- bottomSheet 키보드 제어 -->
+    <style name="DialogStyle" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowSoftInputMode">adjustResize</item>
     </style>
 </resources>

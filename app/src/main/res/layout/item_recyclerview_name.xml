@@ -57,10 +57,11 @@
         android:id="@+id/btn_minus"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="20dp"
         android:background="@drawable/ic_minus"
-        app:layout_constraintTop_toTopOf="@id/et_medicine_name"
         app:layout_constraintBottom_toBottomOf="@id/et_medicine_name"
-        app:layout_constraintStart_toEndOf="@id/et_medicine_name"/>
+        app:layout_constraintStart_toEndOf="@id/et_medicine_name"
+        app:layout_constraintTop_toTopOf="@id/et_medicine_name"
+        app:layout_constraintVertical_bias="0.52" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

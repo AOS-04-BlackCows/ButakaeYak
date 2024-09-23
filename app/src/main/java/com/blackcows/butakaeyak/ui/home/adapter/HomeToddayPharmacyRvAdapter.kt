@@ -40,7 +40,9 @@ class HomeTodayMedicineRvAdapter(private val clickListener: ClickListener): List
             }
         }
     }
+
     var itemClick : ClickListener? = null
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ToddayMedicineListViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_home_today_medicine_group, parent, false)
         return ToddayMedicineListViewHolder(ItemHomeTodayMedicineGroupBinding.bind(view))

@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
+import com.blackcows.butakaeyak.data.models.Medicine
 import com.blackcows.butakaeyak.databinding.FragmentSearchBinding
 import com.blackcows.butakaeyak.ui.search.adapter.SearchViewPager
 import com.google.android.material.tabs.TabLayoutMediator
@@ -24,13 +25,19 @@ class SearchFragment : Fragment() {
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
 
+    private var columnCount = 2 //컬럼 갯수 = 2 그리드
+
     private lateinit var viewPager: ViewPager2
 
     private val searchViewModel: SearchViewModel by activityViewModels()
 
     private var imm : InputMethodManager? =null
-    private object homeData{
-        var userEffectList = mutableListOf<Pair<String,String>>()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+            columnCount = it.getInt(ARG_COLUMN_COUNT)
+        }
     }
 
     override fun onCreateView(
@@ -82,8 +89,6 @@ class SearchFragment : Fragment() {
             binding.searchLoImageblock.visibility = View.GONE
             imm!!.hideSoftInputFromWindow(binding.searchBtnSearch.windowToken, 0)
             searchViewModel.searchMedicinesWithName(query)
-
-            //TODO 키보드 내리기
             val inputMethodManager = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             inputMethodManager.hideSoftInputFromWindow(view?.windowToken ?: null, 0)
         }
@@ -126,6 +131,20 @@ class SearchFragment : Fragment() {
 
     private fun initView(){
 
+    }
+
+    companion object {
+
+        const val ARG_COLUMN_COUNT = "column-count"
+        const val TAB_NAME = "검색 기록"
+
+        @JvmStatic
+        fun newInstance(columnCount: Int,) =
+            SearchFragment().apply {
+                arguments = Bundle().apply {
+                    putInt(ARG_COLUMN_COUNT, columnCount)
+                }
+            }
     }
 
 }

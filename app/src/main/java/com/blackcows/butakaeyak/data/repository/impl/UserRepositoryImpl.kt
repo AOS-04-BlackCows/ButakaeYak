@@ -1,5 +1,6 @@
 package com.blackcows.butakaeyak.data.repository.impl
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.util.Log
 import com.blackcows.butakaeyak.data.models.User
@@ -11,8 +12,13 @@ import com.blackcows.butakaeyak.domain.repo.UserRepository
 import com.blackcows.butakaeyak.domain.result.LoginResult
 import com.blackcows.butakaeyak.domain.result.SignUpResult
 import com.blackcows.butakaeyak.firebase.firebase_store.models.UserData
+import com.blackcows.butakaeyak.ui.schedule.recycler.ScheduleProfile
 import com.google.firebase.messaging.FirebaseMessaging
+import com.kakao.sdk.auth.model.OAuthToken
+import com.kakao.sdk.common.model.ClientError
+import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import kotlin.coroutines.resume
@@ -21,7 +27,9 @@ import kotlin.coroutines.suspendCoroutine
 class UserRepositoryImpl @Inject constructor(
     private val userDataSource: UserDataSource,
     private val localUtilsDataSource: LocalUtilsDataSource,
-    private val imageDataSource: ImageDataSource
+    private val imageDataSource: ImageDataSource,
+    @ApplicationContext
+    private val context: Context
 ) : UserRepository {
 
     companion object {
@@ -65,31 +73,63 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun trySignUpWithKakao(): SignUpResult {
         return kotlin.runCatching {
-            val result = suspendCoroutine {
-                UserApiClient.instance.me{ user, error ->
-                    if (error!= null) {
-                        Log.e(TAG, "카카오 사용자 정보 요청 실패: $error")
-                        it.resume(null)
-                    } else if (user != null) {
-                        Log.i(TAG, "사용자 정보 요청 성공 ${user.id}")
-
-                        val kakaoUserRequest = UserRequest(
-                            name = user.kakaoAccount?.profile?.nickname !!,
-                            kakaoId = user.id!!,
-                            profileUrl = user.kakaoAccount?.profile?.thumbnailImageUrl ?: ""
-                        )
-
-                        it.resume(kakaoUserRequest)
+            val result = suspendCoroutine<Pair<OAuthToken?, Throwable?>> { continuation ->
+                if (UserApiClient.instance.isKakaoTalkLoginAvailable(context)) {
+                    // 카카오톡 로그인
+                    UserApiClient.instance.loginWithKakaoTalk(context) { token, e ->
+                        // 사용자 취소
+                        if (e != null) {
+                            if (e is ClientError && e.reason == ClientErrorCause.Cancelled) {
+                                return@loginWithKakaoTalk
+                            }
+                            // 로그인 실패 -> 이메일 로그인
+                            UserApiClient.instance.loginWithKakaoAccount(context) { token, e ->
+                                continuation.resume(Pair(token, e))
+                            }
+                        } else if (token != null) {
+                            continuation.resume(Pair(token, null))
+                        }
+                    }
+                } else {
+                    // 카카오 이메일 로그인
+                    UserApiClient.instance.loginWithKakaoAccount(context) { token, e ->
+                        continuation.resume(Pair(token, e))
                     }
                 }
             }
 
-            if(result == null) {
-                SignUpResult.KakaoSignUpFail
+            if(result.second != null) {
+                Log.w(TAG, "trySignUpWithKakao: Kakako.GetToken returns error) msg: ${result.second!!.message}")
+                return SignUpResult.KakaoSignUpFail
             } else {
-                SignUpResult.Success(
-                    userDataSource.saveUser(result)
-                )
+                val loginResult = suspendCoroutine<UserRequest?> {
+                    UserApiClient.instance.me { user, error ->
+                        if(user != null) {
+                            it.resume(
+                                UserRequest(
+                                    name = user.kakaoAccount!!.profile!!.nickname!!,
+                                    loginId = null,
+                                    pwd = null,
+                                    profileUrl = user.kakaoAccount!!.profile!!.profileImageUrl!!,
+                                    kakaoId = user.id!!,
+                                    naverId = null,
+                                    googleId = null,
+                                    deviceToken = null
+                                )
+                            )
+                        } else {
+                            it.resume(null)
+                        }
+                    }
+                }
+
+                return if(loginResult == null) {
+                    SignUpResult.KakaoSignUpFail
+                } else {
+                    SignUpResult.Success(
+                        userDataSource.saveUser(loginResult)
+                    )
+                }
             }
         }
 //            .onSuccess {
@@ -164,5 +204,14 @@ class UserRepositoryImpl @Inject constructor(
         )
 
         return userDataSource.updateUser(newOne)
+    }
+
+    override suspend fun getProfileAndName(userId: String): ScheduleProfile {
+        val imageUrl = imageDataSource.getHttpUrl(userId)
+        val name = userDataSource.getUserWithId(userId)!!.name
+
+        return ScheduleProfile(
+            userId, name, imageUrl
+        )
     }
 }

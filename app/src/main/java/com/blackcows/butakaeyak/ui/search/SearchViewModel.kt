@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.blackcows.butakaeyak.data.models.Medicine
 import com.blackcows.butakaeyak.domain.GetMedicinesNameUseCase
+import com.blackcows.butakaeyak.domain.repo.LocalUtilsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,7 +17,10 @@ private const val TAG = "SearchResult"
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val getMedicinesNameUseCase: GetMedicinesNameUseCase,
+    private val localUtilsRepository: LocalUtilsRepository
 ) : ViewModel() {
+
+    private val queryHistory = MutableLiveData<String>()
 
     private val _text = MutableLiveData<String>().apply {
         value = "This is home Fragment"
@@ -37,4 +41,13 @@ class SearchViewModel @Inject constructor(
         }
     }
 
+    fun getQueryHistory(){
+        //TODO 검색한 기록 저장 (반환타입 List<String>)
+//        queryHistory.value = localUtilsRepository.getQueryHistory()
+    }
+
+    fun getViewedHistory(){
+        //TODO 검색후 클릭한 기록 저장 (반환타입 List<Medicine>)
+//        queryHistory.value = localUtilsRepository.getViewedViewedHistory()
+    }
 }

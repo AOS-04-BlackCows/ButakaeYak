@@ -52,7 +52,7 @@ class SearchDetailFragment () : Fragment(){
 
 
         with(binding) {
-            Glide.with(root).load(medicine.imageUrl?: R.drawable.medicine).into(binding.detailIvMedicine)
+            Glide.with(root).load(medicine.imageUrl?: R.drawable.logo_big).into(binding.detailIvMedicine)
 
             detailTvName.text = medicine.name
             detailTvEnterprise.text = medicine.enterprise

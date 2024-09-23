@@ -17,6 +17,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
@@ -25,6 +26,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.blackcows.butakaeyak.MainViewModel
 import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.data.models.Medicine
+import com.blackcows.butakaeyak.data.models.MedicineGroup
+import com.blackcows.butakaeyak.data.models.MedicineGroupRequest
+import com.blackcows.butakaeyak.data.models.MedicineGroupResponse
 import com.blackcows.butakaeyak.databinding.BottomsheetCalendarBinding
 import com.blackcows.butakaeyak.databinding.BottomsheetRepeatCycleBinding
 import com.blackcows.butakaeyak.databinding.FragmentCycleBinding
@@ -37,6 +41,7 @@ import com.blackcows.butakaeyak.ui.take.adapter.CycleAdapter
 import com.blackcows.butakaeyak.ui.take.data.AlarmItem
 import com.blackcows.butakaeyak.ui.take.data.MyMedicine
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import java.time.LocalDate
 import java.util.Calendar
 
 class CycleFragment : Fragment() {
@@ -76,7 +81,6 @@ class CycleFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         MainNavigation.hideBottomNavigation(true)
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
@@ -99,7 +103,7 @@ class CycleFragment : Fragment() {
         bottomSheetDialog.setContentView(bottomSheetView.root)
 
         bottomSheetView2 = BottomsheetRepeatCycleBinding.inflate(layoutInflater)
-        bottomSheetDialog2 = BottomSheetDialog(requireContext())
+        bottomSheetDialog2 = BottomSheetDialog(requireContext(), R.style.DialogStyle)
         bottomSheetDialog2.setContentView(bottomSheetView2.root)
 
         binding.etMedicineGroup.addTextChangedListener(object : TextWatcher {
@@ -109,8 +113,6 @@ class CycleFragment : Fragment() {
             }
             override fun afterTextChanged(s: Editable?) {}
         })
-
-
 
         binding.apply {
             ivBack.setOnClickListener {
@@ -128,75 +130,30 @@ class CycleFragment : Fragment() {
                     bottomSheetView.calendarView.setOnDateChangeListener { view, year, month, dayOfMonth ->
                         val selectDate = "${year}년 ${month + 1}월 ${dayOfMonth}일"
                         binding.tvStartDay.setText(selectDate)
+
+                        //TODO viewModel startDate 값 설정
+                        viewModel.startDate = binding.tvStartDay.text.toString()
                         btnNext()
                     }
             }
 
+            val inputMethodManager = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+
             binding.clRepeatCycle.setOnClickListener {
                 bottomSheetDialog2.show()
-
-                val selectedDays = mutableListOf<String>()
-
-                bottomSheetView2.tvMonday.setOnClickListener {
-                    handleDaySelection(it as TextView, "월", selectedDays)
-                }
-
-                bottomSheetView2.tvTuesday.setOnClickListener {
-                    handleDaySelection(it as TextView, "화", selectedDays)
-                }
-
-                bottomSheetView2.tvWednesday.setOnClickListener {
-                    handleDaySelection(it as TextView, "수", selectedDays)
-                }
-
-                bottomSheetView2.tvThursday.setOnClickListener {
-                    handleDaySelection(it as TextView, "목", selectedDays)
-                }
-
-                bottomSheetView2.tvFriday.setOnClickListener {
-                    handleDaySelection(it as TextView, "금", selectedDays)
-                }
-
-                bottomSheetView2.tvSaturday.setOnClickListener {
-                    handleDaySelection(it as TextView, "토", selectedDays)
-                }
-
-                bottomSheetView2.tvSunday.setOnClickListener {
-                    handleDaySelection(it as TextView, "일", selectedDays)
-                }
 
                 bottomSheetView2.btnNext.setOnClickListener {
                     if(bottomSheetView2.etCustom.text.isNotEmpty()){
                         binding.tvRepeatCycle.text = "${bottomSheetView2.etCustom.text}일"
                         bottomSheetView2.tvCustomCaption.setText("${bottomSheetView2.etCustom.text}일마다 반복합니다.")
                     }
-                    else {
-                        val orderedDays = orderSelectedDays(selectedDays)
-                        val selectedDaysString = orderedDays.joinToString(", ")
-                        binding.tvRepeatCycle.text = selectedDaysString
-                    }
+                    inputMethodManager.hideSoftInputFromWindow(bottomSheetView2.root.windowToken,0)
                     bottomSheetDialog2.dismiss()
                     btnNext()
                 }
 
                 bottomSheetDialog2.setOnDismissListener {
-                    bottomSheetView2.etCustom.setText("")
-
-                    bottomSheetView2.tvMonday.setBackgroundResource(android.R.color.white)
-                    bottomSheetView2.tvTuesday.setBackgroundResource(android.R.color.white)
-                    bottomSheetView2.tvWednesday.setBackgroundResource(android.R.color.white)
-                    bottomSheetView2.tvThursday.setBackgroundResource(android.R.color.white)
-                    bottomSheetView2.tvFriday.setBackgroundResource(android.R.color.white)
-                    bottomSheetView2.tvSaturday.setBackgroundResource(android.R.color.white)
-                    bottomSheetView2.tvSunday.setBackgroundResource(android.R.color.white)
-
-                    bottomSheetView2.tvMonday.isSelected = false
-                    bottomSheetView2.tvTuesday.isSelected = false
-                    bottomSheetView2.tvWednesday.isSelected = false
-                    bottomSheetView2.tvThursday.isSelected = false
-                    bottomSheetView2.tvFriday.isSelected = false
-                    bottomSheetView2.tvSaturday.isSelected = false
-                    bottomSheetView2.tvSunday.isSelected = false
+//                    bottomSheetView2.etCustom.setText("")
                 }
             }
 
@@ -235,12 +192,6 @@ class CycleFragment : Fragment() {
         alarmAddTextUpdate(adapter.itemCount)
     }
 
-    private fun orderSelectedDays(selectedDays: List<String>): List<String> {
-        val dayOrder = listOf("월", "화", "수", "목", "금", "토", "일")
-
-        return selectedDays.sortedBy { dayOrder.indexOf(it) }
-    }
-
     private fun showCustomTimePickerDialog() {
         // text 임시 설정
         val tempTextView = TextView(requireContext())
@@ -252,6 +203,10 @@ class CycleFragment : Fragment() {
             if (selectedTime.isNotEmpty()) {
                 addAlarmItem(selectedTime)
                 alarmAddTextUpdate(adapter.itemCount)
+
+                //TODO viewModel alarms 값 설정
+                val alarms: List<String> = alarmList.mapNotNull { it.timeText }
+                viewModel.alarms = alarms
             }
         }
         timePickerDialog.show()
@@ -293,6 +248,17 @@ class CycleFragment : Fragment() {
                 btnNext.setTextColor(Color.WHITE)
 
                 btnNext.setOnClickListener {
+                    val nameGroup = etMedicineGroup.text.toString()
+                    val finishDate = LocalDate.parse("2100-12-31").toString()
+
+                    //TODO viewModel 약 그룹이랑 끝나는 날짜 값 설정
+                    viewModel.groupName = nameGroup
+                    viewModel.finishDate = finishDate
+
+                    //TODO viewModel create, save
+//                    val groupCycle = viewModel.createNewMedicineGroupRequest()
+//                    viewModel.saveGroup(groupCycle)
+
                     val repeatCycle = tvRepeatCycle.text.toString()
                     val selectDate = tvStartDay.text.toString()
                     val dateFormat = dateFormatText(selectDate)
@@ -310,6 +276,7 @@ class CycleFragment : Fragment() {
                             it.timeText!!
                         }
                     )
+
                     newMyMedicine?.let { it1 -> mainViewModel.addToMyMedicineList(it1) }
                     MainNavigation.popCurrentFragment()
                 }
@@ -321,7 +288,7 @@ class CycleFragment : Fragment() {
             }
         }
     }
-//
+
     private fun setAlarmForAllItems(repeatType:String, startDate : Long) {
         val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
         val alarmList = adapter.getAlarmList()
@@ -348,12 +315,10 @@ class CycleFragment : Fragment() {
                     val alarmTime = alarm.timeInMillis
                     //선택한 날짜 + 알람 설정한 시간 더하는 변수
                     val adjustedTimeInMillis = startDate + (alarmTime % (24 * 60 * 60 * 1000)) + (9 * 60 * 60 * 1000)
-                    val alarmClock =
-//                        AlarmManager.AlarmClockInfo(adjustedTimeInMillis, pendingIntent)
-//                    alarmManager.setAlarmClock(alarmClock, pendingIntent)
+
                     Log.d("AlarmTest", "Adjusted Time In Millis: $adjustedTimeInMillis")
 
-                    //TODO 반복 주기에 따른 알람 설정 추가
+                    //반복 주기에 따른 알람 설정 추가
                     scheduleNextAlarm(repeatType, alarmManager, pendingIntent, adjustedTimeInMillis)
 
                 } catch (e: SecurityException) {
@@ -369,7 +334,7 @@ class CycleFragment : Fragment() {
         Toast.makeText(context, "알림이 설정되었습니다.", Toast.LENGTH_SHORT).show()
     }
 
-    //TODO 년,월,일 추출하는 메소드
+    //년,월,일 추출하는 메소드
     fun dateFormatText(dateText: String): Long {
         val year = dateText.substringBefore("년").trim().toInt()
         val month = dateText.substringAfter("년").substringBefore("월").trim().toInt() - 1 // Calendar는 0부터 시작
@@ -393,130 +358,18 @@ class CycleFragment : Fragment() {
         val calendar = Calendar.getInstance()
         calendar.timeInMillis = currentTimeMillis
 
+        val repeatInterval: Long
+        Log.d("AlarmDebug", "Repeat Type: $repeatType")
+
         when (repeatType) {
-            "1일" -> alarmManager.setRepeating(
-                AlarmManager.RTC_WAKEUP,
-                calendar.timeInMillis,
-                AlarmManager.INTERVAL_DAY,
-                pendingIntent
-            )
-            "2일" -> alarmManager.setRepeating(
-                AlarmManager.RTC_WAKEUP,
-                calendar.timeInMillis,
-                2*AlarmManager.INTERVAL_DAY,
-                pendingIntent
-            )
-            "3일" -> alarmManager.setRepeating(
-                AlarmManager.RTC_WAKEUP,
-                calendar.timeInMillis,
-                3*AlarmManager.INTERVAL_DAY,
-                pendingIntent
-            )
-            "4일" -> alarmManager.setRepeating(
-                AlarmManager.RTC_WAKEUP,
-                calendar.timeInMillis,
-                4*AlarmManager.INTERVAL_DAY,
-                pendingIntent
-            )
-            "5일" -> alarmManager.setRepeating(
-                AlarmManager.RTC_WAKEUP,
-                calendar.timeInMillis,
-                5*AlarmManager.INTERVAL_DAY,
-                pendingIntent
-            )
-            "6일" -> alarmManager.setRepeating(
-                AlarmManager.RTC_WAKEUP,
-                calendar.timeInMillis,
-                6*AlarmManager.INTERVAL_DAY,
-                pendingIntent
-            )
-            "7일" -> alarmManager.setRepeating(
-                AlarmManager.RTC_WAKEUP,
-                calendar.timeInMillis,
-                7*AlarmManager.INTERVAL_DAY,
-                pendingIntent
-            )
-            "월" -> {
-                calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
-                if (calendar.timeInMillis < System.currentTimeMillis()) {
-                    calendar.add(Calendar.WEEK_OF_YEAR, 1)  // 다음 월요일로 설정
-                }
+            "1일", "2일", "3일", "4일", "5일", "6일", "7일" -> {
+                // 일 단위 반복
+                repeatInterval = repeatType.replace("일", "").toLong()
+                Log.d("AlarmDebug2", "Repeat Type: $repeatInterval")
                 alarmManager.setRepeating(
                     AlarmManager.RTC_WAKEUP,
                     calendar.timeInMillis,
-                    AlarmManager.INTERVAL_DAY * 7, // 매주 반복
-                    pendingIntent
-                )
-            }
-            "화" -> {
-                calendar.set(Calendar.DAY_OF_WEEK, Calendar.TUESDAY)
-                if (calendar.timeInMillis < System.currentTimeMillis()) {
-                    calendar.add(Calendar.WEEK_OF_YEAR, 1)  // 다음 월요일로 설정
-                }
-                alarmManager.setRepeating(
-                    AlarmManager.RTC_WAKEUP,
-                    calendar.timeInMillis,
-                    AlarmManager.INTERVAL_DAY * 7, // 매주 반복
-                    pendingIntent
-                )
-            }
-            "수" -> {
-                calendar.set(Calendar.DAY_OF_WEEK, Calendar.WEDNESDAY)
-                if (calendar.timeInMillis < System.currentTimeMillis()) {
-                    calendar.add(Calendar.WEEK_OF_YEAR, 1)  // 다음 월요일로 설정
-                }
-                alarmManager.setRepeating(
-                    AlarmManager.RTC_WAKEUP,
-                    calendar.timeInMillis,
-                    AlarmManager.INTERVAL_DAY * 7, // 매주 반복
-                    pendingIntent
-                )
-            }
-            "목" -> {
-                calendar.set(Calendar.DAY_OF_WEEK, Calendar.THURSDAY)
-                if (calendar.timeInMillis < System.currentTimeMillis()) {
-                    calendar.add(Calendar.WEEK_OF_YEAR, 1)  // 다음 월요일로 설정
-                }
-                alarmManager.setRepeating(
-                    AlarmManager.RTC_WAKEUP,
-                    calendar.timeInMillis,
-                    AlarmManager.INTERVAL_DAY * 7, // 매주 반복
-                    pendingIntent
-                )
-            }
-            "금" -> {
-                calendar.set(Calendar.DAY_OF_WEEK, Calendar.FRIDAY)
-                if (calendar.timeInMillis < System.currentTimeMillis()) {
-                    calendar.add(Calendar.WEEK_OF_YEAR, 1)  // 다음 월요일로 설정
-                }
-                alarmManager.setRepeating(
-                    AlarmManager.RTC_WAKEUP,
-                    calendar.timeInMillis,
-                    AlarmManager.INTERVAL_DAY * 7, // 매주 반복
-                    pendingIntent
-                )
-            }
-            "토" -> {
-                calendar.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY)
-                if (calendar.timeInMillis < System.currentTimeMillis()) {
-                    calendar.add(Calendar.WEEK_OF_YEAR, 1)  // 다음 월요일로 설정
-                }
-                alarmManager.setRepeating(
-                    AlarmManager.RTC_WAKEUP,
-                    calendar.timeInMillis,
-                    AlarmManager.INTERVAL_DAY * 7, // 매주 반복
-                    pendingIntent
-                )
-            }
-            "일" -> {
-                calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY)
-                if (calendar.timeInMillis < System.currentTimeMillis()) {
-                    calendar.add(Calendar.WEEK_OF_YEAR, 1)  // 다음 일요일 설정
-                }
-                alarmManager.setRepeating(
-                    AlarmManager.RTC_WAKEUP,
-                    calendar.timeInMillis,
-                    AlarmManager.INTERVAL_DAY * 7, // 매주 반복
+                    repeatInterval * AlarmManager.INTERVAL_DAY,
                     pendingIntent
                 )
             }
@@ -525,18 +378,6 @@ class CycleFragment : Fragment() {
         // 반복되는 알람 설정
         val nextAlarmClock = AlarmManager.AlarmClockInfo(calendar.timeInMillis, pendingIntent)
         alarmManager.setAlarmClock(nextAlarmClock, pendingIntent)
-    }
-
-    //날짜 선택 시 색 변경
-    private fun handleDaySelection(textView: TextView, day: String, selectedDays: MutableList<String>) {
-        if (textView.isSelected) {
-            textView.setBackgroundResource(android.R.color.white)
-            selectedDays.remove(day)
-        } else {
-            textView.setBackgroundResource(R.drawable.user_cl_bg_green_gradient_gray)
-            selectedDays.add(day)
-        }
-        textView.isSelected = !textView.isSelected
     }
 
     override fun onDestroyView() {

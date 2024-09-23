@@ -15,7 +15,7 @@ import com.blackcows.butakaeyak.databinding.ItemResultsBinding
 import com.blackcows.butakaeyak.ui.search.data.ListItem
 import com.bumptech.glide.Glide
 
-private const val TAG = "홈 어뎁터"
+private const val TAG = "SearchRecyclerAdapter"
 class SearchRecyclerAdapter(private val clickListener: ClickListener) :
     ListAdapter<Medicine, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
 

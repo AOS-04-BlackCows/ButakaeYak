@@ -3,10 +3,8 @@ package com.blackcows.butakaeyak.ui.navigation
 import android.util.Log
 import android.view.View
 import androidx.activity.OnBackPressedCallback
-import androidx.core.app.ActivityCompat.finishAffinity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.replace
 import androidx.viewpager2.widget.ViewPager2
 import com.blackcows.butakaeyak.MainActivity
 import com.blackcows.butakaeyak.R
@@ -72,6 +70,13 @@ object MainNavigation {
         curStack.pop()
     }
 
+    fun showLoadingBar() {
+        binding.loadingView.visibility = View.VISIBLE
+    }
+    fun disableLoadingBar() {
+        binding.loadingView.visibility = View.GONE
+    }
+
 
 
     fun toOtherTab(tabTag: TabTag) {
@@ -86,8 +91,8 @@ object MainNavigation {
         fragmentManager = activity.supportFragmentManager
 
         fragmentStack[TabTag.Home] = Stack()
-        fragmentStack[TabTag.Search] = Stack()
-        fragmentStack[TabTag.Map] = Stack()
+        fragmentStack[TabTag.Schedule] = Stack()
+        fragmentStack[TabTag.Note] = Stack()
         fragmentStack[TabTag.User] = Stack()
 
         initViewPager(activity, binding)
@@ -127,23 +132,24 @@ object MainNavigation {
             }
 
             currentTab = when(item.itemId) {
-                R.id.navigation_take -> {
+                R.id.navigation_home -> {
                     binding.viewPager.currentItem = 0
                     TabTag.Home
                 }
-                R.id.navigation_home -> {
+                R.id.navigation_schedule -> {
                     binding.viewPager.currentItem = 1
-                    TabTag.Search
+                    TabTag.Schedule
                 }
-                R.id.navigation_map -> {
+                R.id.navigation_note -> {
                     binding.viewPager.currentItem = 2
 
-                    TabTag.Map
+                    TabTag.Note
                 }
                 R.id.navigation_user -> {
                     binding.viewPager.currentItem = 3
                     TabTag.User
                 }
+
                 else -> return@setOnItemSelectedListener false
             }
 

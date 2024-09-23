@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
-import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -16,27 +15,22 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.blackcows.butakaeyak.MainActivity
 import com.blackcows.butakaeyak.R
-import com.blackcows.butakaeyak.data.models.Medicine
+import com.blackcows.butakaeyak.data.models.TakeAddMedicine
 import com.blackcows.butakaeyak.databinding.FragmentNameBinding
-import com.blackcows.butakaeyak.ui.navigation.FragmentTag
 import com.blackcows.butakaeyak.ui.navigation.MainNavigation
 import com.blackcows.butakaeyak.ui.take.FormSelectDialog
-import com.blackcows.butakaeyak.ui.take.adapter.CycleAdapter
+import com.blackcows.butakaeyak.ui.take.TakeAddViewModel
 import com.blackcows.butakaeyak.ui.take.adapter.NameAdapter
-import com.blackcows.butakaeyak.ui.take.data.AlarmItem
 import com.blackcows.butakaeyak.ui.take.data.NameItem
-import com.blackcows.butakaeyak.ui.take.fragment.TakeAddFragment.Companion
 
 class NameFragment : Fragment() {
 
     //binding 설정
     private var _binding: FragmentNameBinding? = null
     private val binding get() = _binding!!
-
+    private val takeAddViewModel : TakeAddViewModel by activityViewModels()
     private lateinit var adapter : NameAdapter
 
     //data class
@@ -97,16 +91,31 @@ class NameFragment : Fragment() {
 
 //            etMedicineName.setText(medicine.name!!)
 
-            adapter = NameAdapter(mItems, requireContext())
+//            val nameList
+
+            takeAddViewModel.loadNames()
+            adapter = NameAdapter(object : NameAdapter.ClickListener {
+                override fun onMinusClick(item: TakeAddMedicine) {
+                    // TODO("Not yet implemented")
+                }
+
+                override fun onSearchClick(item: TakeAddMedicine) {
+                    // TODO("Not yet implemented")
+                }
+            }
+            )
             recyclerView.adapter = adapter
             recyclerView.layoutManager = LinearLayoutManager(requireContext())
-
+            takeAddViewModel.nameRvGroup.observe(viewLifecycleOwner) {
+                adapter.submitList(it)
+            }
             btnPlusMinus.setOnClickListener {
                 val image = btnMedicineForm.background
                 val bitmap = (image as BitmapDrawable).bitmap
                 val text = etMedicineName.text.toString()
                 val nameItem = NameItem(bitmap, text)
-                adapter.addItem(nameItem)
+                // TODO viewModel에 아이템 추가 로 다시 만들기
+//                adapter.addItem(nameItem)
                 hideKeyboard()
             }
 

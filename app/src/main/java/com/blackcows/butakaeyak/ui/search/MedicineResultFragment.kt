@@ -78,7 +78,7 @@ class MedicineResultFragment : Fragment() {
                     val bottomSheetView = BottomsheetSearchDetailBinding.inflate(layoutInflater)
                     val bottomSheetDialog = BottomSheetDialog(requireContext())
                     with(bottomSheetView){
-                        Glide.with(root).load(item.imageUrl?: R.drawable.medicine).into(detailIvMedicine)
+                        Glide.with(root).load(item.imageUrl?: R.drawable.logo_big).into(detailIvMedicine)
                         detailTvName.text = item.name
                         detailTvEnterprise.text = item.enterprise
                         detailTvEffect.text = item.effect
@@ -89,6 +89,7 @@ class MedicineResultFragment : Fragment() {
                         detailTvSideEffect.text = item.sideEffect
                         detailTvStoringMethod.text = item.storingMethod
                     }
+                    //TODO 클릭한 약 정보 검색 기록으로 넘겨야 함...
                     bottomSheetDialog.setContentView(bottomSheetView.root)
                     bottomSheetDialog.show()
 

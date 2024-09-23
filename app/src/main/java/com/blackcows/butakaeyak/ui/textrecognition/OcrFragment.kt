@@ -173,6 +173,7 @@ class OcrFragment : Fragment(), View.OnClickListener {
                     is GPTResultUIState.Success -> {
                         Log.d(TAG, "약이름 찾기후${uiState.response.gptMessage.trim()}")
                         if (!uiState.response.gptMessage.trim().equals("약 이름 없음")){
+                            medicineList = uiState.response.gptMessage.split(", ").toMutableList()
                             medicineList.let {
                                 takeAddViewModel.saveNames(it?: mutableListOf())
                             }

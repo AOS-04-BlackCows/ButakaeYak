@@ -6,35 +6,20 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.blackcows.butakaeyak.MainActivity
 import com.blackcows.butakaeyak.MainViewModel
-import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.data.models.Medicine
 import com.blackcows.butakaeyak.data.toKorean
 import com.blackcows.butakaeyak.databinding.FragmentTakeBinding
-import com.blackcows.butakaeyak.ui.example.UserUiState
 import com.blackcows.butakaeyak.ui.navigation.MainNavigation
 import com.blackcows.butakaeyak.ui.navigation.TabTag
-import com.blackcows.butakaeyak.ui.take.TakeUiState
 import com.blackcows.butakaeyak.ui.take.adapter.MyMedicinesRvAdapter
 import com.blackcows.butakaeyak.ui.take.adapter.TakeRvDecorator
 import com.blackcows.butakaeyak.ui.take.adapter.TodayMedicineRvAdapter
-import com.google.api.Distribution.BucketOptions.Linear
 import io.ktor.util.date.WeekDay
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
-import org.junit.internal.runners.statements.Fail
-import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
@@ -110,7 +95,7 @@ class TakeFragment : Fragment() {
         }
 
         noTodayGuideGoBtn.setOnClickListener {
-            MainNavigation.toOtherTab(TabTag.Search)
+            MainNavigation.toOtherTab(TabTag.Schedule)
         }
 
         todayMedicineRv.run {

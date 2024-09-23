@@ -1,5 +1,6 @@
 package com.blackcows.butakaeyak.ui.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -34,8 +35,12 @@ class UserViewModel @Inject constructor(
     private val _signUpUiState = MutableStateFlow<SignUpUiState>(SignUpUiState.Init)
     val signUpUiState = _signUpUiState.asStateFlow()
 
+
+
     fun autoLogin() {
         viewModelScope.launch {
+            _loginUiState.value = LoginUiState.Loading
+
             val data = localUtilsRepository.getAutoLoginData()
             val result =
                 if(data == null) LoginResult.Failure
@@ -43,6 +48,7 @@ class UserViewModel @Inject constructor(
                     if(data.isKakao) userRepository.loginWithKakaoId(data.kakaoId.toLong())
                     else userRepository.loginWithId(data.loginId, data.pwd)
                 }
+
 
             when(result) {
                 is LoginResult.Success -> {
@@ -53,7 +59,7 @@ class UserViewModel @Inject constructor(
                     _loginUiState.value = LoginUiState.UnKnownUserData
                 }
                 is LoginResult.Failure -> {
-                    _loginUiState.value = LoginUiState.Failure
+                    _loginUiState.value = LoginUiState.NotFoundAutoLoginData
                 }
             }
         }
@@ -62,16 +68,22 @@ class UserViewModel @Inject constructor(
     // 카카오 로그인에 사용
     fun signUpWithKakaoAndLogin() {
         viewModelScope.launch {
-            when(val signUpResult = userRepository.trySignUpWithKakao()) {
+            val signUpResult = userRepository.trySignUpWithKakao()
+            Log.d("UserViewModel", signUpResult.toString())
+            when(signUpResult) {
                 is SignUpResult.Success -> {
                     loginWithKakao(signUpResult.user.kakaoId!!.toLong())
+                    _signUpUiState.value = SignUpUiState.Success
                 }
                 is SignUpResult.KakaoSignUpFail -> {
                     _signUpUiState.value = SignUpUiState.KakaoSignUpFail
                 }
 
                 is SignUpResult.LoginIdDuplicate -> {
-                    throw Exception("SignUpWithKakao: 카카오로 로그인 시도했는데 LoginIdDuplicated가 반환됨.")
+                    val duplicated = Exception("SignUpWithKakao: 카카오로 로그인 시도했는데 LoginIdDuplicated가 반환됨.")
+                    Log.w("UserViewModel", duplicated.message!!)
+
+                    _signUpUiState.value = SignUpUiState.Failure
                 }
 
                 is SignUpResult.Failure -> {
@@ -83,10 +95,22 @@ class UserViewModel @Inject constructor(
 
     private fun loginWithKakao(kakakoId: Long) {
         viewModelScope.launch {
-            when(val result = userRepository.loginWithKakaoId(kakakoId)) {
+            val result = userRepository.loginWithKakaoId(kakakoId)
+            Log.d("UserViewModel: Login", result.toString())
+            when(result) {
                 is LoginResult.Success -> {
                     _user.value = result.user
+                    localUtilsRepository.saveAutoLoginData(
+                        AutoLoginData(
+                            isKakao = true,
+                            loginId = "",
+                            pwd = "",
+                            kakaoId = result.user.kakaoId!!.toString()
+                        )
+                    )
                     _loginUiState.value = LoginUiState.Success
+
+                    Log.d("UserViewModel", "User name is ${user.value!!.name}")
                 }
                 is LoginResult.UnknownAccount -> {
                     _loginUiState.value = LoginUiState.UnKnownUserData
@@ -104,6 +128,8 @@ class UserViewModel @Inject constructor(
 
     fun logout(onFinished: () -> Unit) {
         viewModelScope.launch {
+            _user.value = null
+            _loginUiState.value = LoginUiState.Init
             userRepository.logout()
             onFinished()
         }
