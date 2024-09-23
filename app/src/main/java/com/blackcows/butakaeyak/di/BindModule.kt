@@ -5,11 +5,17 @@ import com.blackcows.butakaeyak.domain.repo.KakaoMapRepository
 import com.blackcows.butakaeyak.domain.repo.LocalRepository
 import com.blackcows.butakaeyak.domain.repo.MedicineRepository
 import com.blackcows.butakaeyak.data.repository.impl.DrugRepositoryImpl
+import com.blackcows.butakaeyak.data.repository.impl.FriendRepositoryImpl
 import com.blackcows.butakaeyak.data.repository.impl.LocalRepositoryImpl
 import com.blackcows.butakaeyak.data.repository.impl.KakaoMapRepositoryImpl
+import com.blackcows.butakaeyak.data.repository.impl.LocalUtilsRepositoryImpl
 import com.blackcows.butakaeyak.data.repository.impl.MedicineRepositoryImpl
+import com.blackcows.butakaeyak.data.repository.impl.MemoRepositoryImpl
 import com.blackcows.butakaeyak.data.repository.impl.PharmacyRepositoryImpl
 import com.blackcows.butakaeyak.data.repository.impl.UserRepositoryImpl
+import com.blackcows.butakaeyak.domain.repo.FriendRepository
+import com.blackcows.butakaeyak.domain.repo.LocalUtilsRepository
+import com.blackcows.butakaeyak.domain.repo.MemoRepository
 import com.blackcows.butakaeyak.domain.repo.PharmacyRepository
 import com.blackcows.butakaeyak.domain.repo.UserRepository
 import dagger.Binds
@@ -43,4 +49,11 @@ abstract class BindModule {
     @Binds
     //@ViewModelScoped
     abstract fun providePharmacyRepository(impl: PharmacyRepositoryImpl): PharmacyRepository
+
+    @Binds
+    abstract fun provideFriendRepository(impl: FriendRepositoryImpl): FriendRepository
+
+    @Binds
+    //@ViewModelScoped
+    abstract fun provideLocalUtilsRepository(impl: LocalUtilsRepositoryImpl): LocalUtilsRepository
 }

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bottomsheet_map_list_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bottom_sheet_white_20"
+    android:paddingTop="20dp"
+    app:behavior_draggable="true"
+    app:behavior_hideable="true"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+    <com.google.android.material.divider.MaterialDivider
+        android:id="@+id/materialDivider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/close_bottom_sheet_list" />
+
+    <ImageView
+        android:id="@+id/close_bottom_sheet_list"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/icon_back_arr" />
+
+    <TextView
+        android:id="@+id/map_list_title"
+        style="@style/subtitle_b"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/favorite_pharmacy"
+        app:layout_constraintBottom_toBottomOf="@+id/close_bottom_sheet_list"
+        app:layout_constraintStart_toEndOf="@+id/close_bottom_sheet_list"
+        app:layout_constraintTop_toTopOf="@+id/close_bottom_sheet_list" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/bottomsheet_map_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="42dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/materialDivider"
+        tools:listitem="@layout/item_recyclerview_pharmacy_list" />
+</androidx.constraintlayout.widget.ConstraintLayout>

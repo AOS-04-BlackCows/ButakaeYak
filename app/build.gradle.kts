@@ -25,6 +25,10 @@ android {
         buildConfig = true
     }
 
+    kapt {
+        correctErrorTypes = true
+    }
+
     defaultConfig {
         applicationId = "com.blackcows.butakaeyak"
         minSdk = 26
@@ -32,7 +36,9 @@ android {
         versionCode = 1
         versionName = "1.0"
 
+        //testInstrumentationRunner = "dagger.hilt.android.testing.HiltTestRunner"
         testInstrumentationRunner = "com.blackcows.butakaeyak.HiltTestRunner"
+
 
         buildConfigField(
             "String",
@@ -90,6 +96,16 @@ android {
             "PHARMACY_LIST_INFO_KEY",
             properties.getProperty("pharmacy_list_info_key")
         )
+        buildConfigField(
+            "String",
+            "MEDICINE_INFO_KEY",
+            properties.getProperty("medicine_info_key")
+        )
+        buildConfigField(
+            "String",
+            "OPEN_AI_KEY",
+            properties.getProperty("open_ai_key")
+        )
     }
 
     buildTypes {
@@ -136,6 +152,13 @@ dependencies {
     implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.firebase.storage.ktx)
+    implementation(libs.androidx.legacy.support.v4)
+    implementation(libs.androidx.camera.core)
+    implementation(libs.androidx.camera.view)
+    implementation(libs.androidx.camera.lifecycle)
+    val camerax_version = "1.5.0-alpha01"
+    implementation("androidx.camera:camera-core:${camerax_version}")
+    implementation("androidx.camera:camera-camera2:${camerax_version}")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -161,8 +184,9 @@ dependencies {
     androidTestImplementation("com.google.dagger:hilt-android-testing:2.48")
     // ...with Kotlin.
     kaptAndroidTest("com.google.dagger:hilt-android-compiler:2.47")
-
+    androidTestImplementation("androidx.test:runner:1.5.2")
     testImplementation("org.robolectric:robolectric:4.9")
+    androidTestImplementation("org.robolectric:robolectric:4.9")
 
     // LiveData (optional)
     implementation("androidx.lifecycle:lifecycle-livedata-ktx")
@@ -181,6 +205,9 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.2.0"))
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-auth-ktx")     //인증
+    implementation("com.google.firebase:firebase-storage")
+    implementation("com.google.firebase:firebase-messaging-ktx")
+
 
     //Algoria
     implementation("com.algolia:algoliasearch-android:3.27.0")
@@ -191,4 +218,12 @@ dependencies {
     implementation("com.tickaroo.tikxml:core:0.8.13")
     implementation("com.tickaroo.tikxml:retrofit-converter:0.8.13")
     kapt("com.tickaroo.tikxml:processor:0.8.13")
+
+    //ML Kit
+    // To recognize Korean script
+    implementation ("com.google.mlkit:text-recognition-korean:16.0.1")
+    // viewPager2 Indicator
+    implementation("com.tbuonomo:dotsindicator:5.0")
+    implementation("com.vanniktech:android-image-cropper:4.5.0")
+
 }

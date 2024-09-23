@@ -3,8 +3,7 @@ package com.blackcows.butakaeyak.data.source.api
 import android.util.Log
 import com.blackcows.butakaeyak.data.models.Drug
 import com.blackcows.butakaeyak.data.models.Pill
-import com.blackcows.butakaeyak.data.retrofit.DrugApiService
-import retrofit2.Retrofit
+import com.blackcows.butakaeyak.data.retrofit.service.DrugApiService
 import javax.inject.Inject
 
 class DrugDataSource @Inject constructor(

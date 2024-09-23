@@ -9,6 +9,7 @@ output.json
 
 /local.properties
 /.idea/caches
+/.idea/appInsightsSettings.xml
 /.idea/libraries
 /.idea/modules.xml
 /.idea/workspace.xml
@@ -19,6 +20,7 @@ output.json
 /.idea/deploymentTargetDropDown.xml
 /.idea/misc.xml
 /.idea/render.experimental.xml
+/.idea/*
 .DS_Store
 /build
 /captures
@@ -33,4 +35,4 @@ local.properties
 *.keystore
 
 # Android Profiling
-*.hprof
+*.hprofuser_tv_stroke_light_pink_12dp.xml

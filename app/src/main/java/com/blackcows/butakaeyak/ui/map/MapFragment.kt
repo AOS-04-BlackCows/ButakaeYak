@@ -8,7 +8,6 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -19,23 +18,31 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.blackcows.butakaeyak.BuildConfig
 import com.blackcows.butakaeyak.MainViewModel
 import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.data.models.KakaoPlacePharmacy
 import com.blackcows.butakaeyak.data.source.LocalDataSource
 import com.blackcows.butakaeyak.databinding.BottomsheetMapDetailBinding
+import com.blackcows.butakaeyak.databinding.BottomsheetMapListBinding
 import com.blackcows.butakaeyak.databinding.FragmentMapBinding
+import com.blackcows.butakaeyak.ui.map.adapter.PharmacyListRvAdapter
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.kakao.sdk.common.KakaoSdk
 import com.kakao.sdk.common.util.Utility
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.LatLng
-import com.kakao.vectormap.camera.CameraAnimation
 import com.kakao.vectormap.camera.CameraUpdateFactory
+import com.kakao.vectormap.label.CompetitionType
+import com.kakao.vectormap.label.CompetitionUnit
+import com.kakao.vectormap.label.LabelLayer
+import com.kakao.vectormap.label.LabelLayerOptions
 import com.kakao.vectormap.label.LabelOptions
 import com.kakao.vectormap.label.LabelStyle
 import com.kakao.vectormap.label.LabelStyles
+import com.kakao.vectormap.label.OrderingType
+
 
 private const val TAG = "k3f_MapFragment"
 class MapFragment : Fragment() {
@@ -45,17 +52,21 @@ class MapFragment : Fragment() {
     private val mapViewModel: MapViewModel by activityViewModels()
     private var myPlaceLongtudeX: Double = 127.11547410533494 // 임시 127.11547410533494
     private var myPlaceLatitudeY: Double = 37.40754692649233 // 임시 37.40754692649233
+    private var viewPlaceLongtudeX: Double = myPlaceLongtudeX // 임시 127.11547410533494
+    private var viewPlaceLatitudeY: Double = myPlaceLatitudeY // 임시 37.40754692649233
+    private var locationStatus = false
     private lateinit var locationManager: LocationManager
     private lateinit var locationListener: LocationListener
 //    private var mFusedLocationProviderClient: FusedLocationProviderClient? = null // 현재 위치를 가져오기 위한 변수
-    private val REQUEST_PERMISSION_LOCATION = 10
 //    lateinit var mLastLocation: Location // 위치 값을 가지고 있는 객체
 //    private lateinit var mLocationRequest: LocationRequest // 위치 정보
-    private lateinit var bottomSheetView: BottomsheetMapDetailBinding
-    private lateinit var bottomSheetDialog: BottomSheetDialog
+    private lateinit var bottomSheetDetailView: BottomsheetMapDetailBinding
+    private lateinit var bottomSheetDetailDialog: BottomSheetDialog
+    private lateinit var bottomSheetListView: BottomsheetMapListBinding
+    private lateinit var bottomSheetListDialog: BottomSheetDialog
     private lateinit var kakaoMapCall: KakaoMap
-
     private val mainViewModel: MainViewModel by activityViewModels()
+    private lateinit var pharmacyListRvAdapter : PharmacyListRvAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -65,10 +76,6 @@ class MapFragment : Fragment() {
         _binding = FragmentMapBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        if (checkPermissionForLocation()) {
-            // 권한이 있을 때만 GPS 초기화
-            gpsInit()
-        }
         return root
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -78,12 +85,125 @@ class MapFragment : Fragment() {
          val keyHash = Utility.getKeyHash(requireContext())
          Log.d(TAG, "keyHash : $keyHash")
 
-        bottomSheetView = BottomsheetMapDetailBinding.inflate(layoutInflater)
-        bottomSheetDialog = BottomSheetDialog(requireContext())
-        bottomSheetDialog.setContentView(bottomSheetView.root)
-        kakaoMapInit(myPlaceLongtudeX, myPlaceLatitudeY)
-        mapViewModel.findPharmacy(myPlaceLongtudeX, myPlaceLatitudeY)
-        mapViewModel.moreFindPharmacy(myPlaceLongtudeX, myPlaceLatitudeY)
+
+
+        bottomSheetDetailView = BottomsheetMapDetailBinding.inflate(layoutInflater)
+        bottomSheetDetailDialog = BottomSheetDialog(requireContext())
+        bottomSheetDetailDialog.setContentView(bottomSheetDetailView.root)
+
+        bottomSheetListView = BottomsheetMapListBinding.inflate(layoutInflater)
+        bottomSheetListDialog = BottomSheetDialog(requireContext())
+        bottomSheetListDialog.setContentView(bottomSheetListView.root)
+
+        kakaoMapInit()
+
+        //ViewPager 설정
+        pharmacyListRvAdapter = PharmacyListRvAdapter (object : PharmacyListRvAdapter.ClickListener {
+            override fun onViewPharmacyDetail(item: KakaoPlacePharmacy) {
+                bottomSheetListDialog.cancel()
+                with(bottomSheetDetailView) {
+                    distance.text = "${item.distance}m"
+                    placeName.text = item.placeName
+                    phone.text = item.phone
+                    addressName.text = item.addressName
+                    roadAddressName.text = item.roadAddressName
+                    if (mainViewModel.isPharmacyChecked(item.id)) {
+                        btnFavorite.setImageResource(R.drawable.icon_favorite_active)
+                    } else {
+                        btnFavorite.setImageResource(R.drawable.icon_favorite)
+                    }
+                    btnFavorite.setOnClickListener {
+                        if (mainViewModel.isPharmacyChecked(item.id)) {
+                            mainViewModel.cancelFavoritePharmacy(item.id)
+                            btnFavorite.setImageResource(R.drawable.icon_favorite)
+                        } else {
+                            mainViewModel.addToFavoritePharmacyList(item)
+                            btnFavorite.setImageResource(R.drawable.icon_favorite_active)
+                        }
+                    }
+                    detailBtnCall.setOnClickListener {
+                        val phone = item.phone
+                        if (phone.isNotEmpty()) {
+                            val intent = Intent(Intent.ACTION_DIAL)
+                            intent.data = Uri.parse("tel:$phone")
+                            startActivity(intent)
+                        } else {
+                            Toast.makeText(context, "유효한 전화번호가 아닙니다.", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                    detailBtnFindRoad.setOnClickListener {
+                        val url = item.placeUrl
+                        if (url.isNotEmpty()) {
+                            val intent = Intent(Intent.ACTION_VIEW)
+                            intent.data = Uri.parse(url)
+                            startActivity(intent)
+                        } else {
+                            Toast.makeText(context, "유효한 URL이 아닙니다.", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+                bottomSheetDetailDialog.show()
+            }
+            // 즐겨찾기 아이콘 변경은 리싸이클러뷰에 작성되어있음.
+            override fun onFavoriteClick(item: KakaoPlacePharmacy, position: Int) {
+                if (mainViewModel.isPharmacyChecked(item.id)) {
+                    mainViewModel.cancelFavoritePharmacy(item.id)
+                } else {
+                    mainViewModel.addToFavoritePharmacyList(item)
+                }
+            }
+            override fun onCallClick(item: KakaoPlacePharmacy) {
+                val phone = item.phone
+                if (phone.isNotEmpty()) {
+                    val intent = Intent(Intent.ACTION_DIAL)
+                    intent.data = Uri.parse("tel:$phone")
+                    startActivity(intent)
+                } else {
+                    Toast.makeText(context, "유효한 전화번호가 아닙니다.", Toast.LENGTH_SHORT).show()
+                }
+            }
+            override fun onFindRoadClick(item: KakaoPlacePharmacy) {
+                val url = item.placeUrl
+                if (url.isNotEmpty()) {
+                    val intent = Intent(Intent.ACTION_VIEW)
+                    intent.data = Uri.parse(url)
+                    startActivity(intent)
+                } else {
+                    Toast.makeText(context, "유효한 URL이 아닙니다.", Toast.LENGTH_SHORT).show()
+                }
+            }
+        })
+        bottomSheetListView.bottomsheetMapList.run {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = pharmacyListRvAdapter
+            itemAnimator = null
+        }
+        binding.btnPharmacyList.setOnClickListener {
+            Log.d(TAG, "mapViewModel.items = ${mapViewModel.items.value}")
+            bottomSheetListView.mapListTitle.text = "약국 목록"
+            pharmacyListRvAdapter.submitList(mapViewModel.items.value)
+            bottomSheetListDialog.show()
+            bottomSheetListDialog.setOnShowListener {
+                bottomSheetListView.bottomsheetMapList.scrollToPosition(0)
+            }
+        }
+        binding.btnFavoriteList.setOnClickListener {
+            Log.d(TAG, "mainViewModel.pharmacies = ${mainViewModel.pharmacies.value}")
+            bottomSheetListView.mapListTitle.text = "즐겨찾기한 약국"
+            mainViewModel.getPharmacyList()
+            pharmacyListRvAdapter.submitList(mainViewModel.pharmacies.value?.toList()?: listOf())
+            bottomSheetListDialog.show()
+            bottomSheetListDialog.setOnShowListener {
+                bottomSheetListView.bottomsheetMapList.scrollToPosition(0)
+            }
+        }
+        bottomSheetListView.closeBottomSheetList.setOnClickListener {
+            bottomSheetListDialog.cancel()
+        }
+        // 바텀시트 리스트 다이얼로그를 닫게되면 데이터를 초기화함
+        bottomSheetListDialog.setOnCancelListener {
+            pharmacyListRvAdapter.submitList(listOf())
+        }
         /*
         해시키 발급하는 키
         try {
@@ -105,27 +225,14 @@ class MapFragment : Fragment() {
     }
 
     // 내 위치로 이동
-    private fun kakaoMapMoveCamera(kakaoMap: KakaoMap) {
-        var cameraUpdate = CameraUpdateFactory.newCenterPosition(LatLng.from(myPlaceLatitudeY, myPlaceLongtudeX))
-        kakaoMap.moveCamera(cameraUpdate, CameraAnimation.from(500, true, true))
+    private fun kakaoMapMoveCamera(y: Double,x: Double) {
+        var cameraUpdate = CameraUpdateFactory.newCenterPosition(LatLng.from(y, x))
+        viewPlaceLongtudeX = myPlaceLongtudeX
+        viewPlaceLatitudeY = myPlaceLatitudeY
+        kakaoMapCall.moveCamera(cameraUpdate)
     }
 
-    // 위치 권한이 있는지 확인하는 메서드
-    private fun checkPermissionForLocation(): Boolean {
-        // Android 6.0 Marshmallow 이상에서는 위치 권한에 추가 런타임 권한이 필요
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (requireContext().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                true
-            } else {
-                // 권한이 없으므로 권한 요청 알림 보내기
-                requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_PERMISSION_LOCATION)
-                Toast.makeText(requireContext(), "권한이 없어 해당 기능을 실행할 수 없습니다.", Toast.LENGTH_SHORT).show()
-                false
-            }
-        } else {
-            true
-        }
-    }
+
 
     // 사용자에게 권한 요청 후 결과에 대한 처리 로직
 //    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -139,18 +246,6 @@ class MapFragment : Fragment() {
 //            }
 //        }
 //    }
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == REQUEST_PERMISSION_LOCATION) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // 권한이 승인되면 GPS 초기화
-                gpsInit()
-            } else {
-                Log.d(TAG, "onRequestPermissionsResult() _ 권한 허용 거부")
-                Toast.makeText(requireContext(), "권한이 없어 해당 기능을 실행할 수 없습니다.", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
 
     // NEW GPS CODE
     fun gpsInit() {
@@ -176,9 +271,20 @@ class MapFragment : Fragment() {
                 // 위치 정보가 변경될 때 호출되는 콜백
                 myPlaceLongtudeX = location.longitude
                 myPlaceLatitudeY = location.latitude
+                viewPlaceLongtudeX = myPlaceLongtudeX
+                viewPlaceLatitudeY = myPlaceLatitudeY
                 // 위치 정보를 사용하여 원하는 작업 수행
                 Log.e(TAG, "onLocationChanged ( myPlaceLongtudeX = ${location.latitude}, myPlaceLatitudeY = ${location.longitude} )")
-                Log.e(TAG, "")
+                // 최초 한번 실행
+                if (!locationStatus) {
+                    if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                        locationStatus = true
+                        kakaoMapMoveCamera(myPlaceLatitudeY, myPlaceLongtudeX)
+                        mapViewModel.findPharmacy(myPlaceLongtudeX, myPlaceLatitudeY)
+                        mapViewModel.moreFindPharmacy(myPlaceLongtudeX, myPlaceLatitudeY)
+                    }
+                }
+
             }
 
             override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
@@ -198,53 +304,35 @@ class MapFragment : Fragment() {
         }
         // 위치 업데이트 요청
         if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1f, locationListener)
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 5f, locationListener)
         }
 
         // 위치정보얻기
-        // getAccuracy(): 정확도 || getLatitude(): 위도 || getLongitude(): 경도 || getTime(): 획득 시간
-       val location: Location? = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-       Log.d(TAG, LocationManager.GPS_PROVIDER)
+       val location: Location? = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+       Log.d(TAG, LocationManager.NETWORK_PROVIDER)
        location?.let{
            myPlaceLongtudeX = location.longitude // 갱신 된 경도 127.11547410533494
            myPlaceLatitudeY = location.latitude // 갱신 된 위도 37.40754692649233
            val accuracy = location.accuracy
            val time = location.time
            Log.d(TAG, "$myPlaceLongtudeX, $myPlaceLatitudeY, $location, $accuracy, $time")
-
-           // 위치 정보가 유효한 경우에만 카카오맵 초기화
-//           if (myPlaceLongtudeX != 0.0 && myPlaceLatitudeY != 0.0) {
-//           } else {
-//               Log.d(TAG, "유효하지 않은 위치 정보입니다.")
-//               Toast.makeText(requireContext(), "유효하지 않은 위치 정보입니다.", Toast.LENGTH_SHORT).show()
-//           }
        } ?: run {
            // 위치 정보가 없을 경우 처리
-           Log.d(TAG, "위치 정보를 가져올 수 없습니다.")
-           Toast.makeText(requireContext(), "위치 정보를 가져올 수 없습니다.", Toast.LENGTH_SHORT).show()
+           Log.d(TAG, "최근까지의 위치 정보를 가져올 수 없습니다.")
        }
-
-        binding.mapResearch.setOnClickListener {
-            val camera = kakaoMapCall.getCameraPosition()
-            myPlaceLatitudeY = camera?.position?.latitude?: 0.0
-            myPlaceLongtudeX = camera?.position?.longitude?: 0.0
-            mapViewModel.findPharmacy(myPlaceLongtudeX, myPlaceLatitudeY)
-        }
-        binding.mapViewMore.setOnClickListener {
-            if (mapViewModel.pharmacyPager <= 5) {
-                mapViewModel.moreFindPharmacy(myPlaceLongtudeX, myPlaceLatitudeY)
-            } else {
-                Toast.makeText(requireContext(), "표시된 약국이 많아 더 이상 검색할 수 없습니다.", Toast.LENGTH_SHORT).show()
-            }
-        }
     }
 
     // 카카오맵
-    private fun kakaoMapInit(x: Double, y: Double) {
+    private fun kakaoMapInit() {
         // 카카오맵 실행
         Log.d(TAG, "myPlaceX, myPlaceY = $myPlaceLongtudeX, $myPlaceLatitudeY")
-        KakaoMapUtil(requireContext()).kakaoMapInit(binding.mapView, x, y, mapViewModel) { kakaoMap ->
+        KakaoMapUtil(requireContext()).kakaoMapInit(binding.mapView, mapViewModel) { kakaoMap ->
             kakaoMapCall = kakaoMap
+            if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                // 권한이 있을 때만 GPS 초기화
+                gpsInit()
+            }
+
             // 버튼 이벤트 설정
             // 버튼 이벤트를 통해 현재 위치 찾기
             binding.btnLocation.setOnClickListener {
@@ -252,121 +340,147 @@ class MapFragment : Fragment() {
                     // 위치 찍는 코드
                     // startLocationUpdates()
                     // 현재 위치로 이동합니다.
-                    kakaoMapMoveCamera(kakaoMap)
+                    kakaoMapMoveCamera(myPlaceLatitudeY, myPlaceLongtudeX)
                 }
             }
             // 약국의 데이터가 들어오면 라벨을 찍어준다
+
+
+
             mapViewModel.items.observe(viewLifecycleOwner) { items ->
-                Log.d(TAG,"mapViewModel.items Changed")
-                kakaoMap.labelManager!!.layer
-                kakaoMap.labelManager!!.lodLayer
-                for (item in items) {
-                    val itemResult = with(item){
-                        "$placeName||$distance||$placeUrl||$categoryName||$addressName||$roadAddressName||$id||$phone||$categoryGroupCode||$categoryGroupName||$x||$y"
-                    }
-                    var style: LabelStyles?
-                    // id가 이미 pharmacy에 있을 때
-                    val styleFavorite = kakaoMap.labelManager?.addLabelStyles(LabelStyles.from(LabelStyle.from(R.drawable.icon_pharmacy_label_favorite)))
-                    val styleDefault = kakaoMap.labelManager?.addLabelStyles(LabelStyles.from(LabelStyle.from(R.drawable.icon_pharmacy_label)))
-                    val styleClicked = kakaoMap.labelManager?.addLabelStyles(LabelStyles.from(LabelStyle.from(R.drawable.icon_pharmacy_label_clicked)))
-                    fun styleCheck (id: String): LabelStyles? {
-                        return if (LocalDataSource(requireContext()).isPharmacyChecked(id)) {
-                            styleFavorite
-                        } else {
-                            styleDefault
-                        }
-                    }
-                    style = styleCheck(item.id)
-                    // 라벨 옵션 지정. 위경도와 스타일 넣기
-                    val options = LabelOptions.from(LatLng.from(item.y.toDouble(), item.x.toDouble())).setStyles(style).setTag(itemResult).setClickable(true)
-                    // 레이어 가져오기
-                    val layer = kakaoMap.labelManager?.layer
-                    // 레이어에 라벨 추가
-                    layer?.addLabel(options)
-                    kakaoMap.setOnLabelClickListener { kakaoMap, labelLayer, label ->
-                        Log.d(TAG, "Clicked Label id : $id")
-                        Log.d(TAG, label?.tag.toString())
-                        val tag = label?.tag.toString().split("||")
-                        val pharmacyData = KakaoPlacePharmacy(tag[0],tag[1],tag[2],tag[3],tag[4],tag[5],tag[6],tag[7],tag[8],tag[9],tag[10],tag[11])
-                        bottomSheetView.distance.text = "${pharmacyData.distance}m"
-                        bottomSheetView.placeName.text = pharmacyData.placeName
-                        bottomSheetView.phone.text = pharmacyData.phone
-                        bottomSheetView.placeUrl.text = pharmacyData.placeUrl
-                        bottomSheetView.addressName.text = pharmacyData.addressName
-                        bottomSheetView.roadAddressName.text = pharmacyData.roadAddressName
-                        label.changeStyles(styleClicked)
-                        bottomSheetDialog.setOnCancelListener {
-                            style = styleCheck(pharmacyData.id)
-                            label.changeStyles(style)
-                        }
-                        fun pharmacyChecked(): Boolean = LocalDataSource(requireContext()).isPharmacyChecked(pharmacyData.id)
-                        Log.d(TAG, "pharmacyChecked() = ${pharmacyChecked()}")
-                        fun activeIcon() {
-                            bottomSheetView.btnFavorite.setImageResource(R.drawable.icon_favorite_active)
-                            Log.d(TAG, "activeIcon() Run")
-                        }
-                        fun passiveIcon() {
-                            bottomSheetView.btnFavorite.setImageResource(R.drawable.icon_favorite)
-                            Log.d(TAG, "passiveIcon() Run")
-                        }
-                        // init icon option
-                        if (pharmacyChecked()) {
-                            activeIcon()
-                        } else {
-                            passiveIcon()
-                        }
-                        bottomSheetView.btnFavorite.setOnClickListener {
-                            if (pharmacyChecked()) {
-                                passiveIcon()
-                                mainViewModel.cancelFavoritePharmacy(pharmacyData.id)
-                            } else {
-                                activeIcon()
-                                mainViewModel.addToFavoritePharmacyList(pharmacyData)
-                            }
-                        }
-                        bottomSheetView.btnCall.setOnClickListener {
-                            val phone = pharmacyData.phone
-                            if (phone.isNotEmpty()) {
-                                val intent = Intent(Intent.ACTION_DIAL)
-                                intent.data = Uri.parse("tel:$phone")
-                                startActivity(intent)
-                            } else {
-                                Toast.makeText(context, "유효한 전화번호가 아닙니다.", Toast.LENGTH_SHORT).show()
-                            }
-                        }
-                        bottomSheetView.placeUrl.setOnClickListener {
-                            val url = pharmacyData.placeUrl
-                            if (url.isNotEmpty()) {
-                                val intent = Intent(Intent.ACTION_VIEW)
-                                intent.data = Uri.parse(url)
-                                startActivity(intent)
-                            } else {
-                                Toast.makeText(context, "유효한 URL이 아닙니다.", Toast.LENGTH_SHORT).show()
-                            }
-                        }
-                        bottomSheetDialog.show()
-                        true
-                    }
-                    /*
-                        selectTagArr Data
-                           [0] placeName = 예시 : 한우리약국,
-                        || [1] distance = 예시 : 291,
-                        || [2] placeUrl = 예시 : "http://place.map.kakao.com/9578427",
-                        || [3] categoryName = 예시 : "의료,건강 > 약국",
-                        || [4] addressName = 예시 : "경기 성남시 분당구 야탑동 215",
-                        || [5] roadAddressName = 예시 : "경기 성남시 분당구 장미로 139",
-                        || [6] id = 예시 : 9578427,
-                        || [7] phone = 예시 : "031-708-3399",
-                        || [8] categoryGroupCode = 예시 : "PM9",
-                        || [9] categoryGroupName = 예시 : "약국",
-                        || [10] x = 예시 : 127.13616482305073,
-                        || [11] y = 예시 : 37.413583634331886
-                    */
-                }
+                labelStyle(items)
+            }
+            mainViewModel.pharmacies.observe(viewLifecycleOwner) {
+                labelStyle(mapViewModel.items.value!!)
             }
         }
     }
 
+    // label style set
+
+    // label style set end
+
+    private fun labelStyle(items: List<KakaoPlacePharmacy>) {
+        // draw labels init
+        kakaoMapCall.labelManager?.removeAllLabelLayer()
+        kakaoMapCall.labelManager?.layer
+        kakaoMapCall.labelManager?.lodLayer
+        val styleClicked = kakaoMapCall.labelManager?.addLabelStyles(LabelStyles.from(LabelStyle.from(R.drawable.icon_pharmacy_label_clicked)))
+        val styleFavorite = kakaoMapCall.labelManager?.addLabelStyles(LabelStyles.from(LabelStyle.from(R.drawable.icon_pharmacy_label_favorite)))
+        val styleDefault = kakaoMapCall.labelManager?.addLabelStyles(LabelStyles.from(LabelStyle.from(R.drawable.icon_pharmacy_label)))
+        fun styleCheck (id: String): LabelStyles? {
+            return if (LocalDataSource(requireContext()).isPharmacyChecked(id)) {
+                styleFavorite
+            } else {
+                styleDefault
+            }
+        }
+        fun pharmacyChecked(thisData: KakaoPlacePharmacy): Boolean = LocalDataSource(requireContext()).isPharmacyChecked(thisData.id)
+        fun selectIconType(iconType: Boolean) {
+            when (iconType) {
+                false -> bottomSheetDetailView.btnFavorite.setImageResource(R.drawable.icon_favorite)
+                true -> bottomSheetDetailView.btnFavorite.setImageResource(R.drawable.icon_favorite_active)
+            }
+        }
+        var style: LabelStyles? = null
+        var options: LabelOptions? = null
+        // 사용자 커스텀으로 LabelLayer 생성
+        val layer: LabelLayer? = kakaoMapCall.labelManager?.addLayer(
+            LabelLayerOptions.from("default")
+                .setOrderingType(OrderingType.Rank)
+                .setCompetitionUnit(CompetitionUnit.IconAndText)
+                .setCompetitionType(CompetitionType.None)
+        )
+        val layerFavorite: LabelLayer? = kakaoMapCall.labelManager?.addLayer(
+            LabelLayerOptions.from("favorite")
+                .setOrderingType(OrderingType.Rank)
+                .setCompetitionUnit(CompetitionUnit.IconAndText)
+                .setCompetitionType(CompetitionType.None)
+        )
+        layer?.zOrder = 10001
+        layerFavorite?.zOrder = 10100
+        fun labelDraw (item: KakaoPlacePharmacy) {
+            // id가 이미 pharmacy에 있을 때
+            style = styleCheck(item.id)
+            // 라벨 옵션 지정. 위경도와 스타일 넣기
+            options = LabelOptions.from(LatLng.from(item.y.toDouble(), item.x.toDouble())).setStyles(style).setTag(item.id).setClickable(true)
+            // 레이어에 라벨 추가
+            if (pharmacyChecked(item)) {
+                // 이 아이템이 즐겨찾기에 있을 때
+                layerFavorite?.addLabel(options!!)
+            } else {
+                // 이 아이템이 즐겨찾기에 없을 때
+                layer?.addLabel(options!!)
+            }
+        }
+        // 라벨찍기
+        for (i in items) {
+            labelDraw(i)
+        }
+        kakaoMapCall.setOnLabelClickListener { kakaoMap, labelLayer, label ->
+            val pharmacyItem = items.first { it.id == label.tag }
+            with(bottomSheetDetailView) {
+                distance.text = "${pharmacyItem.distance}m"
+                placeName.text = pharmacyItem.placeName
+                phone.text = pharmacyItem.phone
+                addressName.text = pharmacyItem.addressName
+                roadAddressName.text = pharmacyItem.roadAddressName
+                label.changeStyles(styleClicked)
+                bottomSheetDetailDialog.setOnCancelListener {
+                    style = styleCheck(pharmacyItem.id)
+                    label.changeStyles(style)
+                }
+                // init icon option
+                selectIconType(pharmacyChecked(pharmacyItem))
+                btnFavorite.setOnClickListener {
+                    if (pharmacyChecked(pharmacyItem)) {
+                        mainViewModel.cancelFavoritePharmacy(pharmacyItem.id)
+                    } else {
+                        mainViewModel.addToFavoritePharmacyList(pharmacyItem)
+                    }
+                    selectIconType(pharmacyChecked(pharmacyItem))
+                }
+                detailBtnCall.setOnClickListener {
+                    val phone = pharmacyItem.phone
+                    if (phone.isNotEmpty()) {
+                        val intent = Intent(Intent.ACTION_DIAL)
+                        intent.data = Uri.parse("tel:$phone")
+                        startActivity(intent)
+                    } else {
+                        Toast.makeText(context, "유효한 전화번호가 아닙니다.", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                detailBtnFindRoad.setOnClickListener {
+                    val url = pharmacyItem.placeUrl
+                    if (url.isNotEmpty()) {
+                        val intent = Intent(Intent.ACTION_VIEW)
+                        intent.data = Uri.parse(url)
+                        startActivity(intent)
+                    } else {
+                        Toast.makeText(context, "유효한 URL이 아닙니다.", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+            bottomSheetDetailDialog.show()
+            true
+        }
+
+        binding.mapResearch.setOnClickListener {
+            val camera = kakaoMapCall.getCameraPosition()
+            kakaoMapCall.labelManager?.removeAllLabelLayer()
+            viewPlaceLatitudeY = camera?.position?.latitude?: 0.0
+            viewPlaceLongtudeX = camera?.position?.longitude?: 0.0
+            mapViewModel.findPharmacy(viewPlaceLongtudeX, viewPlaceLatitudeY)
+        }
+
+        binding.mapViewMore.setOnClickListener {
+            if (mapViewModel.pharmacyPager <= 5) {
+                mapViewModel.moreFindPharmacy(viewPlaceLongtudeX, viewPlaceLatitudeY)
+            } else {
+                Toast.makeText(requireContext(), "표시된 약국이 많아 더 이상 검색할 수 없습니다.", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 
     override fun onResume() {
         super.onResume()

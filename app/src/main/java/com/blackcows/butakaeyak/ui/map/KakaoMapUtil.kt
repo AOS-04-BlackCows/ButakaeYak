@@ -22,7 +22,7 @@ import com.kakao.vectormap.label.LabelStyles
 private const val TAG = "k3f_KakaoMapUtil"
 
 class KakaoMapUtil (private val context: Context) {
-    fun kakaoMapInit(mapView: MapView, myPlaceLongtudeX: Double, myPlaceLatitudeY: Double, mapViewModel: MapViewModel, onMapReady: (KakaoMap) -> Unit) {
+    fun kakaoMapInit(mapView: MapView, mapViewModel: MapViewModel, onMapReady: (KakaoMap) -> Unit) {
         // KakaoMap SDK 초기화
         KakaoMapSdk.init(context, BuildConfig.NATIVE_APP_KEY)
         mapView.start(object : MapLifeCycleCallback() {
@@ -44,7 +44,7 @@ class KakaoMapUtil (private val context: Context) {
 
             override fun getPosition(): LatLng {
                 // 지도 시작 시 위치 좌표를 설정
-                return LatLng.from(myPlaceLatitudeY, myPlaceLongtudeX)
+                return LatLng.from(0.0, 0.0)
             }
 
             override fun getZoomLevel(): Int {

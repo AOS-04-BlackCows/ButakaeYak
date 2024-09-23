@@ -4,7 +4,7 @@ import android.util.Log
 import com.algolia.search.saas.Client
 import com.algolia.search.saas.Query
 import com.blackcows.butakaeyak.data.models.Medicine
-import com.blackcows.butakaeyak.data.retrofit.DrugApiService
+import com.blackcows.butakaeyak.data.retrofit.service.DrugApiService
 import com.google.gson.Gson
 import javax.inject.Inject
 import kotlin.coroutines.resume

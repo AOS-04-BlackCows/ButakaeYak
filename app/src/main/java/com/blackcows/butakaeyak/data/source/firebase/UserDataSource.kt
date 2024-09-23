@@ -1,6 +1,11 @@
 package com.blackcows.butakaeyak.data.source.firebase
 
+import android.util.Log
+import com.blackcows.butakaeyak.data.models.User
+import com.blackcows.butakaeyak.data.models.UserRequest
 import com.blackcows.butakaeyak.data.toMap
+import com.blackcows.butakaeyak.data.toObjectWithId
+import com.blackcows.butakaeyak.data.toObjectsWithId
 import com.blackcows.butakaeyak.firebase.firebase_store.models.UserData
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
@@ -15,62 +20,90 @@ class UserDataSource @Inject constructor(
 ){
     private val db = Firebase.firestore
 
+
     companion object {
-        private const val TAG = "UserDataSource"
+        private const val TAG = "UserSource"
         private const val USER_COLLECTION = "users"
 
-        private const val ID = "id"
+        private const val LOGIN_ID = "loginId"
         private const val PASSWORD = "pwd"
         private const val KAKAO_ID = "kakaoId"
 
-        val USER_NOT_FOUND_EXCEPTION = object : Exception() {
+        val NOT_REGISTER_USER = object: Exception() {
             override val message: String
-                get() = "가입된 정보가 없습니다."
-        }
-        val DUPLICATED_EXCEPTION = object : Exception() {
-            override val message: String
-                get() = "이미 가입된 사용자입니다."
+                get() = "존재하지 않는 User에 접근 시도함."
         }
     }
 
-    suspend fun getUserWithLoginId(id: String, pwd: String): Result<UserData> {
-        val result = db.collection(USER_COLLECTION)
-            .whereEqualTo(ID, id)
+    suspend fun getUserWithId(id: String): User? {
+        return db.collection(USER_COLLECTION)
+            .document(id)
+            .get().await().toObjectWithId()
+    }
+
+    suspend fun updateUser(user: User): User {
+        val saved = db.collection(USER_COLLECTION)
+            .document(user.id).get().await()
+
+        if(saved == null) {
+            throw NOT_REGISTER_USER
+        } else {
+            db.collection(USER_COLLECTION)
+                .document(user.id)
+                .set(user.toRequest()).await()
+
+            return getUserWithId(user.id)!!
+        }
+    }
+
+    suspend fun getUserWithLoginId(id: String, pwd: String): User? {
+        return db.collection(USER_COLLECTION)
+            .whereEqualTo(LOGIN_ID, id)
             .whereEqualTo(PASSWORD, pwd)
-            .get().await()?.toObjects(UserData::class.java)?.getOrNull(0)
-
-        return if(result == null) Result.failure(USER_NOT_FOUND_EXCEPTION)
-                else Result.success(result)
+            .get().await().toObjectsWithId<User>().getOrNull(0)
     }
 
-    private suspend fun isDuplicatedId(id: String): Boolean {
+    suspend fun isDuplicatedId(id: String): Boolean {
         val result = db.collection(USER_COLLECTION)
-            .whereEqualTo(ID, id)
-            .get().await()?.toObjects(UserData::class.java)?.getOrNull(0)
+                .whereEqualTo(LOGIN_ID, id)
+                .get().await().toObjectsWithId<User>().getOrNull(0)
 
         return (result != null)
     }
 
-    suspend fun getUserWithKakaoId(id: Long): Result<UserData> {
-        val result = db.collection(USER_COLLECTION)
+    suspend fun getUserWithKakaoId(id: Long): User? {
+        return db.collection(USER_COLLECTION)
             .whereEqualTo(KAKAO_ID, id)
-            .get().await()?.toObjects(UserData::class.java)?.getOrNull(0)
-
-        return if(result == null) Result.failure(USER_NOT_FOUND_EXCEPTION)
-        else Result.success(result)
+            .get().await().toObjectsWithId<User>().firstOrNull()
     }
 
-    suspend fun saveUserData(userData: UserData): Result<UserData> = coroutineScope {
-        val hasAccount = async { userData.id?.let { isDuplicatedId(userData.id) } ?: false }
-        val hasKakaoAccount = async {
-            (userData.kakaoId != null && getUserWithKakaoId(userData.kakaoId).isSuccess)
-        }
+    suspend fun saveUser(user: User): User {
+        val userRequest = user.toRequest()
+        return db.collection(USER_COLLECTION)
+                .add(userRequest)
+                .await().get().await().toObjectWithId<User>()!!
+    }
+    suspend fun saveUser(user: UserRequest): User {
+        return db.collection(USER_COLLECTION)
+            .add(user)
+            .await().get().await().toObjectWithId<User>()!!
+    }
 
-        if (!hasAccount.await() && !hasKakaoAccount.await()) {
-            db.collection("users")
-                .add(userData.toMap()).await()
+    suspend fun registerDeviceToken(user: User, token: String): User? {
+        val withToken = user.copy(
+            deviceToken = token
+        )
 
-            Result.success(userData)
-        } else Result.failure(DUPLICATED_EXCEPTION)
+        db.collection(USER_COLLECTION)
+            .document(user.id)
+            .set(withToken)
+
+        return withToken
+    }
+
+    suspend fun deleteAccount(user: User) {
+        db.collection(USER_COLLECTION)
+            .document(user.id)
+            .delete().await()
     }
 }

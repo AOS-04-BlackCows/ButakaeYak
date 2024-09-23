@@ -7,6 +7,11 @@ plugins {
 }
 
 buildscript {
+    repositories {
+        // Add the following line:
+        google()  // Google's Maven repository
+    }
+
     dependencies {
         classpath("com.google.dagger:hilt-android-gradle-plugin:2.48")
     }

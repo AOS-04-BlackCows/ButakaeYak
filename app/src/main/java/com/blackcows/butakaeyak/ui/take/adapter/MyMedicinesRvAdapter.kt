@@ -1,30 +1,19 @@
 package com.blackcows.butakaeyak.ui.take.adapter
 
-import android.app.AlertDialog
-import android.app.Dialog
-import android.content.DialogInterface
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.blackcows.butakaeyak.R
-import com.blackcows.butakaeyak.data.models.Medicine
 import com.blackcows.butakaeyak.databinding.MyMedicineItemBinding
-import com.blackcows.butakaeyak.databinding.TodayMedicineItemBinding
-import com.blackcows.butakaeyak.domain.repo.LocalRepository
-import com.blackcows.butakaeyak.ui.home.MedicineResultFragment
-import com.blackcows.butakaeyak.ui.home.SearchDetailFragment
+import com.blackcows.butakaeyak.ui.search.SearchDetailFragment
 import com.blackcows.butakaeyak.ui.navigation.FragmentTag
 import com.blackcows.butakaeyak.ui.navigation.MainNavigation
-import com.blackcows.butakaeyak.ui.take.data.MedicineAtTime
 import com.blackcows.butakaeyak.ui.take.data.MyMedicine
 import com.blackcows.butakaeyak.ui.take.fragment.CycleFragment
 import com.bumptech.glide.Glide
-import javax.inject.Inject
 
 class MyMedicinesRvAdapter(
     private val longClickCallback: (MyMedicine) -> Unit
@@ -63,7 +52,8 @@ class MyMedicinesRvAdapter(
                     }
                     tvMedicineAlarmIv.setOnClickListener {
                         MainNavigation.addFragment(
-                            CycleFragment.newInstance(item.medicine), FragmentTag.CycleFragment
+                            CycleFragment.newInstance(item.medicine, FragmentTag.CycleFragmentInHome),
+                            FragmentTag.CycleFragmentInHome
                         )
                     }
                 }

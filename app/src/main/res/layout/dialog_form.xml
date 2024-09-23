@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="310dp"
+    android:layout_height="370dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/tv_form_select"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        style="@style/subtitle_b"
+        android:background="@drawable/user_cl_bg_green_radius_top"
+        android:text="약 제형을 골라주세요"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@drawable/user_cl_bg_white_radius_bot"
+        app:layout_constraintTop_toBottomOf="@id/tv_form_select"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <ImageView
+            android:id="@+id/medicine_type_1"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/medicine_type_1"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="20dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <ImageView
+            android:id="@+id/medicine_type_2"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/medicine_type_2"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="10dp"
+            app:layout_constraintStart_toEndOf="@id/medicine_type_1"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <ImageView
+            android:id="@+id/medicine_type_3"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/medicine_type_3"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="10dp"
+            app:layout_constraintStart_toEndOf="@id/medicine_type_2"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <ImageView
+            android:id="@+id/medicine_type_4"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/medicine_type_4"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <ImageView
+            android:id="@+id/medicine_type_5"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/medicine_type_5"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="20dp"
+            app:layout_constraintTop_toBottomOf="@id/medicine_type_1"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <ImageView
+            android:id="@+id/medicine_type_6"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/medicine_type_6"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
+            app:layout_constraintStart_toEndOf="@id/medicine_type_5"
+            app:layout_constraintTop_toBottomOf="@id/medicine_type_1"/>
+
+        <ImageView
+            android:id="@+id/medicine_type_7"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/medicine_type_7"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
+            app:layout_constraintStart_toEndOf="@id/medicine_type_6"
+            app:layout_constraintTop_toBottomOf="@id/medicine_type_1"/>
+
+        <ImageView
+            android:id="@+id/medicine_type_8"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/medicine_type_8"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/medicine_type_1"/>
+
+        <ImageView
+            android:id="@+id/medicine_type_9"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/medicine_type_9"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/medicine_type_5"/>
+
+        <ImageView
+            android:id="@+id/medicine_type_10"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/medicine_type_10"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
+            app:layout_constraintStart_toEndOf="@id/medicine_type_9"
+            app:layout_constraintTop_toBottomOf="@id/medicine_type_5"/>
+
+        <ImageView
+            android:id="@+id/medicine_type_11"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/medicine_type_11"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
+            app:layout_constraintStart_toEndOf="@id/medicine_type_10"
+            app:layout_constraintTop_toBottomOf="@id/medicine_type_5"/>
+
+        <ImageView
+            android:id="@+id/medicine_type_12"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/medicine_type_12"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/medicine_type_5"/>
+
+        <ImageView
+            android:id="@+id/medicine_type_13"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/medicine_type_13"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/medicine_type_9"/>
+
+        <ImageView
+            android:id="@+id/medicine_type_14"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/medicine_type_14"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
+            app:layout_constraintStart_toEndOf="@id/medicine_type_9"
+            app:layout_constraintTop_toBottomOf="@id/medicine_type_9"/>
+
+        <ImageView
+            android:id="@+id/medicine_type_15"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/medicine_type_15"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
+            app:layout_constraintStart_toEndOf="@id/medicine_type_14"
+            app:layout_constraintTop_toBottomOf="@id/medicine_type_9"/>
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

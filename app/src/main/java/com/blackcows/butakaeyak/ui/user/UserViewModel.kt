@@ -34,7 +34,7 @@ class UserViewModel @Inject constructor(
     suspend fun logout() {
         localRepository.deleteUserData()
         if(currentUser.value!!.kakaoId != null) {
-            userRepository.logoutKakao()
+            userRepository.logout()
         }
         withContext(Dispatchers.Main) {
             currentUser.value = null

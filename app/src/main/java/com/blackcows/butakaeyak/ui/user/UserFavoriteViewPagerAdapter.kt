@@ -1,7 +1,5 @@
 package com.blackcows.butakaeyak.ui.user
 
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -9,9 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.data.models.KakaoPlacePharmacy
-import com.blackcows.butakaeyak.data.source.LocalDataSource
 import com.blackcows.butakaeyak.databinding.MypageItemFavoriteBinding
-import com.bumptech.glide.Glide
 
 class UserFavoriteViewPagerAdapter(
     private val onClickRemove: (KakaoPlacePharmacy) -> Unit

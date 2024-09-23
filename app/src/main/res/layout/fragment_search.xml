@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:paddingHorizontal="16dp"
     android:paddingVertical="16dp"
-    tools:context=".ui.home.HomeFragment"
+    tools:context=".ui.search.SearchFragment"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -19,12 +19,12 @@
         app:layout_constraintTop_toBottomOf="@+id/search_lo_tab">
 
         <ImageView
-            android:layout_width="200dp"
-            android:layout_height="200dp"
+            android:layout_width="240dp"
+            android:layout_height="240dp"
 
             android:scaleType="fitCenter"
-            android:src="@drawable/medicine_search"
-            app:tint="@color/any_200"
+            android:src="@drawable/logo_big_trans"
+            app:tint="#EEEEEE"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -45,7 +45,7 @@
             android:layout_height="64dp"
 
             android:scaleType="fitCenter"
-            android:src="@drawable/logo_final"
+            android:src="@drawable/logo_big"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -61,18 +61,18 @@
 
             <EditText
                 android:id="@+id/search_et_searchtext"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginEnd="1dp"
+                android:paddingEnd="32dp"
                 android:background="@null"
                 android:layout_marginStart="4dp"
                 android:hint="@string/hint_search"
                 android:maxLines="1"
                 android:singleLine="true"
                 android:inputType="text"
+                android:imeOptions="actionDone"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/search_btn_search"
-                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -87,90 +87,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/search_et_searchtext" />
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone"
-            app:layout_constraintStart_toStartOf="@+id/search_iv_logo"
-            app:layout_constraintTop_toBottomOf="@+id/search_iv_logo">
-
-            <HorizontalScrollView
-                android:id="@+id/search_sv_keywords"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="4dp">
-
-                <com.google.android.material.chip.ChipGroup
-                    android:id="@+id/search_cg_keyword"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:singleLine="true"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/searchCategory1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        style="@style/Widget.MaterialComponents.Chip.Filter"
-
-                        android:text="머리"/>
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/searchCategory2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        style="@style/Widget.MaterialComponents.Chip.Filter"
-                        android:background="@drawable/selector_key_button"
-                        android:text="얼굴"/>
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/searchCategory3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        style="@style/Widget.MaterialComponents.Chip.Filter"
-                        android:background="@drawable/selector_key_button"
-                        android:text="목"/>
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/searchCategory4"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        style="@style/Widget.MaterialComponents.Chip.Filter"
-                        android:background="@drawable/selector_key_button"
-                        android:text="가슴/흉부"/>
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/searchCategory5"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        style="@style/Widget.MaterialComponents.Chip.Filter"
-                        android:background="@drawable/selector_key_button"
-                        android:text="복부"/>
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/searchCategory6"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        style="@style/Widget.MaterialComponents.Chip.Filter"
-                        android:background="@drawable/selector_key_button"
-                        android:text="등/허리"/>
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/searchCategory7"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        style="@style/Widget.MaterialComponents.Chip.Filter"
-                        android:background="@drawable/selector_key_button"
-                        android:text="다리/발"/>
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/searchCategory8"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        style="@style/Widget.MaterialComponents.Chip.Filter"
-                        android:background="@drawable/selector_key_button"
-                        android:text="피부"/>
-
-                </com.google.android.material.chip.ChipGroup>
-            </HorizontalScrollView>
-        </LinearLayout>
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

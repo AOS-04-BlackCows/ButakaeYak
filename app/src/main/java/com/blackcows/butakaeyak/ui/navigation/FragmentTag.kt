@@ -4,10 +4,16 @@ enum class FragmentTag {
     // 컨벤션: {FragmentName}In{TabName}
 
     TakeAddFragment,
+    OCRFragment,
     MedicineDetailFragment,
-    CycleFragment,
+    CycleFragmentInTakeAdd,
+    CycleFragmentInHome,
     SearchDetailFragmentInSearch,
     NameFragment,
     FormFragment,
-    SearchDetailFragmentInTake
+    SearchDetailFragmentInTake,
+    SignInFragment,
+    TermsFragment,
+    MapFragment,
+    OpenAPIFragment
 }

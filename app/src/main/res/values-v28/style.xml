@@ -14,6 +14,13 @@
         <item name="android:textFontWeight">700</item>
     </style>
 
+    <style name="medium_b">
+        <item name="fontFamily">@font/pretendard</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textFontWeight">700</item>
+    </style>
+
     <style name="body_b">
         <item name="fontFamily">@font/pretendard</item>
         <item name="android:textColor">@color/black</item>
@@ -39,6 +46,13 @@
         <item name="fontFamily">@font/pretendard</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:textSize">24sp</item>
+        <item name="android:textFontWeight">400</item>
+    </style>
+
+    <style name="medium">
+        <item name="fontFamily">@font/pretendard</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">20sp</item>
         <item name="android:textFontWeight">400</item>
     </style>
 

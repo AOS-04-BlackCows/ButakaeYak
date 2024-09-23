@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/tv_pharmacy_name"
+        style="@style/medium_b"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:text="정제"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_pharmacy_distance"
+        style="@style/caption_gray"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:paddingEnd="32dp"
+        android:text="@string/distance"
+        android:textColor="@color/any_200"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_pharmacy_name"
+        app:layout_constraintStart_toEndOf="@+id/tv_pharmacy_name" />
+
+<!--    <TextView-->
+<!--        android:id="@+id/tv_pharmacy_address"-->
+<!--        style="@style/body"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="4dp"-->
+<!--        android:text="@string/address_name"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/tv_pharmacy_name"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/tv_pharmacy_name" />-->
+
+    <TextView
+        android:id="@+id/tv_pharmacy_road_address"
+        style="@style/body"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="@string/road_address_name"
+        app:layout_constraintStart_toStartOf="@+id/tv_pharmacy_name"
+        app:layout_constraintTop_toBottomOf="@+id/tv_pharmacy_name" />
+
+    <TextView
+        android:id="@+id/tv_pharmacy_tel_num"
+        style="@style/body"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="@string/phone_number"
+        android:textColor="@color/any_500"
+        app:layout_constraintStart_toStartOf="@+id/tv_pharmacy_name"
+        app:layout_constraintTop_toBottomOf="@+id/tv_pharmacy_road_address" />
+
+    <ImageView
+        android:id="@+id/btn_favorite_pharmacy"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/icon_favorite" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_call_pharmacy"
+        style="@style/body"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/round_long_rect_500"
+        android:backgroundTint="@color/white"
+        android:drawableStart="@drawable/ic_call"
+        android:paddingHorizontal="12dp"
+        android:text="@string/btn_call"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/tv_pharmacy_name"
+        app:layout_constraintTop_toBottomOf="@+id/tv_pharmacy_tel_num" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_find_road"
+        style="@style/body"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:layout_marginStart="20dp"
+        android:background="@drawable/round_long_rect_500"
+        android:backgroundTint="@color/white"
+        android:drawableStart="@drawable/ic_map"
+        android:paddingHorizontal="12dp"
+        android:text="@string/btn_nav"
+        app:layout_constraintStart_toEndOf="@+id/btn_call_pharmacy"
+        app:layout_constraintTop_toTopOf="@+id/btn_call_pharmacy" />
+</androidx.constraintlayout.widget.ConstraintLayout>

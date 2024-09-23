@@ -8,5 +8,5 @@
     android:layout_height="wrap_content"
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
-    tools:context=".ui.home.MedicineResultFragment"
+    tools:context=".ui.search.MedicineResultFragment"
     tools:listitem="@layout/item_results" />

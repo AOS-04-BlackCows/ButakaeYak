@@ -1,18 +1,17 @@
 package com.blackcows.butakaeyak.data.retrofit
 
 import com.blackcows.butakaeyak.BuildConfig
+import com.blackcows.butakaeyak.data.retrofit.interceptors.KakaoInterceptor
 import com.blackcows.butakaeyak.data.retrofit.interceptors.MedicineInterceptor
 import com.google.gson.GsonBuilder
-import okhttp3.Interceptor
+import com.tickaroo.tikxml.TikXml
+import com.tickaroo.tikxml.retrofit.TikXmlConverterFactory
 import okhttp3.OkHttpClient
-import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitClient {
-    const val DRUG_REST_API_KEY = BuildConfig.DRUG_INFO_KEY
-
     private val retrofitInstances = mutableMapOf<ApiBaseUrl, Retrofit>()
 
     private val gson = GsonBuilder()
@@ -39,17 +38,28 @@ object RetrofitClient {
 
     private fun getOkhttpClient(apiBaseUrl: ApiBaseUrl): OkHttpClient {
         return when(apiBaseUrl) {
-            ApiBaseUrl.DrugInfoUrl -> {
-                OkHttpClient().newBuilder().build()
-            }
             ApiBaseUrl.KakaoPlaceSearchUrl -> {
-                OkHttpClient().newBuilder().addInterceptor(KakaoInterceptor.getInterceptor()).build()
                 OkHttpClient().newBuilder().addInterceptor(KakaoInterceptor.getInterceptor()).build()
             }
             ApiBaseUrl.MedicineUrl -> {
                 OkHttpClient().newBuilder().addInterceptor(MedicineInterceptor.get()).build()
             }
             ApiBaseUrl.PharmacyListInfoUrl -> {
+                OkHttpClient().newBuilder().build()
+            }
+            ApiBaseUrl.MedicineInfoUrl -> {
+                OkHttpClient().newBuilder()
+                    .addInterceptor(
+                        HttpLoggingInterceptor().apply {
+                            level = HttpLoggingInterceptor.Level.BODY
+                        }
+                    )
+                    .build()
+            }
+            ApiBaseUrl.GPTUrl->{
+                OkHttpClient().newBuilder().build()
+            }
+            else -> {
                 OkHttpClient().newBuilder().build()
             }
         }

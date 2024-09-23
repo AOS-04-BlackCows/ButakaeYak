@@ -1,6 +1,10 @@
 package com.blackcows.butakaeyak
 
+import com.blackcows.butakaeyak.data.models.UserRequest
+import com.blackcows.butakaeyak.data.source.api.MedicineInfoDataSource
 import com.blackcows.butakaeyak.domain.repo.DrugRepository
+import com.blackcows.butakaeyak.domain.repo.UserRepository
+import com.blackcows.butakaeyak.domain.result.SignUpResult
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.HiltTestApplication
@@ -29,6 +33,9 @@ class RepositoryUnitTest {
 
     @Inject
     lateinit var drugRepository: DrugRepository
+
+    @Inject
+    lateinit var userRepository: UserRepository
 
     @Before
     fun setUp() {
@@ -76,4 +83,6 @@ class RepositoryUnitTest {
             println("$i: ${it.name}")
         }
     }
+
+
 }

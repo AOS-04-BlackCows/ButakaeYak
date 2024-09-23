@@ -12,7 +12,7 @@
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:src="@drawable/baseline_arrow_back_24dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -23,99 +23,143 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:text="@string/cycle"
+        android:text="알림 설정"
         android:textColor="@color/dark_gray"
         app:layout_constraintBottom_toBottomOf="@id/iv_back"
-        app:layout_constraintStart_toEndOf="@id/iv_back"
-        app:layout_constraintTop_toTopOf="@id/iv_back" />
+        app:layout_constraintStart_toEndOf="@id/iv_back" />
 
-    <TextView
-        android:id="@+id/tv_cycle_name"
-        style="@style/body_b"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="32dp"
-        android:maxLines="3"
-        android:scrollHorizontally="false"
-        android:text=""
-        android:textColor="@color/dark_gray"
-        app:layout_constraintStart_toStartOf="@+id/iv_back"
-        app:layout_constraintTop_toBottomOf="@+id/tv_cycle" />
-
-    <TextView
-        android:id="@+id/tv_cycle_form"
-        style="@style/body_b"
-        android:layout_width="wrap_content"
+    <com.google.android.material.divider.MaterialDivider
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text=""
-        android:textColor="@color/dark_gray"
-        app:layout_constraintStart_toStartOf="@+id/tv_cycle_name"
-        app:layout_constraintTop_toBottomOf="@+id/tv_cycle_name" />
+        app:layout_constraintTop_toBottomOf="@id/iv_back"/>
 
-    <ImageView
-        android:id="@+id/iv_cycle_form"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginStart="12dp"
-        app:layout_constraintBottom_toBottomOf="@id/tv_cycle_form"
-        app:layout_constraintStart_toEndOf="@id/tv_cycle_form"
-        app:layout_constraintTop_toTopOf="@id/tv_cycle_form" />
+    <EditText
+        android:id="@+id/et_medicine_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginHorizontal="20dp"
+        android:hint="약 그룹 이름을 입력해주세요"
+        android:textColorHint="@color/gray"
+        android:backgroundTint="@color/green"
+        app:layout_constraintTop_toBottomOf="@id/divider" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_start_day"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="32dp"
-        android:background="@drawable/user_cl_bg_light_gray"
-        android:fillViewport="true"
-        app:layout_constraintBottom_toTopOf="@id/btn_next"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_cycle_form">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginHorizontal="20dp"
+        app:layout_constraintTop_toBottomOf="@id/et_medicine_group">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="시작 날짜"
+            style="@style/body"
+            android:padding="4dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <TextView
+            android:id="@+id/tv_start_day"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="없음"
+            android:textColorHint="@color/gray"
+            android:padding="4dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/tv_start_day"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_repeat_cycle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginHorizontal="20dp"
+        app:layout_constraintTop_toBottomOf="@id/cl_start_day">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="반복 주기"
+            style="@style/body"
+            android:padding="4dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <TextView
+            android:id="@+id/tv_repeat_cycle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="없음"
+            android:textColorHint="@color/gray"
+            android:padding="4dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/tv_repeat_cycle"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_cycle_alarm_add"
-            android:layout_width="175dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/user_cl_bg_white_gradient_gray"
-            android:padding="12dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginHorizontal="20dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/cl_repeat_cycle">
 
-            <ImageView
-                android:id="@+id/iv_cycle_alarm_add"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_marginBottom="12dp"
-                android:src="@drawable/baseline_access_time_24dp"
-                app:layout_constraintBottom_toBottomOf="parent"
+            <TextView
+                style="@style/body"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:text="시간"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/tv_cycle_alarm_add"
-                style="@style/body_b"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:layout_marginBottom="12dp"
-                android:text="@string/cycle_alarm_add"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@id/iv_cycle_alarm_add"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:hint="없음"
+                android:textColorHint="@color/gray"
+                android:padding="4dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/tv_cycle_alarm_add"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
-            android:layout_width="match_parent"
+            android:layout_width="280dp"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginTop="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/btn_next"
             app:layout_constraintTop_toBottomOf="@id/cl_cycle_alarm_add" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_next"
@@ -123,8 +167,7 @@
         android:layout_width="match_parent"
         android:layout_height="72dp"
         android:background="@color/gray"
-        android:enabled="false"
-        android:text="@string/check"
+        android:text="등록하기"
         android:textColor="@color/dark_gray"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

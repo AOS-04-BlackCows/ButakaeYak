@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/round_white_radius12"
+    android:padding="23dp"
+    android:elevation="5dp">
+
+    <TextView
+        android:id="@+id/title_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+
+        android:text="약 그룹 이름"
+        style="@style/subtitle"
+
+        android:maxEms="5"
+        android:ellipsize="end"
+        android:maxLines="1"
+        />
+
+    <TextView
+        android:id="@+id/date_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintTop_toTopOf="@id/title_tv"
+        app:layout_constraintBottom_toBottomOf="@id/title_tv"
+        app:layout_constraintStart_toEndOf="@id/title_tv"
+
+        android:layout_marginStart="12dp"
+
+        android:text="2024.9.12"
+        style="@style/body_gray"
+        />
+
+    <TextView
+        android:id="@+id/note_num_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintTop_toTopOf="@id/title_tv"
+        app:layout_constraintBottom_toBottomOf="@id/title_tv"
+        app:layout_constraintEnd_toEndOf="parent"
+
+        android:text="5"
+        style="@style/subtitle_gray"
+        />
+</androidx.constraintlayout.widget.ConstraintLayout>

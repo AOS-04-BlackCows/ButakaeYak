@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ButakaeYak</string>
+    <string name="app_name">부탁해약</string>
     <string name="title_home">Home</string>
     <string name="title_search">Search</string>
     <string name="title_map">map</string>
@@ -14,6 +14,8 @@
     <string name="check">확인</string>
     <string name="next">다음</string>
 
+    <string name="btn_call">전화</string>
+    <string name="btn_nav">길찾기</string>
     <!-- FireBase -->
     <string name="set">set</string>
 
@@ -24,11 +26,22 @@
     <string name="input_age">나이를 입력해 주세요</string>
     <string name="input_photo">사진 설정하세요</string>
 
-    <string name="btn_login">로그인</string>
-    <string name="tv_signup">계정이 없으신가요? 회원가입</string>
-    <string name="btn_signup">회원가입</string>
-
     <string name="autologin">자동 로그인</string>
+    <string name="Unsubscribing">회원탈퇴</string>
+    <string name="name">내 이름</string>
+    <string name="login_info">로그인 정보</string>
+    <string name="if_login">로그인하시겠습니까?</string>
+
+    <string name="BreakfastLunchDinner">아침/점심/저녁</string>
+    <string name="Services">서비스 이용 약관</string>
+    <string name="open_API">오픈 소스</string>
+    <string name="version">버전</string>
+    <string name="version_num">2.0</string>
+
+    <string name="set_time">시간 설정</string>
+    <string name="breakfast">아침</string>
+    <string name="lunch">점심</string>
+    <string name="dinner">저녁</string>
 
     <string name="today_medicine">오늘 먹어야 할 약</string>
     <string name="neighbor">내 지인</string>
@@ -75,15 +88,17 @@
     <string name="form">약 모형</string>
 
     <!-- Map -->
-    <string name="view_more">목록 더보기</string>
+    <string name="view_more">더 불러오기</string>
     <string name="map_research">현 위치에서 재검색</string>
 
     <!-- Name -->
     <string name="medicine_name_explanation">복용하는 약 종류\n및 이름을 작성하세요</string>
     <string name="hint_medicine_name">입력해주세요</string>
+    <string name="medicine_guide">약 등록 안내</string>
+    <string name="medicine_guide_particular">· 약 제형을 선택한 후, 약 이름을 입력해주세요\n· 같은 시간대에 복용하는 약은 ‘+’ 버튼으로 추가하세요.\n· ‘다음’ 버튼을 눌러 날짜와 시간을 설정하세요.</string>
 
     <!-- Search -->
-    <string name="hint_search">검색어를 적어주세요.</string>
+    <string name="hint_search">검색어를 입력해 주세요.</string>
 
     <!-- Take -->
     <string name="today_date">2024년 9월 3일</string>
@@ -134,5 +149,10 @@
         \n개발자는 "구체적인 약의 정보 및 복용"에 대해 애플리케이션 이용 시 이용자에게 "약사에게 확인할 것"을 고지하고 있으며, 이를 이용자가 확인하지 않아 발생한 사고에 대해서는 개발자는 책임을 지지 않습니다.</string>
 
 
+    <!-- Open API -->
+    <string name="api">
+        api 작성하면 됨요
+
+    </string>
 
 </resources>

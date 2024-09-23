@@ -4,24 +4,35 @@
         <item name="fontFamily">@font/pretendard</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:textSize">28sp</item>
+        <item name="android:fontWeight">700</item>
     </style>
 
     <style name="subtitle_b">
         <item name="fontFamily">@font/pretendard</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:textSize">24sp</item>
+        <item name="android:fontWeight">700</item>
+    </style>
+
+    <style name="medium_b">
+        <item name="fontFamily">@font/pretendard</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:fontWeight">700</item>
     </style>
 
     <style name="body_b">
         <item name="fontFamily">@font/pretendard</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:textSize">16sp</item>
+        <item name="android:fontWeight">700</item>
     </style>
 
     <style name="caption_b">
         <item name="fontFamily">@font/pretendard</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:textSize">12sp</item>
+        <item name="android:fontWeight">700</item>
     </style>
 
     <style name="headline">
@@ -35,6 +46,17 @@
         <item name="android:textColor">@color/black</item>
         <item name="android:textSize">24sp</item>
     </style>
+    <style name="subtitle_gray">
+        <item name="fontFamily">@font/pretendard</item>
+        <item name="android:textColor">@color/gray</item>
+        <item name="android:textSize">24sp</item>
+    </style>
+
+    <style name="medium">
+        <item name="fontFamily">@font/pretendard</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">20sp</item>
+    </style>
 
     <style name="body_big">
         <item name="fontFamily">@font/pretendard</item>
@@ -45,6 +67,12 @@
     <style name="body">
         <item name="fontFamily">@font/pretendard</item>
         <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="body_gray">
+        <item name="fontFamily">@font/pretendard</item>
+        <item name="android:textColor">@color/gray</item>
         <item name="android:textSize">16sp</item>
     </style>
 

@@ -3,18 +3,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.blackcows.butakaeyak">
 
+    <uses-feature
+        android:name="android.hardware.camera.any"
+        android:required="false" />
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28" />
+
 
     <application
-        android:name = ".di.HiltApplication"
+        android:name=".di.HiltApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -24,6 +32,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.YacTong"
         tools:targetApi="31">
+        <activity
+            android:name="com.canhub.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat"
+            />
+        <activity
+            android:name=".ui.textrecognition.OCRActivity"
+            android:exported="false" />
+
+
+
+
 
         <receiver
             android:name=".ui.take.AlarmReceiver"
@@ -32,6 +51,7 @@
         <meta-data
             android:name="com.kakao.sdk.AppKey"
             android:value="d4ce3a86b1d0a8895e9eccdf9fb16fc4"/>
+
         <activity
             android:name=".ui.splash.LoadingActivity"
             android:exported="false" />
@@ -47,29 +67,28 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:windowSoftInputMode="adjustResize"
-            android:label="@string/app_name">
-
+            android:label="@string/app_name"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:host="oauth"
+                <data
+                    android:host="oauth"
                     android:scheme="${kakao_native_app_key}" />
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>

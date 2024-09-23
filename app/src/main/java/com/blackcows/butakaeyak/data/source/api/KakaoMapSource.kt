@@ -1,7 +1,7 @@
 package com.blackcows.butakaeyak.data.source.api
 
 import com.blackcows.butakaeyak.data.models.KakaoPlacePharmacy
-import com.blackcows.butakaeyak.data.retrofit.KakaoApiService
+import com.blackcows.butakaeyak.data.retrofit.service.KakaoApiService
 import javax.inject.Inject
 
 class KakaoMapSource @Inject constructor(

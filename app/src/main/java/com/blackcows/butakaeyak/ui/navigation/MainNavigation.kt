@@ -17,7 +17,7 @@ object MainNavigation {
     private val TAG = "MainNavigation"
     private lateinit var fragmentManager: FragmentManager
 
-    private var currentTab = TabTag.Take
+    private var currentTab = TabTag.Home
     private val fragmentStack = HashMap<TabTag, Stack<FragmentTag>>()
     private val tagToFragment = mutableMapOf<FragmentTag, Fragment?>()
 
@@ -85,7 +85,7 @@ object MainNavigation {
     fun initialize(activity: MainActivity, binding: ActivityMainBinding) {
         fragmentManager = activity.supportFragmentManager
 
-        fragmentStack[TabTag.Take] = Stack()
+        fragmentStack[TabTag.Home] = Stack()
         fragmentStack[TabTag.Search] = Stack()
         fragmentStack[TabTag.Map] = Stack()
         fragmentStack[TabTag.User] = Stack()
@@ -129,7 +129,7 @@ object MainNavigation {
             currentTab = when(item.itemId) {
                 R.id.navigation_take -> {
                     binding.viewPager.currentItem = 0
-                    TabTag.Take
+                    TabTag.Home
                 }
                 R.id.navigation_home -> {
                     binding.viewPager.currentItem = 1
@@ -166,12 +166,13 @@ object MainNavigation {
     private fun addBackPressedCallback(activity: MainActivity, binding: ActivityMainBinding) {
         val callback = object: OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
+                Log.d(TAG, "Back Pressed!")
                 val curStack = fragmentStack[currentTab]!!
                 if(curStack.size == 0) {
-                    if(currentTab == TabTag.Take) {
+                    if(currentTab == TabTag.Home) {
                         activity.finishAffinity()
                     } else {
-                        currentTab = TabTag.Take
+                        currentTab = TabTag.Home
                         binding.viewPager.currentItem = 0
                     }
                 } else popCurrentFragment()
