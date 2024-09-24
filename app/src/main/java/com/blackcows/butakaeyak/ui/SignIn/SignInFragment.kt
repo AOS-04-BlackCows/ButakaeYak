@@ -9,31 +9,12 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.fragment.app.viewModels
-import com.blackcows.butakaeyak.BuildConfig
-import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.databinding.FragmentSignInBinding
-import com.blackcows.butakaeyak.domain.repo.LocalRepository
-import com.blackcows.butakaeyak.domain.repo.UserRepository
-import com.blackcows.butakaeyak.ui.navigation.FragmentTag
 import com.blackcows.butakaeyak.ui.navigation.MainNavigation
 import com.blackcows.butakaeyak.ui.state.LoginUiState
-import com.blackcows.butakaeyak.ui.state.SignUpUiState
-import com.blackcows.butakaeyak.ui.user.UserFragment
 import com.blackcows.butakaeyak.ui.viewmodels.UserViewModel
-import com.kakao.sdk.auth.model.OAuthToken
-import com.kakao.sdk.common.KakaoSdk
-import com.kakao.sdk.common.model.ClientError
-import com.kakao.sdk.common.model.ClientErrorCause
-import com.kakao.sdk.user.UserApiClient
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import javax.inject.Inject
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 class SignInFragment : Fragment() {
 

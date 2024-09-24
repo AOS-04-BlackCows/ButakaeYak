@@ -4,11 +4,11 @@ import android.app.Dialog
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.DialogFragment
 import com.blackcows.butakaeyak.databinding.DialogMealTimeBinding
 import com.blackcows.butakaeyak.ui.take.TimePickerDialog
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
-class MealTimeDialog : DialogFragment() {
+class MealTimeBottomSheet : BottomSheetDialogFragment() {
 
     private var _binding: DialogMealTimeBinding? = null
     private val binding get() = _binding!!
@@ -16,11 +16,11 @@ class MealTimeDialog : DialogFragment() {
     private lateinit var mypageViewModel: MypageViewModel
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(requireContext())
+        val builder = super.onCreateDialog(savedInstanceState)
 
-        // 커스텀 레이아웃을 인플레이트합니다.
+        // 커스텀 레이아웃을 인플레이트
         _binding = DialogMealTimeBinding.inflate(requireActivity().layoutInflater)
-        builder.setView(binding.root)
+        builder.setContentView(binding.root)
 
         // 확인 버튼
         binding.btnMealSave.setOnClickListener {
@@ -55,7 +55,7 @@ class MealTimeDialog : DialogFragment() {
             showTimePickerDialog(binding.dinnerTimeTextView)
         }
 
-        return builder.create()
+        return builder
     }
 
     private fun showTimePickerDialog(textView: TextView) {

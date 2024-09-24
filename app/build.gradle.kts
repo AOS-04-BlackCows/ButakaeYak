@@ -225,5 +225,4 @@ dependencies {
     // viewPager2 Indicator
     implementation("com.tbuonomo:dotsindicator:5.0")
     implementation("com.vanniktech:android-image-cropper:4.5.0")
-
 }

@@ -17,6 +17,8 @@ import com.blackcows.butakaeyak.ui.take.fragment.OpenAPIFragment
 import com.blackcows.butakaeyak.ui.take.fragment.TermsFragment
 import com.blackcows.butakaeyak.ui.viewmodels.UserViewModel
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -57,8 +59,8 @@ class UserFragment : Fragment() {
 
         // 아침/점심/저녁 시간 설정
         binding.cvSetTime.setOnClickListener {
-            val mealTimeDialog = MealTimeDialog()
-            mealTimeDialog.show(childFragmentManager, "MealTimeDialog")
+            val mealTimeBottomSheet = MealTimeBottomSheet()
+            mealTimeBottomSheet.show(childFragmentManager, "MealTimeDialog")
         }
 
         // 로그아웃 콜백 구현
@@ -66,8 +68,8 @@ class UserFragment : Fragment() {
             if (userViewModel.user.value == null) {
                 Log.d(TAG, "user == null")
             }
-            Log.d(TAG,"로그아웃 버튼 클릭!")
-            userViewModel.logout{
+            Log.d(TAG, "로그아웃 버튼 클릭!")
+            userViewModel.logout {
 
                 Toast.makeText(requireContext(), "로그아웃이 되었습니다!!", Toast.LENGTH_SHORT).show()
 
@@ -86,7 +88,8 @@ class UserFragment : Fragment() {
                 // 닉네임 및 프로필 이미지 업데이트
                 binding.tvName.text = user.name
                 Glide.with(this)
-                    .load(user.profileUrl)
+                    .load(user.profileUrl ?: R.drawable.account_circle)
+                    .apply(RequestOptions.bitmapTransform(RoundedCorners(90)))
                     .placeholder(R.drawable.account_circle) // 기본 이미지
                     .into(binding.ivProfile)
 
