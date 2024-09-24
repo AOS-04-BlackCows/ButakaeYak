@@ -5,8 +5,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.blackcows.butakaeyak.data.models.Medicine
+import com.blackcows.butakaeyak.data.models.MedicineDetail
+import com.blackcows.butakaeyak.data.source.local.MedicineInfoRepository
 import com.blackcows.butakaeyak.domain.GetMedicinesNameUseCase
 import com.blackcows.butakaeyak.domain.repo.LocalUtilsRepository
+import com.blackcows.butakaeyak.domain.repo.MedicineRepository
+import com.blackcows.butakaeyak.domain.repo.SearchHistoryRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,10 +21,13 @@ private const val TAG = "SearchResult"
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val getMedicinesNameUseCase: GetMedicinesNameUseCase,
-    private val localUtilsRepository: LocalUtilsRepository
+    private val searchHistoryRepository: SearchHistoryRepository,
+    private val medicineRepository: MedicineRepository
 ) : ViewModel() {
 
-    private val queryHistory = MutableLiveData<String>()
+    private val queryHistory = MutableLiveData<List<String>>(listOf())
+
+    private val medicineDetailHistory = MutableLiveData<List<MedicineDetail>>(listOf())
 
     private val _text = MutableLiveData<String>().apply {
         value = "This is home Fragment"
@@ -42,12 +49,26 @@ class SearchViewModel @Inject constructor(
     }
 
     fun getQueryHistory(){
-        //TODO 검색한 기록 저장 (반환타입 List<String>)
-//        queryHistory.value = localUtilsRepository.getQueryHistory()
+        queryHistory.value = searchHistoryRepository.getQueryHistory()
+    }
+    fun removeQueryHistory() {
+        searchHistoryRepository.removeQueryHistory()
     }
 
-    fun getViewedHistory(){
-        //TODO 검색후 클릭한 기록 저장 (반환타입 List<Medicine>)
-//        queryHistory.value = localUtilsRepository.getViewedViewedHistory()
+    fun getMedicineHistory(){
+        val idList = searchHistoryRepository.getMedicineDetailHistory()
+        viewModelScope.launch {
+            val list = idList.mapNotNull {
+                medicineRepository.searchMedicineById(it)
+            }
+
+            _medicineResult.value = list
+        }
+    }
+    fun saveMedicineHistory(medicine: Medicine) {
+        searchHistoryRepository.saveMedicineDetailHistory(medicine)
+    }
+    fun removeMedicineHistory() {
+        searchHistoryRepository.removeMedicineDetailHistory()
     }
 }

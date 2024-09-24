@@ -51,6 +51,34 @@ class MedicineDataSource @Inject constructor(
         return result
     }
 
+    suspend fun searchMedicineById(id: String): Medicine? {
+        val result = mutableListOf<Medicine>()
+        val facet = "id"
+
+        val query = Query(id).apply {
+            advancedSyntax = true
+            setRestrictSearchableAttributes(facet)
+            hitsPerPage = 10
+        }
+
+        val jsonArray = medicineIndex.searchSync(query)
+
+        jsonArray?.getJSONArray("hits")?.let { medicines ->
+            println("hits size: ${medicines.length()}")
+            Log.d(TAG, "hits size: ${medicines.length()}")
+            val gson = Gson()
+
+            val seq = (0 until medicines.length()).asSequence().map { medicines.getJSONObject(it) }
+            for(json in seq) {
+                val data = gson.fromJson(json.toString(), Medicine::class.java)
+                result.add(getImageUrl(data))
+            }
+        }
+
+        return if(result.size != 0) result[0]
+                else null
+    }
+
     suspend fun searchMedicinesByNames(names: String): List<Medicine> {
         val result = mutableListOf<Medicine>()
         val facet = "name"

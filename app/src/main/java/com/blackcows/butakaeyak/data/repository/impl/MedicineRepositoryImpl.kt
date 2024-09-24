@@ -19,4 +19,11 @@ class MedicineRepositoryImpl @Inject constructor(
             medicineDataSource.searchMedicinesByName(name)
         }
     }.getOrElse { listOf() }
+
+    override suspend fun searchMedicineById(id: String): Medicine? = kotlin.runCatching {
+        withContext(dispatcher) {
+            medicineDataSource.searchMedicineById(id)
+        }
+    }.getOrElse { null }
+
 }

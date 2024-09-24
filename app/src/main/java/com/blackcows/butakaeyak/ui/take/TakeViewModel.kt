@@ -24,7 +24,7 @@ class TakeAddViewModel @Inject constructor(
     private val _medicineGroup = MutableLiveData<MedicineGroup?>(null)
     val medicineGroup get() = _medicineGroup
     private val medicineNameList = mutableListOf<String>()
-    private var _nameRvGroup = MutableLiveData<MutableList<TakeAddMedicine>>(null)
+    private var _nameRvGroup = MutableLiveData<List<TakeAddMedicine>>(null)
     val nameRvGroup get() = _nameRvGroup
 
     var groupName : String? = null
@@ -49,16 +49,19 @@ class TakeAddViewModel @Inject constructor(
     fun saveNames(medicines: MutableList<String>){
         medicineNameList.addAll(medicines)
     }
-
-    fun loadNames() : List<String>{
+    fun loadNames() {
         _nameRvGroup.value = medicineNameList.map {
             TakeAddMedicine(
                 imageUrl = null,
                 name = it,
                 isDetail = false
             )
-        }.toMutableList()
-        return medicineNameList
+        }
+    }
+    fun addNames(imageUrl: String, name: String) {
+        _nameRvGroup.value = _nameRvGroup.value?.toMutableList().apply {
+            this?.add(TakeAddMedicine(imageUrl, name, false))
+        }
     }
 
 }

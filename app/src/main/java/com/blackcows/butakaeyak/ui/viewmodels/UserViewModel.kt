@@ -19,6 +19,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 @HiltViewModel
 class UserViewModel @Inject constructor(
@@ -131,6 +133,21 @@ class UserViewModel @Inject constructor(
             _user.value = null
             _loginUiState.value = LoginUiState.Init
             userRepository.logout()
+            onFinished()
+        }
+    }
+
+    fun deleteAccount(onFinished: () -> Unit) {
+        if(_user.value == null) return
+
+        viewModelScope.launch {
+            suspendCoroutine<String> {
+                logout {
+                    it.resume("")
+                }
+            }
+
+            userRepository.deleteAccount(_user.value!!)
             onFinished()
         }
     }

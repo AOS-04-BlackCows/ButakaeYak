@@ -52,7 +52,6 @@
                 android:id="@+id/breakfastTimeTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="09:00"
                 android:textColor="@color/gray"
                 android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -75,7 +74,7 @@
 
     <!-- 점심 시간 설정 -->
     <androidx.cardview.widget.CardView
-        android:id="@+id/cv_luncht_time"
+        android:id="@+id/cv_lunch_time"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
@@ -108,7 +107,6 @@
                 android:id="@+id/lunchTimeTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="13:00"
                 android:textColor="@color/gray"
                 android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -140,7 +138,7 @@
         app:cardElevation="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cv_luncht_time">
+        app:layout_constraintTop_toBottomOf="@+id/cv_lunch_time">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -163,7 +161,6 @@
                 android:id="@+id/dinnerTimeTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="18:00"
                 android:textColor="@color/gray"
                 android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="parent"

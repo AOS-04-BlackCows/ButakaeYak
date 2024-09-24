@@ -15,6 +15,8 @@ import com.blackcows.butakaeyak.data.models.MedicineGroup
 import com.blackcows.butakaeyak.data.models.TakeAddMedicine
 import com.blackcows.butakaeyak.databinding.ItemHomeTodayMedicineGroupBinding
 import com.blackcows.butakaeyak.databinding.ItemRecyclerviewNameBinding
+import com.blackcows.butakaeyak.ui.DrawableNameToResource
+import com.blackcows.butakaeyak.ui.getDrawableNames
 import com.blackcows.butakaeyak.ui.note.recycler.RecyclerItem
 import com.blackcows.butakaeyak.ui.take.FormSelectDialog
 import com.blackcows.butakaeyak.ui.take.adapter.NameAdapter.DetailViewHolder
@@ -34,7 +36,7 @@ class NameAdapter(private val clickListener: ClickListener): ListAdapter<TakeAdd
         fun bind(item: TakeAddMedicine) {
             with(binding){
                 Glide.with(root.context)
-                    .load(item.imageUrl)
+                    .load(getDrawableNames(item.imageUrl!!))
                     .into(btnMedicineForm)
                 btnMinus.setOnClickListener {
                     clickListener.onMinusClick(item)

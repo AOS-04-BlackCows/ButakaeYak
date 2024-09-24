@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.blackcows.butakaeyak.R
 import com.blackcows.butakaeyak.data.models.TakeAddMedicine
 import com.blackcows.butakaeyak.databinding.FragmentNameBinding
+import com.blackcows.butakaeyak.ui.DrawableNameToResource
 import com.blackcows.butakaeyak.ui.navigation.MainNavigation
 import com.blackcows.butakaeyak.ui.take.FormSelectDialog
 import com.blackcows.butakaeyak.ui.take.TakeAddViewModel
@@ -108,15 +109,25 @@ class NameFragment : Fragment() {
             recyclerView.layoutManager = LinearLayoutManager(requireContext())
             takeAddViewModel.nameRvGroup.observe(viewLifecycleOwner) {
                 adapter.submitList(it)
+                if(it.isNotEmpty()){
+                    btnNext.apply{
+                        isEnabled = true
+                        setBackgroundResource(R.color.green)
+                        setTextColor(Color.WHITE)
+                    }
+                } else {
+                    btnNext.apply{
+                        isEnabled = false
+                        setBackgroundResource(R.color.gray)
+                        setTextColor(Color.DKGRAY)
+                    }
+                }
             }
+            Log.d("제발되어라", "btnMedicineForm.background.toString() = ${btnMedicineForm.background.toString()}")
+            btnMedicineForm.setBackgroundResource(R.drawable.medicine_type_14)
             btnPlusMinus.setOnClickListener {
-                val image = btnMedicineForm.background
-                val bitmap = (image as BitmapDrawable).bitmap
-                val text = etMedicineName.text.toString()
-                val nameItem = NameItem(bitmap, text)
-                // TODO viewModel에 아이템 추가 로 다시 만들기
-//                adapter.addItem(nameItem)
-                hideKeyboard()
+                takeAddViewModel.addNames("medicine_type_1", etMedicineName.text.toString())
+                etMedicineName.text.clear()
             }
 
             tvSize.text = "총 ${adapter.itemCount}개의 약이 등록 예정"
@@ -149,22 +160,22 @@ class NameFragment : Fragment() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                binding.apply{
-                    if(etMedicineName.length() > 0){
-                        btnNext.apply{
-                            isEnabled = true
-                            setBackgroundResource(R.color.green)
-                            setTextColor(Color.WHITE)
-                        }
-                    }
-                    else{
-                        btnNext.apply{
-                            isEnabled = false
-                            setBackgroundResource(R.color.gray)
-                            setTextColor(Color.DKGRAY)
-                        }
-                    }
-                }
+//                binding.apply{
+//                    if(etMedicineName.length() > 0){
+//                        btnNext.apply{
+//                            isEnabled = true
+//                            setBackgroundResource(R.color.green)
+//                            setTextColor(Color.WHITE)
+//                        }
+//                    }
+//                    else{
+//                        btnNext.apply{
+//                            isEnabled = false
+//                            setBackgroundResource(R.color.gray)
+//                            setTextColor(Color.DKGRAY)
+//                        }
+//                    }
+//                }
             }
 
             override fun afterTextChanged(s: Editable?) {}

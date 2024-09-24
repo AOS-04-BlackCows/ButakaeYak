@@ -16,5 +16,6 @@ enum class FragmentTag {
     TermsFragment,
     MapFragment,
     OpenAPIFragment,
-    UserFragment
+    UserFragment,
+    SearchFragment
 }

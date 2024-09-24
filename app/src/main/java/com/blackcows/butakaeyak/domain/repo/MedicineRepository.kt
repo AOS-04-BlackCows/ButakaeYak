@@ -4,4 +4,5 @@ import com.blackcows.butakaeyak.data.models.Medicine
 
 interface MedicineRepository {
     suspend fun searchMedicinesByName(name: String): List<Medicine>
+    suspend fun searchMedicineById(id: String): Medicine?
 }

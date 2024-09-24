@@ -20,7 +20,7 @@ class FormSelectDialog(context: Context, private val listener: OnFormSelectListe
         binding = DialogFormBinding.inflate(layoutInflater)
         setCancelable(false)
         setContentView(binding.root)
-        dialogSize(0.75f, 0.45f)
+        dialogSize(310, 370)
         window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
         binding.apply {
@@ -103,14 +103,17 @@ class FormSelectDialog(context: Context, private val listener: OnFormSelectListe
         }
     }
 
-    private fun dialogSize(widthRatio: Float, heightRatio: Float) {
+    private fun dialogSize(width: Int, height: Int) {
         val window = window ?: return
 
         val displayMetrics = DisplayMetrics()
         window.windowManager.defaultDisplay.getMetrics(displayMetrics)
+//        val width = (displayMetrics.widthPixels * widthRatio).toInt()
+//        val height = (displayMetrics.heightPixels * heightRatio).toInt()
 
-        val width = (displayMetrics.widthPixels * widthRatio).toInt()
-        val height = (displayMetrics.heightPixels * heightRatio).toInt()
+        val density = context.resources.displayMetrics.density
+        val width = (width * density).toInt()
+        val height = (height * density).toInt()
 
         window.setLayout(width, height)
     }

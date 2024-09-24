@@ -417,7 +417,7 @@
     </androidx.cardview.widget.CardView>
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/delete_account"
         style="@style/caption_gray"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

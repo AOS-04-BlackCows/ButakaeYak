@@ -82,11 +82,16 @@ class UserFragment : Fragment() {
     private fun setObserver() {
         userViewModel.user.observe(viewLifecycleOwner) { user ->
             if (user != null) {
-                binding.loggedInLayout.visibility = View.VISIBLE
-                binding.notLoggedInLayout.visibility = View.GONE
+                with(binding) {
+                    loggedInLayout.visibility = View.VISIBLE
+                    notLoggedInLayout.visibility = View.GONE
 
-                // 닉네임 및 프로필 이미지 업데이트
-                binding.tvName.text = user.name
+                    cvLogout.visibility = View.VISIBLE
+                    deleteAccount.visibility = View.VISIBLE
+
+                    // 닉네임 및 프로필 이미지 업데이트
+                    tvName.text = user.name
+                }
                 Glide.with(this)
                     .load(user.profileUrl ?: R.drawable.account_circle)
                     .apply(RequestOptions.bitmapTransform(RoundedCorners(90)))
@@ -94,17 +99,23 @@ class UserFragment : Fragment() {
                     .into(binding.ivProfile)
 
             } else {
-                // 로그인 되지 않은 경우
-                binding.loggedInLayout.visibility = View.GONE
-                binding.notLoggedInLayout.visibility = View.VISIBLE
+                with(binding) {
+                    // 로그인 되지 않은 경우
+                    loggedInLayout.visibility = View.GONE
+                    notLoggedInLayout.visibility = View.VISIBLE
 
-                //로그인 화면으로 이동
-                binding.notLoggedInLayout.setOnClickListener {
-                    // 로그인 화면으로 이동하는 로직
-                    MainNavigation.addFragment(SignInFragment(), FragmentTag.SignInFragment)
-                    //userViewModel.signUpWithKakaoAndLogin()
+                    cvLogout.visibility = View.GONE
+                    deleteAccount.visibility = View.GONE
+
+                    //로그인 화면으로 이동
+                    notLoggedInLayout.setOnClickListener {
+                        // 로그인 화면으로 이동하는 로직
+                        MainNavigation.addFragment(SignInFragment(), FragmentTag.SignInFragment)
+                        //userViewModel.signUpWithKakaoAndLogin()
+                    }
                 }
             }
+
         }
     }
 }

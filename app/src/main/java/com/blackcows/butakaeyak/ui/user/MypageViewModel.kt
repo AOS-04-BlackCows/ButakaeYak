@@ -1,19 +1,21 @@
 package com.blackcows.butakaeyak.ui.user
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.blackcows.butakaeyak.domain.repo.LocalUtilsRepository
-import com.blackcows.butakaeyak.ui.take.data.AlarmItem
+import com.blackcows.butakaeyak.domain.repo.LocalSettingRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 // 알람 설정 -> 로컬 저장
 @HiltViewModel
-class MypageViewModel @Inject constructor(private val localUtilsRepository: LocalUtilsRepository) :
-    ViewModel() {
+class MypageViewModel @Inject constructor(
+    private val localSettingRepository: LocalSettingRepository
+): ViewModel() {
 
     // 알림 저장하는 메서드
-    fun saveDefultAlams(alams: List<String>) {
-        //TODO : 알림 설정 해놓기
+    fun saveDefaultAlarms(alarms: List<String>) {
+        localSettingRepository.saveDefaultAlarms(alarms)
+    }
+    fun getDefaultAlarms() : List<String> {
+        return localSettingRepository.getDefaultAlarms()
     }
 }

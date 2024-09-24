@@ -23,6 +23,7 @@ import com.blackcows.butakaeyak.ui.home.adapter.HomeViewPagerAdapter
 import com.blackcows.butakaeyak.ui.map.MapFragment
 import com.blackcows.butakaeyak.ui.navigation.FragmentTag
 import com.blackcows.butakaeyak.ui.navigation.MainNavigation
+import com.blackcows.butakaeyak.ui.search.SearchFragment
 import com.blackcows.butakaeyak.ui.take.fragment.TakeAddFragment
 import com.blackcows.butakaeyak.ui.textrecognition.OCRActivity
 import com.blackcows.butakaeyak.ui.textrecognition.OcrFragment
@@ -212,7 +213,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
         }
         // 이게 무슨 약이지?
         binding.homeConnection2.setOnClickListener{
-            Toast.makeText(context, "homeConnection2 is not ready", Toast.LENGTH_SHORT).show()
+            MainNavigation.addFragment(SearchFragment(), FragmentTag.SearchFragment)
         }
         // 직접 등록
         binding.btnAddMedicine1.setOnClickListener{
